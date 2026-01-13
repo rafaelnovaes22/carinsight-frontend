@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarInsight | Escolha Inteligente de Veículos</title>
+    <meta name="description"
+        content="Encontre seu carro seminovo ideal com o poder da Inteligência Artificial. Rapidez, segurança e curadoria premium.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <img src="assets/logo-car-insght-5.png" alt="CarInsight Logo">
+        </a>
+        <div class="header-right">
+            <button id="menu-toggle" aria-label="Abrir menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
+            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
+            <li><a href="#"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+        </ul>
+    </nav>
+
+    <!-- Location Modal -->
+    <div class="location-modal-overlay" id="location-modal-overlay"></div>
+    <div class="location-modal" id="location-modal">
+        <div class="location-modal-header">
+            <h3>Selecione seu Estado</h3>
+            <button id="location-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="location-modal-body">
+            <div class="search-state-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="search-state" placeholder="Buscar estado...">
+            </div>
+            <div class="states-list" id="states-list">
+                <button class="state-item" data-state="AC">Acre</button>
+                <button class="state-item" data-state="AL">Alagoas</button>
+                <button class="state-item" data-state="AP">Amapá</button>
+                <button class="state-item" data-state="AM">Amazonas</button>
+                <button class="state-item" data-state="BA">Bahia</button>
+                <button class="state-item" data-state="CE">Ceará</button>
+                <button class="state-item" data-state="DF">Distrito Federal</button>
+                <button class="state-item" data-state="ES">Espírito Santo</button>
+                <button class="state-item" data-state="GO">Goiás</button>
+                <button class="state-item" data-state="MA">Maranhão</button>
+                <button class="state-item" data-state="MT">Mato Grosso</button>
+                <button class="state-item" data-state="MS">Mato Grosso do Sul</button>
+                <button class="state-item" data-state="MG">Minas Gerais</button>
+                <button class="state-item" data-state="PA">Pará</button>
+                <button class="state-item" data-state="PB">Paraíba</button>
+                <button class="state-item" data-state="PR">Paraná</button>
+                <button class="state-item" data-state="PE">Pernambuco</button>
+                <button class="state-item" data-state="PI">Piauí</button>
+                <button class="state-item" data-state="RJ">Rio de Janeiro</button>
+                <button class="state-item" data-state="RN">Rio Grande do Norte</button>
+                <button class="state-item" data-state="RS">Rio Grande do Sul</button>
+                <button class="state-item" data-state="RO">Rondônia</button>
+                <button class="state-item" data-state="RR">Roraima</button>
+                <button class="state-item" data-state="SC">Santa Catarina</button>
+                <button class="state-item" data-state="SP">São Paulo</button>
+                <button class="state-item" data-state="SE">Sergipe</button>
+                <button class="state-item" data-state="TO">Tocantins</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Year Modal -->
+    <div class="year-modal-overlay" id="year-modal-overlay"></div>
+    <div class="year-modal" id="year-modal">
+        <div class="year-modal-header">
+            <h3>Selecione o Ano</h3>
+            <button id="year-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="year-modal-body">
+            <div class="year-display">
+                <button class="year-nav-btn" id="year-prev">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                <div class="year-value" id="year-value">2020</div>
+                <button class="year-nav-btn" id="year-next">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="year-slider-wrapper">
+                <div class="year-range-labels">
+                    <span>1980</span>
+                    <span>2026</span>
+                </div>
+                <input type="range" id="year-slider" min="1980" max="2026" value="2020" class="year-slider">
+                <div class="year-slider-track">
+                    <div class="year-slider-fill" id="year-slider-fill"></div>
+                    <div class="year-slider-thumb" id="year-slider-thumb"></div>
+                </div>
+            </div>
+
+            <div class="year-quick-select">
+                <button class="year-quick-btn" data-year="1990">1990</button>
+                <button class="year-quick-btn" data-year="2000">2000</button>
+                <button class="year-quick-btn" data-year="2010">2010</button>
+                <button class="year-quick-btn" data-year="2020">2020</button>
+                <button class="year-quick-btn" data-year="2025">2025</button>
+            </div>
+
+            <button class="year-confirm-btn" id="year-confirm">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- Price Modal -->
+    <div class="price-modal-overlay" id="price-modal-overlay"></div>
+    <div class="price-modal" id="price-modal">
+        <div class="price-modal-header">
+            <h3>Faixa de Preço</h3>
+            <button id="price-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="price-modal-body">
+            <div class="year-display"> <!-- Reusing year-display class for consistent style -->
+                <button class="year-nav-btn" id="price-prev">
+                    <i data-lucide="minus"></i>
+                </button>
+                <div class="year-value" id="price-value" style="font-size: 2rem;">R$ 80.000</div>
+                <button class="year-nav-btn" id="price-next">
+                    <i data-lucide="plus"></i>
+                </button>
+            </div>
+
+            <div class="year-slider-wrapper"> <!-- Reusing year-slider-wrapper class -->
+                <div class="year-range-labels">
+                    <span>R$ 20k</span>
+                    <span>R$ 200k</span>
+                </div>
+                <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000"
+                    class="year-slider">
+                <div class="year-slider-track">
+                    <div class="year-slider-fill" id="price-slider-fill"></div>
+                    <div class="year-slider-thumb" id="price-slider-thumb"></div>
+                </div>
+            </div>
+
+            <div class="year-quick-select">
+                <button class="year-quick-btn price-quick-btn" data-price="30000">30k</button>
+                <button class="year-quick-btn price-quick-btn" data-price="50000">50k</button>
+                <button class="year-quick-btn price-quick-btn" data-price="80000">80k</button>
+                <button class="year-quick-btn price-quick-btn" data-price="120000">120k</button>
+                <button class="year-quick-btn price-quick-btn" data-price="150000">150k</button>
+            </div>
+
+            <button class="year-confirm-btn" id="price-confirm">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- Condition Modal -->
+    <div class="condition-modal-overlay" id="condition-modal-overlay"></div>
+    <div class="condition-modal" id="condition-modal">
+        <div class="condition-modal-header">
+            <h3>Condição do Veículo</h3>
+            <button id="condition-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="condition-modal-body">
+            <div class="states-list" style="grid-template-columns: 1fr;">
+                <button class="state-item condition-item" data-value="0km">
+                    0 km
+                </button>
+                <button class="state-item condition-item" data-value="seminovo">
+                    Seminovo / Usado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brand Modal -->
+    <div class="brand-modal-overlay" id="brand-modal-overlay"></div>
+    <div class="brand-modal" id="brand-modal">
+        <div class="brand-modal-header">
+            <h3>Escolha a Marca</h3>
+            <button id="brand-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="brand-modal-body">
+            <div class="search-state-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="search-brand" placeholder="Buscar marca...">
+            </div>
+            <div class="states-list" id="brands-list">
+                <button class="state-item brand-item" data-brand="Audi">Audi</button>
+                <button class="state-item brand-item" data-brand="BMW">BMW</button>
+                <button class="state-item brand-item" data-brand="BYD">BYD</button>
+                <button class="state-item brand-item" data-brand="Chevrolet">Chevrolet</button>
+                <button class="state-item brand-item" data-brand="Citroën">Citroën</button>
+                <button class="state-item brand-item" data-brand="Fiat">Fiat</button>
+                <button class="state-item brand-item" data-brand="Ford">Ford</button>
+                <button class="state-item brand-item" data-brand="GWM">GWM</button>
+                <button class="state-item brand-item" data-brand="Honda">Honda</button>
+                <button class="state-item brand-item" data-brand="Hyundai">Hyundai</button>
+                <button class="state-item brand-item" data-brand="Jeep">Jeep</button>
+                <button class="state-item brand-item" data-brand="Kia">Kia</button>
+                <button class="state-item brand-item" data-brand="Land Rover">Land Rover</button>
+                <button class="state-item brand-item" data-brand="Mercedes-Benz">Mercedes-Benz</button>
+                <button class="state-item brand-item" data-brand="Mitsubishi">Mitsubishi</button>
+                <button class="state-item brand-item" data-brand="Nissan">Nissan</button>
+                <button class="state-item brand-item" data-brand="Peugeot">Peugeot</button>
+                <button class="state-item brand-item" data-brand="Renault">Renault</button>
+                <button class="state-item brand-item" data-brand="Toyota">Toyota</button>
+                <button class="state-item brand-item" data-brand="Volkswagen">Volkswagen</button>
+                <button class="state-item brand-item" data-brand="Volvo">Volvo</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="container">
+                <h2 class="search-title">Procure por: <span id="rotating-text" class="rotating-text"></span></h2>
+                <div class="search-form-wrapper">
+
+                    <form class="search-form" id="search-form-id">
+                        <div class="search-input-group">
+                            <i data-lucide="search"></i>
+                            <input type="text" placeholder="O que você está procurando?">
+                        </div>
+                    </form>
+                </div>
+                <div class="search-action-group">
+                    <div class="filter-buttons">
+                        <button type="button" class="filter-btn" data-tooltip="Localização">
+                            <i data-lucide="map-pin"></i>
+                            <span class="tooltip">Localização</span>
+                        </button>
+                        <button type="button" class="filter-btn" data-tooltip="Ano">
+                            <i data-lucide="calendar"></i>
+                            <span class="tooltip">Ano</span>
+                        </button>
+                        <button type="button" class="filter-btn" data-tooltip="0 km">
+                            <i data-lucide="gauge"></i>
+                            <span class="tooltip">0 km</span>
+                        </button>
+                        <button type="button" class="filter-btn" data-tooltip="Preço">
+                            <i data-lucide="dollar-sign"></i>
+                            <span class="tooltip">Preço</span>
+                        </button>
+                        <button type="button" class="filter-btn" data-tooltip="Marca de Carro">
+                            <i data-lucide="tag"></i>
+                            <span class="tooltip">Marca de Carro</span>
+                        </button>
+                        <button type="button" class="filter-btn btn-plus" data-tooltip="Mais Opções">
+                            <i data-lucide="plus"></i>
+                            <span class="tooltip">Mais Opções</span>
+                        </button>
+                    </div>
+                    <a href="buscando-carro.html" class="btn-search">Procurar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Sliders -->
+        <section class="category-shelf cat-bestsellers">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="trending-up"></i></div>
+                    <div class="shelf-info">
+                        <h2>Mais Vendidos</h2>
+                        <p>Os modelos que todo mundo deseja.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-bestsellers">
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Top 1</span>
+                                    <img src="assets/car1.png" alt="Corolla">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 158.900</div>
+                                    <div class="car-name">Toyota Corolla Cross XR</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 18k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Destaque</span>
+                                    <img src="assets/car2.png" alt="Civic">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 124.900</div>
+                                    <div class="car-name">Honda Civic Sedan EXL</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 35k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Popular</span>
+                                    <img src="assets/suv.png" alt="Compass">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 145.900</div>
+                                    <div class="car-name">Jeep Compass Longitude</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 42k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Oferta</span>
+                                    <img src="assets/car1.png" alt="Corolla">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 155.000</div>
+                                    <div class="car-name">Toyota Corolla Cross XRE</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-economy">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="leaf"></i></div>
+                    <div class="shelf-info">
+                        <h2>Econômicos</h2>
+                        <p>Máxima eficiência para o seu dia a dia.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-economy">
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">20km/L</span>
+                                    <img src="assets/hatch.png" alt="Kwid">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 58.900</div>
+                                    <div class="car-name">Renault Kwid Outsider</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 8.120 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Econômico</span>
+                                    <img src="assets/hatch.png" alt="Mobi">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 54.900</div>
+                                    <div class="car-name">Fiat Mobi Trekking</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 12.300 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Compacto</span>
+                                    <img src="assets/hatch.png" alt="HB20">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 75.900</div>
+                                    <div class="car-name">Hyundai HB20 Sense</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Oportunidade</span>
+                                    <img src="assets/hatch.png" alt="Onix">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 82.500</div>
+                                    <div class="car-name">Chevrolet Onix LT</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 22k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-classics">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="award"></i></div>
+                    <div class="shelf-info">
+                        <h2>Clássicos</h2>
+                        <p>Elegância e história que nunca saem de moda.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-classics">
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Ícone</span>
+                                    <img src="assets/hero.png" alt="Audi A3">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 189.900</div>
+                                    <div class="car-name">Audi A3 Sedan S-Line</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 25.400 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> S-Tronic</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Luxo</span>
+                                    <img src="assets/car2.png" alt="Mercedes">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 225.000</div>
+                                    <div class="car-name">Mercedes C-Class 300</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 30k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> 9G-Tronic</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Clássico</span>
+                                    <img src="assets/car1.png" alt="BMW 320i">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 210.000</div>
+                                    <div class="car-name">BMW 320i M Sport</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 28k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <span class="car-tag">Premium</span>
+                                    <img src="assets/hero.png" alt="Volvo S60">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 240.000</div>
+                                    <div class="car-name">Volvo S60 Inscript</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Híbrido</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-pickups">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="truck"></i></div>
+                    <div class="shelf-info">
+                        <h2>Pickups</h2>
+                        <p>Brutalidade e tecnologia para qualquer terreno.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-pickups">
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Ranger"><span
+                                        class="car-tag">Turbo Diesel</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 245.900</div>
+                                    <div class="car-name">Ford Ranger Limited</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 55k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car2.png" alt="Hilux"><span
+                                        class="car-tag">Indestrutível</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 298.000</div>
+                                    <div class="car-name">Toyota Hilux SRX</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 32k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Amarok"><span
+                                        class="car-tag">V6</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 255.000</div>
+                                    <div class="car-name">VW Amarok V6 Extreme</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2020</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 45k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car2.png" alt="S10"><span
+                                        class="car-tag">Campo</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 230.000</div>
+                                    <div class="car-name">Chemrolet S10 High Country</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 38k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-electric">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="zap"></i></div>
+                    <div class="shelf-info">
+                        <h2>Elétricos</h2>
+                        <p>Sustentabilidade e performance instantânea.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-electric">
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/hero.png" alt="Dolphin"><span
+                                        class="car-tag">100% Elétrico</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 149.800</div>
+                                    <div class="car-name">BYD Dolphin Plus</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2024</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 0 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Elétrico</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/hero.png" alt="Ora 03"><span
+                                        class="car-tag">Tecnológico</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 152.000</div>
+                                    <div class="car-name">GWM Ora 03 Skin</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 2k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Elétrico</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/hero.png" alt="Yuan Plus"><span
+                                        class="car-tag">SUV EV</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 229.000</div>
+                                    <div class="car-name">BYD Yuan Plus</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2024</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 0 km</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/hero.png" alt="Seal"><span
+                                        class="car-tag">Performance</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 296.000</div>
+                                    <div class="car-name">BYD Seal AWD</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2024</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 0 km</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-no-tax">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="shield-off"></i></div>
+                    <div class="shelf-info">
+                        <h2>Livre de IPVA</h2>
+                        <p>Modelos isentos que garantem economia anual.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-notax">
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Civic antigo"><span
+                                        class="car-tag">Isento</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 42.000</div>
+                                    <div class="car-name">Honda Civic LXL 2004</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2004</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 140k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car2.png" alt="Corolla antigo"><span
+                                        class="car-tag">Eterno</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 38.500</div>
+                                    <div class="car-name">Toyota Corolla XEi 2003</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2003</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 120k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Gol"><span
+                                        class="car-tag">Popular</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 25.000</div>
+                                    <div class="car-name">VW Gol G4 2008</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2008</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 150k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car2.png" alt="Uno"><span
+                                        class="car-tag">Raiz</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 22.000</div>
+                                    <div class="car-name">Fiat Uno Mille 2007</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2007</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 180k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-robust">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="hammer"></i></div>
+                    <div class="shelf-info">
+                        <h2>Robustos</h2>
+                        <p>Carros feitos para durar e encarar desafios.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-robust">
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/suv.png" alt="Duster"><span
+                                        class="car-tag">Robusto</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 95.900</div>
+                                    <div class="car-name">Renault Duster Iconic</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 30k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/suv.png" alt="Renegade"><span
+                                        class="car-tag">4x4</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 138.000</div>
+                                    <div class="car-name">Jeep Renegade Trailhawk</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 40k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/suv.png" alt="Troller"><span
+                                        class="car-tag">Off-road</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 180.000</div>
+                                    <div class="car-name">Troller T4 Connect</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2020</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 50k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/suv.png" alt="Compass"><span
+                                        class="car-tag">Diesel</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 190.000</div>
+                                    <div class="car-name">Jeep Compass Trailhawk</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 35k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="category-shelf cat-family">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="users"></i></div>
+                    <div class="shelf-info">
+                        <h2>Para Família</h2>
+                        <p>Amplo espaço interno e segurança para quem você ama.</p>
+                    </div>
+                </div>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-family">
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Commander"><span
+                                        class="car-tag">7 Lugares</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 215.000</div>
+                                    <div class="car-name">Jeep Commander Overland</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 20k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Creta"><span
+                                        class="car-tag">Conforto</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 135.900</div>
+                                    <div class="car-name">Hyundai Creta Platinum</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 30k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Tiguan"><span
+                                        class="car-tag">Espaço</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 180.000</div>
+                                    <div class="car-name">VW Tiguan Allspace</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2020</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 60k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                            <div class="car-card">
+                                <div class="car-image"><img src="assets/car1.png" alt="Spin"><span
+                                        class="car-tag">Prático</span></div>
+                                <div class="car-info">
+                                    <div class="car-price">R$ 95.000</div>
+                                    <div class="car-name">Chevrolet Spin Activ7</div>
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 40k km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Price Modal -->
+        <div class="price-modal-overlay" id="price-modal-overlay"></div>
+        <div class="price-modal" id="price-modal">
+            <div class="price-modal-header">
+                <h3>Faixa de Preço</h3>
+                <button id="price-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="price-modal-body">
+                <div class="year-display"> <!-- Reusing year-display class for consistent style -->
+                    <button class="year-nav-btn" id="price-prev">
+                        <i data-lucide="minus"></i>
+                    </button>
+                    <div class="year-value" id="price-value" style="font-size: 3rem;">R$ 80.000</div>
+                    <button class="year-nav-btn" id="price-next">
+                        <i data-lucide="plus"></i>
+                    </button>
+                </div>
+
+                <div class="year-slider-wrapper"> <!-- Reusing year-slider-wrapper class -->
+                    <div class="year-range-labels">
+                        <span>R$ 20k</span>
+                        <span>R$ 200k</span>
+                    </div>
+                    <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000"
+                        class="year-slider">
+                    <div class="year-slider-track">
+                        <div class="year-slider-fill" id="price-slider-fill"></div>
+                        <div class="year-slider-thumb" id="price-slider-thumb"></div>
+                    </div>
+                </div>
+
+                <div class="year-quick-select">
+                    <button class="year-quick-btn price-quick-btn" data-price="30000">30k</button>
+                    <button class="year-quick-btn price-quick-btn" data-price="50000">50k</button>
+                    <button class="year-quick-btn price-quick-btn" data-price="80000">80k</button>
+                    <button class="year-quick-btn price-quick-btn" data-price="120000">120k</button>
+                    <button class="year-quick-btn price-quick-btn" data-price="150000">150k</button>
+                </div>
+
+                <button class="year-confirm-btn" id="price-confirm">Confirmar</button>
+            </div>
+        </div>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">IA-POWERED CAR MATCHING</div>
+            <h1>Encontre o seu próximo carro <span>em Segundos,</span> Movido por IA.</h1>
+            <p>Sem perguntas complicadas. Apenas os melhores veículos, selecionados para o seu estilo de vida e
+                orçamento.</p>
+
+            <div class="hero-actions">
+                <a href="quiz.html" class="btn-primary">Pesquisa Avançada</a>
+                <a href="#consultor" class="btn-secondary">Falar com Consultor</a>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="container">
+                <div
+                    style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 40px; text-align: center;">
+                    <div>
+                        <h3 style="font-size: 2.5rem;">+500</h3>
+                        <p style="color: var(--text-secondary);">Análises Diárias</p>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 2.5rem;">50</h3>
+                        <p style="color: var(--text-secondary);">Parceiros Certificados</p>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 2.5rem;">150+</h3>
+                        <p style="color: var(--text-secondary);">Pontos de Inspeção</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Grid -->
+        <section id="carros" class="category-shelf cat-suggestions">
+            <div class="container">
+                <div class="shelf-header">
+                    <div class="shelf-icon"><i data-lucide="sparkles"></i></div>
+                    <div class="shelf-info">
+                        <h2>Sugestões Curadas</h2>
+                        <p>Veículos que passaram pelo nosso rigoroso critério de qualidade e procedência.</p>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-suggestions">
+                            <!-- Car 1 -->
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <div class="match-tag"><i data-lucide="star"></i> 98% MATCH</div>
+                                    <span class="car-tag">Destaque IA</span>
+                                    <img src="assets/car1.png" alt="Toyota Corolla Cross">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-meta">
+                                        <span class="meta-chip type">SUV</span>
+                                        <span class="meta-chip km-warn"><i data-lucide="gauge-circle"></i> 18K KM</span>
+                                    </div>
+                                    <div class="car-name">Toyota Corolla Cross XR</div>
+                                    <div class="car-price">R$ 158.900</div>
+
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 18.234 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+
+                                    <div class="recommendation-box">
+                                        <div class="rec-title"><i data-lucide="lightbulb"></i> Por que recomendamos:
+                                        </div>
+                                        <div class="rec-text">Híbrido extremamente econômico. Ideal para o trânsito
+                                            urbano de
+                                            grandes cidades.</div>
+                                    </div>
+
+                                    <div class="seller-row">
+                                        <div class="seller-info">
+                                            <h4>RobustCar - Veículos</h4>
+                                            <div class="seller-location"><i data-lucide="map-pin"></i> São Paulo - SP
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn-whatsapp"><i data-lucide="message-circle"></i>
+                                            WhatsApp</a>
+                                    </div>
+
+                                    <a href="#" class="btn-details-outline"><i data-lucide="image"></i> Ver Detalhes e
+                                        Fotos</a>
+                                </div>
+                            </div>
+
+                            <!-- Car 2 -->
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <div class="match-tag"><i data-lucide="star"></i> 92% MATCH</div>
+                                    <span class="car-tag">Mais Vendido</span>
+                                    <img src="assets/car2.png" alt="Honda Civic">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-meta">
+                                        <span class="meta-chip type">Sedan</span>
+                                        <span class="meta-chip km-warn"><i data-lucide="gauge-circle"></i> 35K KM</span>
+                                    </div>
+                                    <div class="car-name">Honda Civic Sedan EXL</div>
+                                    <div class="car-price">R$ 124.900</div>
+
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 35.120 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+
+                                    <div class="recommendation-box">
+                                        <div class="rec-title"><i data-lucide="lightbulb"></i> Por que recomendamos:
+                                        </div>
+                                        <div class="rec-text">Sinônimo de confiabilidade e prazer ao dirigir. Acabamento
+                                            impecável.</div>
+                                    </div>
+
+                                    <div class="seller-row">
+                                        <div class="seller-info">
+                                            <h4>City Motors Premium</h4>
+                                            <div class="seller-location"><i data-lucide="map-pin"></i> Curitiba - PR
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn-whatsapp"><i data-lucide="message-circle"></i>
+                                            WhatsApp</a>
+                                    </div>
+
+                                    <a href="#" class="btn-details-outline"><i data-lucide="image"></i> Ver Detalhes e
+                                        Fotos</a>
+                                </div>
+                            </div>
+
+                            <!-- Car 3 -->
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <div class="match-tag"><i data-lucide="star"></i> 88% MATCH</div>
+                                    <span class="car-tag">Novo em Estoque</span>
+                                    <img src="assets/suv.png" alt="Jeep Compass">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-meta">
+                                        <span class="meta-chip type">SUV</span>
+                                        <span class="meta-chip km-warn"><i data-lucide="gauge-circle"></i> 42K KM</span>
+                                    </div>
+                                    <div class="car-name">Jeep Compass Longitude</div>
+                                    <div class="car-price">R$ 145.900</div>
+
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 42.500 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+
+                                    <div class="recommendation-box">
+                                        <div class="rec-title"><i data-lucide="lightbulb"></i> Por que recomendamos:
+                                        </div>
+                                        <div class="rec-text">Um dos SUVs mais desejados do Brasil. Espaço e robustez
+                                            para a
+                                            família.</div>
+                                    </div>
+
+                                    <div class="seller-row">
+                                        <div class="seller-info">
+                                            <h4>Adventure Veículos</h4>
+                                            <div class="seller-location"><i data-lucide="map-pin"></i> Belo Horizonte -
+                                                MG</div>
+                                        </div>
+                                        <a href="#" class="btn-whatsapp"><i data-lucide="message-circle"></i>
+                                            WhatsApp</a>
+                                    </div>
+
+                                    <a href="#" class="btn-details-outline"><i data-lucide="image"></i> Ver Detalhes e
+                                        Fotos</a>
+                                </div>
+                            </div>
+
+                            <!-- Car 4 -->
+                            <div class="car-card">
+                                <div class="car-image">
+                                    <div class="match-tag"><i data-lucide="star"></i> 85% MATCH</div>
+                                    <span class="car-tag">Garantia Fábrica</span>
+                                    <img src="assets/hatch.png" alt="VW Polo">
+                                </div>
+                                <div class="car-info">
+                                    <div class="car-meta">
+                                        <span class="meta-chip type">Hatch</span>
+                                        <span class="meta-chip km-warn"><i data-lucide="gauge-circle"></i> 12K KM</span>
+                                    </div>
+                                    <div class="car-name">Volkswagen Polo Highline</div>
+                                    <div class="car-price">R$ 98.400</div>
+
+                                    <div class="car-specs">
+                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                        <div class="spec-item"><i data-lucide="gauge"></i> 12.000 km</div>
+                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                                    </div>
+
+                                    <div class="recommendation-box">
+                                        <div class="rec-title"><i data-lucide="lightbulb"></i> Por que recomendamos:
+                                        </div>
+                                        <div class="rec-text">Ágil e seguro. Baixo consumo com motor turbo eficiente.
+                                        </div>
+                                    </div>
+
+                                    <div class="seller-row">
+                                        <div class="seller-info">
+                                            <h4>Elite Cars SP</h4>
+                                            <div class="seller-location"><i data-lucide="map-pin"></i> São Paulo - SP
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn-whatsapp"><i data-lucide="message-circle"></i>
+                                            WhatsApp</a>
+                                    </div>
+
+                                    <a href="#" class="btn-details-outline"><i data-lucide="image"></i> Ver Detalhes e
+                                        Fotos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="como-funciona">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Como a CarInsight Funciona</h2>
+                    <p>Simplificamos a jornada de compra em passos inteligentes.</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <h3>Filtros Inteligentes.</h3>
+                        <p style="color: var(--text-secondary); margin-top: 12px;">Encontre exatamente o que procura por
+                            marca, modelo, ano ou preço, sem perder tempo.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <h3>Rapidez no Processo</h3>
+                        <p style="color: var(--text-secondary); margin-top: 12px;">Do clique à reserva. Processo 100%
+                            online e simplificado para poupar o seu dia.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <h3>Qualidade Garantida</h3>
+                        <p style="color: var(--text-secondary); margin-top: 12px;">Todos os carros são inspecionados e
+                            certificados. Transparência total em cada detalhe.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Section -->
+        <section id="seguranca">
+            <div class="container">
+                <div class="section-title">
+                    <h2 style="font-weight: 700; color: #0f172a;">Descubra o seu carro ideal</h2>
+                    <p style="color: #64748b; max-width: 650px; margin: 12px auto 0;">Sabemos que comprar um seminovo
+                        exige confiança. Por isso, somos rigorosos.</p>
+                </div>
+
+                <div class="security-grid">
+                    <div class="security-card">
+                        <div class="security-icon-container">
+                            <i data-lucide="check-circle-2"></i>
+                        </div>
+                        <h3>Laudo Cautelar Aprovado</h3>
+                        <p>Todos os carros passam por vistoria completa para garantir estrutura e procedência.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon-container">
+                            <i data-lucide="history"></i>
+                        </div>
+                        <h3>Histórico Verificado</h3>
+                        <p>Nossa IA analisa o histórico do veículo em bases nacionais para evitar fraudes.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon-container">
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                        <h3>Garantia de Procedência</h3>
+                        <p>Trabalhamos apenas com concessionárias verificadas e com boa reputação no mercado.</p>
+                    </div>
+                    <div class="security-card">
+                        <div class="security-icon-container">
+                            <i data-lucide="search"></i>
+                        </div>
+                        <h3>Inspeção Detalhada</h3>
+                        <p>Mais de 150 itens verificados antes do carro ser anunciado na plataforma.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="depoimentos">
+            <div class="container">
+                <div class="section-title">
+                    <h2 style="font-weight: 700; color: #0f172a;">Quem Já Encontrou Seu Carro</h2>
+                    <p style="color: #64748b; max-width: 600px; margin: 12px auto 0;">Histórias reais de quem comprou
+                        com segurança e agilidade através do CarInsight.</p>
+                </div>
+
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="user-info">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100"
+                                    alt="Ricardo Silva">
+                                <div>
+                                    <h4>Ricardo Silva</h4>
+                                    <span>Comprou um Honda Civic</span>
+                                </div>
+                            </div>
+                            <i class="quote-icon" data-lucide="quote"></i>
+                        </div>
+                        <div class="stars">
+                            <i data-lucide="star" class="star-fill"></i>
+                            <i data-lucide="star" class="star-fill"></i>
+                            <i data-lucide="star" class="star-fill"></i>
+                            <i data-lucide="star" class="star-fill"></i>
+                            <i data-lucide="star" class="star-fill"></i>
+                        </div>
+                        <p>"Eu estava com medo de comprar um seminovo, mas o CarInsight me ajudou a encontrar um carro
+                            com laudo cautelar aprovado e garantia."</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="user-info">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100"
+                                    alt="Ana Costa">
+                                <div>
+                                    <h4>Ana Costa</h4>
+                                    <span>Comprou um Jeep Renegade</span>
+                                </div>
+                            </div>
+                            <i class="quote-icon" data-lucide="quote"></i>
+                        </div>
+                        <div class="stars">
+                            <i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i
+                                data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i
+                                data-lucide="star" class="star-fill"></i>
+                        </div>
+                        <p>"O quiz acertou em cheio! Eu nem sabia que queria um Renegade até ver a recomendação. O
+                            atendimento via WhatsApp foi excelente."</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="user-info">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100"
+                                    alt="Carlos Mendes">
+                                <div>
+                                    <h4>Carlos Mendes</h4>
+                                    <span>Comprou um VW Polo</span>
+                                </div>
+                            </div>
+                            <i class="quote-icon" data-lucide="quote"></i>
+                        </div>
+                        <div class="stars">
+                            <i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i
+                                data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i
+                                data-lucide="star" class="star-fill"></i>
+                        </div>
+                        <p>"Economizei muito tempo. Em vez de ficar rodando de loja em loja, recebi as melhores opções
+                            no meu perfil. Recomendo demais!"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-card">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 24px;">Pronto para encontrar seu seminovo?</h2>
+                    <p
+                        style="color: rgba(255,255,255,0.8); margin-bottom: 40px; max-width: 600px; margin: 0 auto 40px;">
+                        Junte-se a centenas de motoristas que economizaram tempo e dinheiro com nossa curadoria.</p>
+                    <a href="quiz.html" class="btn-primary"
+                        style="display: inline-block; background: white; color: var(--accent-primary);">Pesquise ser
+                        próximo carro!</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <img src="assets/logo-car-insght-1.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="#carros">Veículos</a></li>
+                    <li><a href="#como-funciona">Processo</a></li>
+                    <li><a href="#seguranca">Segurança</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Falar com Consultor</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
