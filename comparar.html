@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparar Veículos | CarInsight</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="car-loader-container">
+                <div class="moving-car">
+                    <i data-lucide="car"></i>
+                </div>
+                <div class="loading-bar-track">
+                    <div class="loading-bar-fill"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Preparando comparativo...</h2>
+            <p>Analisando especificações técnicas</p>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen">
+
+        <!-- Header Global (Igual index.html) -->
+        <header>
+            <a href="index.html" class="logo">
+                <img src="assets/logo-car-insght-7.png" alt="CarInsight Logo">
+            </a>
+            <div class="header-right">
+                <button id="menu-toggle" aria-label="Abrir menu">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Menu -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <nav class="sidebar-menu" id="sidebar-menu">
+            <div class="sidebar-header">
+                <h3>Menu</h3>
+                <button id="menu-close" aria-label="Fechar menu">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <ul class="sidebar-links">
+                <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
+                <li><a href="comparar.html" class="active"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
+                <li><a href="#"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Layout -->
+        <div class="container results-layout-container">
+            <div class="results-layout">
+                <!-- Sidebar Info -->
+                <aside class="filters-sidebar">
+                    <div class="saved-sidebar-content">
+                        <h4>Como Funciona</h4>
+                        <ul class="compare-instructions">
+                            <li>Primeiro, você precisa <strong>Salvar</strong> os veículos que te interessam durante a
+                                busca.</li>
+                            <li>Vá até a página "Meus Salvos" e selecione os candidatos.</li>
+                            <li>Adicione-os aqui nos espaços vazios clicando no botão de adicionar.</li>
+                            <li>Nós destacamos automaticamente o melhor custo-benefício.</li>
+                        </ul>
+
+                        <div
+                            style="margin-top: 32px; padding: 20px; background: #fff1f2; border-radius: 12px; border: 1px solid #fecdd3;">
+                            <h4 style="color: #be123c; margin-bottom: 8px; display:flex; gap:8px; align-items:center;">
+                                <i data-lucide="alert-circle" style="width:18px;"></i> Importante
+                            </h4>
+                            <p style="font-size: 0.9rem; color: #881337; margin: 0; line-height: 1.5;">
+                                Só é possível comparar veículos de categorias similares (ex: SUV com SUV) para um
+                                resultado justo.
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content Area -->
+                <main class="results-main">
+
+                    <!-- Criteria Section -->
+                    <section class="comparison-criteria-section">
+                        <div class="criteria-header">
+                            <h3>Critérios de Comparação</h3>
+                            <p>Selecione o que é mais importante para você nesta decisão:</p>
+                        </div>
+                        <div class="criteria-tags">
+                            <label class="criteria-tag active">
+                                <input type="checkbox" checked>
+                                <i data-lucide="check" style="width:14px;"></i> Preço
+                            </label>
+                            <label class="criteria-tag active">
+                                <input type="checkbox" checked>
+                                <i data-lucide="check" style="width:14px;"></i> Quilometragem
+                            </label>
+                            <label class="criteria-tag active">
+                                <input type="checkbox" checked>
+                                <i data-lucide="check" style="width:14px;"></i> Ano
+                            </label>
+                            <label class="criteria-tag">
+                                <input type="checkbox">
+                                Consumo
+                            </label>
+                            <label class="criteria-tag">
+                                <input type="checkbox">
+                                Potência
+                            </label>
+                            <label class="criteria-tag">
+                                <input type="checkbox">
+                                Revisões
+                            </label>
+                            <label class="criteria-tag">
+                                <input type="checkbox">
+                                Desvalorização
+                            </label>
+                        </div>
+                    </section>
+
+                    <!-- Comparison Grid -->
+                    <div class="comparison-grid">
+
+                        <!-- Empty Slot 1 -->
+                        <div class="comparison-slot slot-empty">
+                            <button class="btn-add-car">
+                                <div class="add-icon-circle">
+                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
+                                </div>
+                                <h4>Adicionar Veículo</h4>
+                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
+                            </button>
+                        </div>
+
+                        <!-- Empty Slot 2 -->
+                        <div class="comparison-slot slot-empty">
+                            <button class="btn-add-car">
+                                <div class="add-icon-circle">
+                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
+                                </div>
+                                <h4>Adicionar Veículo</h4>
+                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
+                            </button>
+                        </div>
+
+                        <!-- Empty Slot 3 -->
+                        <div class="comparison-slot slot-empty">
+                            <button class="btn-add-car">
+                                <div class="add-icon-circle">
+                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
+                                </div>
+                                <h4>Adicionar Veículo</h4>
+                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reuse main logic for menu -->
+    <script src="main.js"></script>
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Loading Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const resultsScreen = document.getElementById('results-screen');
+
+            if (loadingScreen && resultsScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        resultsScreen.style.display = 'block';
+                        // Trigger reflow
+                        void resultsScreen.offsetWidth;
+                        resultsScreen.style.opacity = '1';
+                    }, 500);
+                }, 800);
+            }
+
+            // Criteria Tag Interaction
+            const tags = document.querySelectorAll('.criteria-tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', (e) => {
+                    // Prevent default checkbox behavior if clicking the label
+                    if (e.target.tagName !== 'INPUT') {
+                        const input = tag.querySelector('input');
+                        input.checked = !input.checked;
+                    }
+
+                    const input = tag.querySelector('input');
+                    if (input.checked) {
+                        tag.classList.add('active');
+                        // Add check icon if not present
+                        if (!tag.querySelector('.lucide-check')) {
+                            const icon = document.createElement('i');
+                            icon.setAttribute('data-lucide', 'check');
+                            icon.style.width = '14px';
+                            tag.prepend(icon);
+                            lucide.createIcons();
+                        }
+                    } else {
+                        tag.classList.remove('active');
+                        const icon = tag.querySelector('.lucide-check');
+                        if (icon) icon.remove();
+                    }
+                });
+            });
+
+            // Add Car Interaction (Demo)
+            const addButtons = document.querySelectorAll('.btn-add-car');
+            addButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alert('Em uma implementação real, isso abriria um modal com sua lista de "Meus Salvos" para você escolher.');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
