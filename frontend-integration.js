@@ -3,7 +3,9 @@
  * Connects to the NestJS Backend API
  */
 
-const API_URL = 'http://localhost:3000';
+// Configuração da API: Tenta usar variável global (injetada em prod) ou fallback para localhost
+const API_URL = window.API_URL || 'http://localhost:3000';
+console.log('API URL:', API_URL);
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchVehicles();

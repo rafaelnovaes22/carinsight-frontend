@@ -1,0 +1,15 @@
+{
+  "name": "carinsight-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for CarInsight",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -s . -l $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "keywords": [],
+  "author": "Rafael Novaes",
+  "license": "ISC"
+}
