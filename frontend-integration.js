@@ -5,21 +5,27 @@
 
 // Configuração da API: Tenta usar variável global (injetada em prod) ou fallback para localhost
 const API_URL = window.API_URL || 'http://localhost:3000';
+console.log('🚀 Frontend Integration Script carregado!');
 console.log('API URL:', API_URL);
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('📄 DOM Loaded - Iniciando fetch de veículos...');
     fetchVehicles();
 });
 
 async function fetchVehicles() {
+    console.log('🔄 Fazendo fetch para:', `${API_URL}/vehicles`);
     try {
         const response = await fetch(`${API_URL}/vehicles`);
+        console.log('📡 Resposta recebida:', response.status);
+
         if (!response.ok) throw new Error('Falha ao buscar veículos');
 
         const vehicles = await response.json();
+        console.log('✅ Veículos carregados:', vehicles.length);
         renderVehicles(vehicles);
     } catch (error) {
-        console.error('Erro na integração:', error);
+        console.error('❌ Erro na integração:', error);
         // Fallback or error message could be shown here
     }
 }

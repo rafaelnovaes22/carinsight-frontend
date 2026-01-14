@@ -704,7 +704,147 @@
     </div>
 
     <!-- Reuse main logic for menu -->
-    <script src="frontend-integration.js"></script>
+    <script>
+        // Frontend Integration - Load vehicles from backend
+        // Configuração da API: Tenta usar variável global ou fallback para localhost
+        const API_URL = window.API_URL || 'http://localhost:3000';
+        console.log('🚀 Script de Busca carregado. API:', API_URL);
+
+        // Fetch vehicles on page load
+        (async function () {
+            try {
+                // Show loading state if needed (already visible by default in HTML structure)
+
+                const response = await fetch(`${API_URL}/vehicles`);
+                console.log('📡 Status da resposta:', response.status);
+
+                if (!response.ok) throw new Error('Falha ao buscar veículos');
+
+                const vehicles = await response.json();
+                console.log('✅ Veículos carregados:', vehicles.length);
+
+                // Wait for DOM to be ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        renderVehicles(vehicles);
+                        hideLoading();
+                    });
+                } else {
+                    renderVehicles(vehicles);
+                    hideLoading();
+                }
+            } catch (error) {
+                console.error('❌ Erro na integração:', error);
+                // Optionally show error state on UI
+                hideLoading();
+            }
+        })();
+
+        function hideLoading() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        function renderVehicles(vehicles) {
+            console.log('🎨 Renderizando veículos...');
+            const grid = document.querySelector('.cars-grid');
+            if (!grid) {
+                console.error('❌ Grid não encontrado!');
+                return;
+            }
+
+            // Clear existing cards
+            grid.innerHTML = '';
+
+            // Update count
+            const countEl = document.querySelector('.results-count');
+            if (countEl) countEl.textContent = `Encontramos ${vehicles.length} veículos para você`;
+
+            vehicles.forEach(vehicle => {
+                const card = createCarCard(vehicle);
+                grid.appendChild(card);
+            });
+
+            // Re-initialize icons
+            if (window.lucide) lucide.createIcons();
+            console.log('✅ Renderização completa!');
+        }
+
+        function createCarCard(vehicle) {
+            const card = document.createElement('div');
+            card.className = 'car-card';
+
+            const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price);
+            const kmFormatted = new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km';
+            const isNew = vehicle.condition === 'NEW';
+            const conditionText = isNew ? 'Novo' : 'Seminovo';
+            const imageUrl = vehicle.media && vehicle.media.length > 0 ? vehicle.media[0].url : 'assets/car1.png';
+            const dealerName = vehicle.dealer?.name || 'Vendedor Particular';
+            const dealerLoc = 'São Paulo, SP';
+
+            let badgeHtml = '';
+            if (vehicle.aiTags && vehicle.aiTags.includes('Bom Negócio')) {
+                badgeHtml = `<div class="deal-badge-purple"><i data-lucide="arrow-down"></i> Bom Negócio</div>`;
+            }
+
+            card.innerHTML = `
+                <div class="card-main-content">
+                    <div class="car-image">
+                        <span class="match-tag" style="position:absolute; top:12px; left:12px; z-index:2; padding:4px 8px; background:rgba(0,0,0,0.7); color:white; border-radius:4px; font-weight:700; font-size:0.75rem;">1/1</span>
+                        <img src="${imageUrl}" alt="${vehicle.title}" onerror="this.src='assets/car1.png'">
+                    </div>
+                    <div class="car-info">
+                        <div class="info-top">
+                            <div class="info-header">
+                                <span class="condition-badge">${conditionText}</span>
+                                <button class="save-btn" onclick="toggleSave(this)"><i data-lucide="heart"></i> Salvar</button>
+                            </div>
+                            <h2 class="car-name">${vehicle.title}</h2>
+                            <div class="mileage-text">${kmFormatted}</div>
+                            <div class="car-price">${priceFormatted}</div>
+                            ${badgeHtml}
+                        </div>
+                        <div class="dealer-section">
+                            <div class="dealer-details">
+                                <h4>${dealerName}</h4>
+                                <div class="dealer-location">${dealerLoc}</div>
+                            </div>
+                        </div>
+                        <button class="btn-check-availability"><i data-lucide="message-circle"></i> Conversar com vendedor</button>
+                    </div>
+                </div>
+                <div class="card-details-toggle" onclick="toggleDetails(this)">
+                    <span class="toggle-text">Mostrar detalhes</span> <i data-lucide="chevron-down"></i>
+                </div>
+                <div class="card-details-expanded">
+                    <div class="details-grid-section">
+                        <h3>Informações do Veículo</h3>
+                        <div class="specs-grid">
+                            <div class="spec-row"><span class="spec-label">Modelo:</span> <span class="spec-value">${vehicle.model}</span></div>
+                            <div class="spec-row"><span class="spec-label">Versão:</span> <span class="spec-value">${vehicle.version}</span></div>
+                            <div class="spec-row"><span class="spec-label">Ano:</span> <span class="spec-value">${vehicle.yearFab}/${vehicle.yearModel}</span></div>
+                            <div class="spec-row"><span class="spec-label">Carroceria:</span> <span class="spec-value">${vehicle.bodyType}</span></div>
+                        </div>
+                    </div>
+                    <div class="details-grid-section">
+                        <h3>Recursos</h3>
+                        <div class="features-list">
+                            <div class="feature-group">
+                                <span>${vehicle.features ? vehicle.features.join(', ') : 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+    </script>
     <script src="main.js"></script>
     <script>
         // Init Icons

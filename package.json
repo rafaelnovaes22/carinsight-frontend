@@ -4,12 +4,15 @@
   "description": "Frontend for CarInsight",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve -s . -l $PORT"
+    "start": "npx serve -s . -l 8080"
   },
   "dependencies": {
     "serve": "^14.2.0"
   },
   "keywords": [],
   "author": "Rafael Novaes",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
 }
