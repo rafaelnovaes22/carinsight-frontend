@@ -706,9 +706,10 @@
     <!-- Reuse main logic for menu -->
     <script>
         // Frontend Integration - Load vehicles from backend
-        // Configuração da API: Tenta usar variável global ou fallback para localhost
-        const API_URL = window.API_URL || 'http://localhost:3000';
-        console.log('🚀 Script de Busca carregado. API:', API_URL);
+        // Configuração da API: Detecta ambiente automaticamente
+        const isProduction = window.location.hostname === 'carinsight.com.br' || window.location.hostname === 'www.carinsight.com.br';
+        const API_URL = isProduction ? 'https://api.carinsight.com.br' : 'http://localhost:3000';
+        console.log('🚀 Script de Busca carregado. API:', API_URL, '(Produção:', isProduction, ')');
 
         // Fetch vehicles on page load
         (async function () {

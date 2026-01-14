@@ -3,10 +3,11 @@
  * Connects to the NestJS Backend API
  */
 
-// Configuração da API: Tenta usar variável global (injetada em prod) ou fallback para localhost
-const API_URL = window.API_URL || 'http://localhost:3000';
+// Configuração da API: Detecta ambiente automaticamente
+const isProduction = window.location.hostname === 'carinsight.com.br' || window.location.hostname === 'www.carinsight.com.br';
+const API_URL = isProduction ? 'https://api.carinsight.com.br' : 'http://localhost:3000';
 console.log('🚀 Frontend Integration Script carregado!');
-console.log('API URL:', API_URL);
+console.log('API URL:', API_URL, '(Produção:', isProduction, ')');
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 DOM Loaded - Iniciando fetch de veículos...');
