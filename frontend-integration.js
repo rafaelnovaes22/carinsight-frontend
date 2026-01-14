@@ -56,7 +56,9 @@ function createCarCard(vehicle) {
     card.className = 'car-card';
 
     // Format currency
-    const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price);
+    const priceFormatted = vehicle.price && vehicle.price > 0
+        ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)
+        : 'Consulte';
 
     // Format mileage
     const kmFormatted = new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km';
