@@ -123,6 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
       ? `${vehicle.yearFab}/${vehicle.yearModel}` 
       : vehicle.yearModel;
 
+    // Check if vehicle is already favorited
+    const isFavorite = window.FavoritesManager ? FavoritesManager.isFavorite(vehicle.id) : false;
+    const saveButtonClass = isFavorite ? 'save-btn saved' : 'save-btn';
+    const saveButtonContent = isFavorite 
+      ? '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo'
+      : '<i data-lucide="heart"></i> Salvar';
+
     // Score badge (for semantic search)
     let scoreBadge = '';
     if (vehicle.score && vehicle.score < 1) {
@@ -155,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="info-top">
             <div class="info-header">
               <span class="condition-badge">${condition}</span>
-              <button class="save-btn" onclick="toggleSave(this, '${vehicle.id}')">
-                <i data-lucide="heart"></i> Salvar
+              <button class="${saveButtonClass}" onclick="toggleSave(this, '${vehicle.id}')">
+                ${saveButtonContent}
               </button>
             </div>
             <h2 class="car-name">${year} ${title}</h2>
@@ -291,20 +298,29 @@ function toggleDetails(element) {
 }
 
 function toggleSave(button, vehicleId) {
-  button.classList.toggle('saved');
-  const icon = button.querySelector('i');
-  
-  if (button.classList.contains('saved')) {
-    icon.setAttribute('data-lucide', 'heart');
-    icon.style.fill = 'currentColor';
-    button.innerHTML = '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo';
+  // Use FavoritesManager if available
+  if (window.FavoritesManager) {
+    const isFavorite = FavoritesManager.toggle(vehicleId);
     
-    // Save to API if logged in
-    if (CarInsightAPI.isLoggedIn() && vehicleId) {
-      CarInsightAPI.saveVehicle(vehicleId).catch(console.error);
+    if (isFavorite) {
+      button.classList.add('saved');
+      button.innerHTML = '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo';
+    } else {
+      button.classList.remove('saved');
+      button.innerHTML = '<i data-lucide="heart"></i> Salvar';
     }
   } else {
-    button.innerHTML = '<i data-lucide="heart"></i> Salvar';
+    // Fallback to old behavior
+    button.classList.toggle('saved');
+    
+    if (button.classList.contains('saved')) {
+      button.innerHTML = '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo';
+      if (CarInsightAPI.isLoggedIn() && vehicleId) {
+        CarInsightAPI.saveVehicle(vehicleId).catch(console.error);
+      }
+    } else {
+      button.innerHTML = '<i data-lucide="heart"></i> Salvar';
+    }
   }
   
   if (window.lucide) lucide.createIcons();
