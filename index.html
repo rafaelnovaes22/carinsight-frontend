@@ -1451,8 +1451,56 @@
     </footer>
 
     <script src="main.js"></script>
+    <script src="api.js"></script>
     <script>
         lucide.createIcons();
+
+        // Connect search form to results page
+        const searchForm = document.getElementById('search-form-id');
+        const searchInput = searchForm?.querySelector('input');
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const query = searchInput?.value?.trim();
+                if (query) {
+                    window.location.href = `buscando-carro.html?q=${encodeURIComponent(query)}`;
+                } else {
+                    window.location.href = 'buscando-carro.html';
+                }
+            });
+        }
+
+        // Connect "Procurar" button
+        const searchBtn = document.querySelector('.btn-search');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const query = searchInput?.value?.trim() || '';
+                
+                // Collect active filters
+                const params = new URLSearchParams();
+                if (query) params.append('q', query);
+                
+                // Get selected filters from modals (stored in tooltips)
+                const yearTooltip = document.querySelector('.filter-btn[data-tooltip="Ano"] .tooltip');
+                const priceTooltip = document.querySelector('.filter-btn[data-tooltip="Preço"] .tooltip');
+                const brandTooltip = document.querySelector('.filter-btn[data-tooltip="Marca de Carro"] .tooltip');
+                
+                if (yearTooltip && yearTooltip.textContent !== 'Ano') {
+                    params.append('yearMin', yearTooltip.textContent);
+                }
+                if (priceTooltip && priceTooltip.textContent.includes('k')) {
+                    const maxPrice = parseInt(priceTooltip.textContent.replace(/\D/g, '')) * 1000;
+                    params.append('priceMax', maxPrice);
+                }
+                if (brandTooltip && brandTooltip.textContent !== 'Marca de Carro') {
+                    params.append('make', brandTooltip.textContent);
+                }
+                
+                window.location.href = `buscando-carro.html?${params.toString()}`;
+            });
+        }
     </script>
 </body>
 

@@ -898,40 +898,15 @@
             });
         });
 
-        // Toggle Details Function
-        function toggleDetails(element) {
-            // Find parent car-card
-            const card = element.closest('.car-card');
-            const expandedSection = card.querySelector('.card-details-expanded');
-            const icon = element.querySelector('i');
-            const text = element.querySelector('.toggle-text');
+        // Toggle Details Function - moved to search-page.js
 
-            // Toggle active class
-            if (expandedSection.style.display === 'block') {
-                expandedSection.style.display = 'none';
-                text.textContent = 'Mostrar detalhes';
-                element.classList.remove('active');
-                icon.setAttribute('data-lucide', 'chevron-down');
-                lucide.createIcons();
-            } else {
-                expandedSection.style.display = 'block';
-                expandedSection.classList.add('active');
-                text.textContent = 'Ocultar detalhes';
-                element.classList.add('active');
-                icon.setAttribute('data-lucide', 'chevron-up');
-                lucide.createIcons();
-            }
-        }
-
-        // Toggle Save Function
-        function toggleSave(button) {
-            button.classList.toggle('active');
-            const icon = button.querySelector('i');
-            // If we manipulate SVG fill via CSS, we might not need data-lucide logic, 
-            // but let's ensure icon is consistent.
-            // CSS will handle fill.
-        }
+        // Toggle Save Function - moved to search-page.js
     </script>
+
+    <!-- API Client -->
+    <script src="api.js"></script>
+    <!-- Search Page Integration -->
+    <script src="search-page.js"></script>
 </body>
 
 </html>
