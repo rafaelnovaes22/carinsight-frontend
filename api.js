@@ -98,20 +98,88 @@ const CarInsightAPI = {
   },
 
   // ==================== CHAT ====================
-  async startChat(vehicleId) {
-    return this._fetch('/api/chat/start', {
+  /**
+   * Start a new chat session
+   * @param {string} vehicleId - Optional vehicle ID for contextual chat
+   * @returns {Promise<{sessionId: string, greeting: string, vehicle?: object}>}
+   */
+  async startChat(vehicleId = null) {
+    const user = this.getUser();
+    const body = {};
+    
+    if (vehicleId) body.vehicleId = vehicleId;
+    if (user?.id) body.userId = user.id;
+    
+    const response = await this._fetch('/api/chat/start', {
       method: 'POST',
-      body: JSON.stringify({ vehicleId }),
-      auth: true,
+      body: JSON.stringify(body),
     });
+    
+    // Store session ID
+    if (response.sessionId) {
+      const sessionKey = vehicleId ? `chat_session_${vehicleId}` : 'chat_session_general';
+      localStorage.setItem(sessionKey, response.sessionId);
+    }
+    
+    return response;
   },
 
+  /**
+   * Send a message in an existing chat session
+   * @param {string} sessionId - Chat session ID
+   * @param {string} content - Message content
+   * @returns {Promise<{response: string, suggestedActions?: string[], recommendations?: array, currentNode?: string}>}
+   */
   async sendChatMessage(sessionId, content) {
     return this._fetch(`/api/chat/${sessionId}/message`, {
       method: 'POST',
       body: JSON.stringify({ content }),
-      auth: true,
     });
+  },
+
+  /**
+   * Get chat session state
+   * @param {string} sessionId - Chat session ID
+   * @returns {Promise<object>}
+   */
+  async getChatState(sessionId) {
+    return this._fetch(`/api/chat/${sessionId}/state`);
+  },
+
+  /**
+   * Reset/delete a chat session
+   * @param {string} sessionId - Chat session ID
+   */
+  async resetChat(sessionId) {
+    await this._fetch(`/api/chat/${sessionId}`, {
+      method: 'DELETE',
+    });
+    
+    // Clear from localStorage
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('chat_session_'));
+    keys.forEach(key => {
+      if (localStorage.getItem(key) === sessionId) {
+        localStorage.removeItem(key);
+      }
+    });
+  },
+
+  /**
+   * Get existing session ID for a vehicle (if any)
+   * @param {string} vehicleId - Vehicle ID
+   * @returns {string|null}
+   */
+  getChatSessionId(vehicleId = null) {
+    const sessionKey = vehicleId ? `chat_session_${vehicleId}` : 'chat_session_general';
+    return localStorage.getItem(sessionKey);
+  },
+
+  /**
+   * Get chat stats
+   * @returns {Promise<{activeSessions: number}>}
+   */
+  async getChatStats() {
+    return this._fetch('/api/chat/stats/active');
   },
 
   // ==================== INTERACTIONS ====================
