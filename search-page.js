@@ -119,14 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageUrl = vehicle.media?.[0]?.url || 'assets/car1.png';
     const dealerName = vehicle.dealer?.name || 'Vendedor';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model} ${vehicle.yearModel}`;
-    const year = vehicle.yearFab && vehicle.yearModel 
-      ? `${vehicle.yearFab}/${vehicle.yearModel}` 
+    const year = vehicle.yearFab && vehicle.yearModel
+      ? `${vehicle.yearFab}/${vehicle.yearModel}`
       : vehicle.yearModel;
 
     // Check if vehicle is already favorited
     const isFavorite = window.FavoritesManager ? FavoritesManager.isFavorite(vehicle.id) : false;
     const saveButtonClass = isFavorite ? 'save-btn saved' : 'save-btn';
-    const saveButtonContent = isFavorite 
+    const saveButtonContent = isFavorite
       ? '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo'
       : '<i data-lucide="heart"></i> Salvar';
 
@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="btn-check-availability" onclick="openChat('${vehicle.id}')">
             <i data-lucide="message-circle"></i> Conversar com vendedor
           </button>
+          <a href="detalhes-carro.html?id=${vehicle.id}" class="btn-card-action">Saiba mais </a>
         </div>
       </div>
       <div class="card-details-toggle" onclick="toggleDetails(this)">
@@ -301,7 +302,7 @@ function toggleSave(button, vehicleId) {
   // Use FavoritesManager if available
   if (window.FavoritesManager) {
     const isFavorite = FavoritesManager.toggle(vehicleId);
-    
+
     if (isFavorite) {
       button.classList.add('saved');
       button.innerHTML = '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo';
@@ -312,7 +313,7 @@ function toggleSave(button, vehicleId) {
   } else {
     // Fallback to old behavior
     button.classList.toggle('saved');
-    
+
     if (button.classList.contains('saved')) {
       button.innerHTML = '<i data-lucide="heart" style="fill:currentColor;"></i> Salvo';
       if (CarInsightAPI.isLoggedIn() && vehicleId) {
@@ -322,21 +323,21 @@ function toggleSave(button, vehicleId) {
       button.innerHTML = '<i data-lucide="heart"></i> Salvar';
     }
   }
-  
+
   if (window.lucide) lucide.createIcons();
 }
 
 function openChat(vehicleId) {
   console.log('🗨️ Opening chat for vehicle:', vehicleId);
-  
+
   // Initialize chat manager
   ChatManager.init(vehicleId)
     .then((response) => {
       console.log('✅ Chat initialized:', response);
-      
+
       // Store vehicle ID for reference
       window.currentChatVehicleId = vehicleId;
-      
+
       // Show chat UI (modal or panel)
       showChatUI(response.greeting, response.vehicle);
     })
@@ -353,7 +354,7 @@ function openChat(vehicleId) {
 function showChatUI(greeting, vehicle) {
   // Check if modal already exists
   let modal = document.getElementById('chat-modal');
-  
+
   if (!modal) {
     // Create modal structure
     modal = document.createElement('div');
@@ -384,15 +385,15 @@ function showChatUI(greeting, vehicle) {
       </div>
     `;
     document.body.appendChild(modal);
-    
+
     // Add minimal styles if not already present
     addChatStyles();
   }
-  
+
   // Show vehicle context if available
   const contextEl = document.getElementById('chat-vehicle-context');
   if (vehicle && contextEl) {
-    const price = vehicle.price 
+    const price = vehicle.price
       ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)
       : '';
     contextEl.innerHTML = `
@@ -405,25 +406,25 @@ function showChatUI(greeting, vehicle) {
   } else if (contextEl) {
     contextEl.style.display = 'none';
   }
-  
+
   // Clear and add greeting
   const messagesEl = document.getElementById('chat-messages');
   if (messagesEl) {
     messagesEl.innerHTML = '';
     addMessageToUI('assistant', greeting);
   }
-  
+
   // Setup callbacks
   ChatManager.onMessageReceived = (msg) => {
     addMessageToUI(msg.role, msg.content, msg.suggestedActions);
   };
-  
+
   ChatManager.onLoadingChange = (loading) => {
     const input = document.getElementById('chat-input');
     const sendBtn = document.querySelector('.chat-send-btn');
     if (input) input.disabled = loading;
     if (sendBtn) sendBtn.disabled = loading;
-    
+
     // Show typing indicator
     if (loading) {
       showTypingIndicator();
@@ -431,16 +432,16 @@ function showChatUI(greeting, vehicle) {
       hideTypingIndicator();
     }
   };
-  
+
   // Show modal
   modal.classList.add('show');
-  
+
   // Focus input
   setTimeout(() => {
     const input = document.getElementById('chat-input');
     if (input) input.focus();
   }, 300);
-  
+
   // Re-init icons
   if (window.lucide) lucide.createIcons();
 }
@@ -461,7 +462,7 @@ function closeChatUI() {
 function addMessageToUI(role, content, suggestedActions = null) {
   const messagesEl = document.getElementById('chat-messages');
   if (!messagesEl) return;
-  
+
   const messageDiv = document.createElement('div');
   messageDiv.className = `chat-message chat-message-${role}`;
   messageDiv.innerHTML = `
@@ -470,7 +471,7 @@ function addMessageToUI(role, content, suggestedActions = null) {
     </div>
   `;
   messagesEl.appendChild(messageDiv);
-  
+
   // Add action buttons if present
   if (suggestedActions && suggestedActions.length > 0) {
     const actionsEl = document.getElementById('chat-actions');
@@ -482,7 +483,7 @@ function addMessageToUI(role, content, suggestedActions = null) {
       `).join('');
     }
   }
-  
+
   // Scroll to bottom
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
@@ -493,10 +494,10 @@ function addMessageToUI(role, content, suggestedActions = null) {
 function showTypingIndicator() {
   const messagesEl = document.getElementById('chat-messages');
   if (!messagesEl) return;
-  
+
   // Remove existing indicator
   hideTypingIndicator();
-  
+
   const indicator = document.createElement('div');
   indicator.id = 'typing-indicator';
   indicator.className = 'chat-message chat-message-assistant';
@@ -533,14 +534,14 @@ function handleChatKeypress(event) {
 function sendChatMessage() {
   const input = document.getElementById('chat-input');
   if (!input || !input.value.trim()) return;
-  
+
   const message = input.value.trim();
   input.value = '';
-  
+
   // Clear action buttons
   const actionsEl = document.getElementById('chat-actions');
   if (actionsEl) actionsEl.innerHTML = '';
-  
+
   ChatManager.sendMessage(message)
     .catch((error) => {
       console.error('Failed to send message:', error);
@@ -555,7 +556,7 @@ function handleChatAction(action) {
   // Clear action buttons
   const actionsEl = document.getElementById('chat-actions');
   if (actionsEl) actionsEl.innerHTML = '';
-  
+
   ChatManager.sendAction(action)
     .catch((error) => {
       console.error('Failed to send action:', error);
@@ -567,7 +568,7 @@ function handleChatAction(action) {
  */
 function addChatStyles() {
   if (document.getElementById('chat-styles')) return;
-  
+
   const styles = document.createElement('style');
   styles.id = 'chat-styles';
   styles.textContent = `

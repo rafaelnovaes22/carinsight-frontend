@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vender meu Carro | CarInsight</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+        </a>
+        <div class="header-right">
+            <button id="menu-toggle" aria-label="Abrir menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
+            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
+            <li><a href="vender-carro.html" class="active"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+        </ul>
+    </nav>
+
+    <main class="vender-container">
+        <div class="step-progress">
+            <div class="step-pill active" data-step="1">1</div>
+            <div class="step-pill" data-step="2">2</div>
+            <div class="step-pill" data-step="3">3</div>
+            <div class="step-pill" data-step="4">4</div>
+            <div class="step-pill" data-step="5">5</div>
+            <div class="step-pill" data-step="6">6</div>
+            <div class="step-pill" data-step="7">7</div>
+            <div class="step-pill" data-step="8">8</div>
+        </div>
+
+        <div class="vender-nav-btns"
+            style="justify-content: space-between; margin-top: 0; margin-bottom: 30px; border-top: none; padding-top: 0;">
+            <button type="button" class="btn-prev" id="btn-prev" style="display: none;">Voltar</button>
+            <button type="button" class="btn-next" id="btn-next">Próximo</button>
+        </div>
+
+        <form id="vender-form">
+            <!-- Step 1: Cadastro -->
+            <div class="vender-step active" data-step="1">
+                <h2>Vamos começar seu cadastro</h2>
+                <button type="button" class="google-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"
+                        alt="Google">
+                    Continuar com Google
+                </button>
+                <div style="text-align: center; margin: 20px 0; color: #94a3b8;">ou</div>
+
+                <div class="toggle-auth" id="toggle-auth">
+                    <div class="preview-icon"><i data-lucide="user"></i></div>
+                    <div class="preview-info">
+                        <h4>Já tem cadastro?</h4>
+                        <p>Clique aqui para entrar com sua conta</p>
+                    </div>
+                </div>
+
+                <div id="auth-fields">
+                    <div class="form-group">
+                        <label>Nome Completo</label>
+                        <input type="text" placeholder="Seu nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group" id="pass-field">
+                        <label>Senha</label>
+                        <input type="password" placeholder="Mínimo 6 caracteres">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Veículo -->
+            <div class="vender-step" data-step="2">
+                <h2>Qual o veículo você quer vender?</h2>
+                <div class="form-group">
+                    <label>Placa do Veículo</label>
+                    <input type="text" id="plate-input" placeholder="ABC-1234" maxlength="8">
+                </div>
+                <div class="plate-preview" id="plate-preview">
+                    <div class="preview-icon"><i data-lucide="check"></i></div>
+                    <div class="preview-info">
+                        <h4 id="preview-car-name">Toyota Corolla XEI 2021</h4>
+                        <p id="preview-car-details">Flex • Automático • 2.0L</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Fotos do Carro (NEW) -->
+            <div class="vender-step" data-step="3">
+                <h2>Fotos do Veículo</h2>
+                <p style="margin-bottom: 24px; color: var(--text-secondary);">Boas fotos aumentam em <strong>3x</strong>
+                    a chance de venda. Adicione pelo menos 5 fotos.</p>
+
+                <!-- Photo Upload Box -->
+                <div class="photo-upload-container">
+                    <label class="photo-dropzone">
+                        <input type="file" multiple accept="image/*" style="display: none;">
+                        <i data-lucide="camera"
+                            style="width: 40px; height: 40px; color: var(--accent-primary); margin-bottom: 12px;"></i>
+                        <span style="font-weight: 600; color: var(--text-primary);">Adicionar Fotos</span>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Arraste ou clique para
+                            selecionar</span>
+                    </label>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="photo-tips">
+                    <h4><i data-lucide="lightbulb" style="width: 18px; color: #f59e0b;"></i> Dicas para fotos perfeitas
+                    </h4>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <div class="tip-icon"><i data-lucide="sun"></i></div>
+                            <span>Iluminação Natural</span>
+                            <p>Evite fotos escuras ou contra o sol.</p>
+                        </div>
+                        <div class="tip-card">
+                            <div class="tip-icon"><i data-lucide="image"></i></div>
+                            <span>Enquadramento</span>
+                            <p>Mostre o carro inteiro, não corte partes.</p>
+                        </div>
+                        <div class="tip-card">
+                            <div class="tip-icon"><i data-lucide="scan"></i></div>
+                            <span>Detalhes</span>
+                            <p>Foque em rodas, painel e bancos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Quilometragem -->
+            <div class="vender-step" data-step="4">
+                <h2>Qual a quilometragem atual?</h2>
+                <div class="form-group">
+                    <label>Quilometragem (km)</label>
+                    <input type="number" placeholder="Ex: 45000">
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Seja preciso para garantir uma avaliação
+                    justa.</p>
+            </div>
+
+            <!-- Step 5: Itens de Série -->
+            <div class="vender-step" data-step="5">
+                <h2>Itens de série do seu veículo</h2>
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Selecione o que seu carro possui:</p>
+                <div class="selectable-grid">
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Airbag</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Alarme</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Ar Condicionado</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Trava Elétrica</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Vidro Elétrico</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Som / Multimídia</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Freio ABS</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Câmera de Ré</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Sensor de Ré</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Rodas de Liga</div>
+                </div>
+            </div>
+
+            <!-- Step 6: Detalhes Adicionais -->
+            <div class="vender-step" data-step="6">
+                <h2>Mais detalhes sobre o estado</h2>
+                <p style="margin-bottom: 20px; color: var(--text-secondary);">Informações que valorizam ou detalham o
+                    histórico:</p>
+                <div class="selectable-grid">
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Único Dono</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Garantia de Fábrica</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Todas Revisões</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Ipva Pago</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Carro de Leilão</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Blindado</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Chave Reserva</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Manual do Prop.</div>
+                </div>
+
+                <div class="form-group" style="margin-top: 32px;">
+                    <label>Descrição Completa</label>
+                    <textarea rows="6"
+                        placeholder="Fale sobre o estado do veículo, diferenciais, acessórios instalados ou qualquer detalhe importante."></textarea>
+                </div>
+            </div>
+
+            <!-- Step 7: Localização e Contato -->
+            <div class="vender-step" data-step="7">
+                <h2>Onde o veículo está?</h2>
+                <div class="form-group">
+                    <label>CEP</label>
+                    <input type="text" placeholder="00000-000">
+                </div>
+                <div class="form-group">
+                    <label>Endereço</label>
+                    <input type="text" placeholder="Rua, Número, Bairro">
+                </div>
+                <div class="form-group">
+                    <label>Telefone / WhatsApp</label>
+                    <input type="text" placeholder="(11) 99999-9999">
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Ocultar telefone no
+                            anúncio</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8: Valor -->
+            <div class="vender-step" data-step="8">
+                <h2>Preço do anúncio</h2>
+                <p style="margin-bottom: 20px;">Com base no mercado atual, aqui está a referência FIPE:</p>
+                <div class="fipe-box">
+                    <span>Referência Tabela FIPE</span>
+                    <div class="fipe-value">R$ 115.400</div>
+                    <p style="font-size: 0.8rem; opacity: 0.8;">Atualizado em Janeiro/2026</p>
+                </div>
+                <div class="form-group" style="margin-top: 30px;">
+                    <label>Seu Valor de Venda (R$)</label>
+                    <input type="text" placeholder="R$ 115.000">
+                </div>
+            </div>
+
+            <!-- Removed buttons from bottom -->
+        </form>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html#carros">Veículos</a></li>
+                    <li><a href="index.html#como-funciona">Processo</a></li>
+                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Falar com Consultor</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <a href="#" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+
+        let currentStep = 1;
+        const totalSteps = 8;
+
+        const nextBtn = document.getElementById('btn-next');
+        const prevBtn = document.getElementById('btn-prev');
+        const steps = document.querySelectorAll('.vender-step');
+        const pills = document.querySelectorAll('.step-pill');
+
+        function updateSteps() {
+            steps.forEach(step => step.classList.remove('active'));
+            pills.forEach(pill => {
+                pill.classList.remove('active', 'completed');
+                const stepNum = parseInt(pill.dataset.step);
+                if (stepNum === currentStep) pill.classList.add('active');
+                if (stepNum < currentStep) pill.classList.add('completed');
+            });
+
+            document.querySelector(`.vender-step[data-step="${currentStep}"]`).classList.add('active');
+
+            prevBtn.style.display = currentStep === 1 ? 'none' : 'block';
+            nextBtn.textContent = currentStep === totalSteps ? 'Finalizar Anúncio' : 'Próximo';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateSteps();
+                window.scrollTo(0, 0);
+            } else {
+                alert('Anúncio criado com sucesso!');
+                window.location.href = 'index.html';
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateSteps();
+                window.scrollTo(0, 0);
+            }
+        });
+
+        // Step 1 Toggle Auth
+        const toggleAuth = document.getElementById('toggle-auth');
+        let isLogin = false;
+        toggleAuth.addEventListener('click', () => {
+            isLogin = !isLogin;
+            const h2 = document.querySelector('.vender-step[data-step="1"] h2');
+            const h4 = toggleAuth.querySelector('h4');
+            const p = toggleAuth.querySelector('p');
+            const nameField = document.querySelector('.form-group:nth-of-type(1)');
+
+            if (isLogin) {
+                h2.textContent = 'Acesse sua conta';
+                h4.textContent = 'Não tem cadastro?';
+                p.textContent = 'Clique aqui para criar sua conta agora';
+                nameField.style.display = 'none';
+            } else {
+                h2.textContent = 'Vamos começar seu cadastro';
+                h4.textContent = 'Já tem cadastro?';
+                p.textContent = 'Clique aqui para entrar com sua conta';
+                nameField.style.display = 'block';
+            }
+        });
+
+        // Step 2 Plate Logic
+        const plateInput = document.getElementById('plate-input');
+        const platePreview = document.getElementById('plate-preview');
+        plateInput.addEventListener('input', (e) => {
+            if (e.target.value.length >= 7) {
+                platePreview.classList.add('show');
+            } else {
+                platePreview.classList.remove('show');
+            }
+        });
+
+        // Selectable Toggles
+        function toggleSelectable(item) {
+            item.classList.toggle('active');
+        }
+    </script>
+</body>
+
+</html>

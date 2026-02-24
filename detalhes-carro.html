@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toyota Corolla Cross 2022 | CarInsight</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body class="detail-page">
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+        </a>
+        <div class="header-right">
+            <button id="menu-toggle" aria-label="Abrir menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <ul class="sidebar-links">
+            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
+            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
+            <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Gallery -->
+        <div class="gallery-container">
+            <div class="main-image">
+                <img src="assets/car1.png" alt="Corolla Cross Main" onclick="openModal(0)">
+            </div>
+            <div class="side-images">
+                <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=800"
+                    alt="Corolla Interior" onclick="openModal(1)">
+                <div class="more-images-container" onclick="openModal(2)">
+                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&fit=crop&q=80&w=800"
+                        alt="Corolla Front">
+                    <div class="more-overlay">
+                        <i data-lucide="grid"></i>
+                        <span>+15 fotos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Modal -->
+        <div id="gallery-modal" class="gallery-modal">
+            <div class="modal-header">
+                <h3>Galeria de Fotos (18)</h3>
+                <button onclick="closeModal()" class="btn-close-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-grid">
+                <!-- Images simulated for demo -->
+                <div class="modal-img-wrapper full-width" onclick="openLightbox(0)">
+                    <img src="assets/car1.png" alt="Car 1">
+                </div>
+                <div class="modal-img-wrapper" onclick="openLightbox(1)">
+                    <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=800"
+                        alt="Interior">
+                </div>
+                <div class="modal-img-wrapper" onclick="openLightbox(2)">
+                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&fit=crop&q=80&w=800"
+                        alt="Front">
+                </div>
+                <div class="modal-img-wrapper" onclick="openLightbox(3)">
+                    <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=800"
+                        alt="Detail 1">
+                </div>
+                <div class="modal-img-wrapper" onclick="openLightbox(4)">
+                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800"
+                        alt="Detail 2">
+                </div>
+                <div class="modal-img-wrapper full-width" onclick="openLightbox(5)">
+                    <img src="assets/car2.png" alt="Side">
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div id="lightbox" class="lightbox">
+            <button class="lightbox-close" onclick="closeLightbox()"><i data-lucide="x"></i></button>
+            <button class="lightbox-nav prev" onclick="changeSlide(-1)"><i data-lucide="chevron-left"></i></button>
+            <div class="lightbox-content">
+                <img id="lightbox-img" src="" alt="Zoomed Image">
+            </div>
+            <button class="lightbox-nav next" onclick="changeSlide(1)"><i data-lucide="chevron-right"></i></button>
+            <div class="lightbox-counter">
+                <span id="current-slide">1</span> / <span id="total-slides">6</span>
+            </div>
+        </div>
+
+        <div class="detail-layout">
+            <!-- Main Content -->
+            <main class="detail-main">
+                <div class="vehicle-header">
+                    <div class="vehicle-badges">
+                        <span class="badge-detail badge-premium">Destaque CarInsight</span>
+                        <span class="badge-detail">Único Dono</span>
+                        <span class="badge-detail">Garantia Fábrica</span>
+                    </div>
+                    <h1>2022 Toyota Corolla Cross XR</h1>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        <i data-lucide="map-pin" style="width: 16px; vertical-align: middle;"></i> São Paulo, SP • 12 km
+                        de distância
+                    </p>
+                </div>
+
+                <!-- Info Card: Basics -->
+                <div class="info-card">
+                    <h3><i data-lucide="list"></i> Especificações Básicas</h3>
+                    <div class="specs-list-grid">
+                        <div class="spec-row-detail"><span class="label">Quilometragem</span><span class="value">18.234
+                                km</span></div>
+                        <div class="spec-row-detail"><span class="label">Motor</span><span class="value">2.0L Flex
+                                Dynamic Force</span></div>
+                        <div class="spec-row-detail"><span class="label">Transmissão</span><span
+                                class="value">Automático CVT</span></div>
+                        <div class="spec-row-detail"><span class="label">Tração</span><span class="value">Dianteira
+                                (FWD)</span></div>
+                        <div class="spec-row-detail"><span class="label">Combustível</span><span class="value">Flex
+                                (Álcool/Gasolina)</span></div>
+                        <div class="spec-row-detail"><span class="label">Cor Exterior</span><span class="value">Branco
+                                Polar</span></div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="info-card">
+                    <h3><i data-lucide="file-text"></i> Descrição do Vendedor</h3>
+                    <p style="line-height: 1.8; color: var(--text-secondary);">
+                        Toyota Corolla Cross XR 2022 em estado de novo. Veículo de único dono, com todas as revisões
+                        feitas na concessionária autorizada e garantia de fábrica até 2027. Possui laudo cautelar 100%
+                        aprovado, sem sinistros ou leilão. Ideal para famílias que buscam conforto, segurança e a
+                        confiabilidade mecânica da Toyota. Equipado com o motor 2.0 Dynamic Force super econômico e
+                        potente.
+                    </p>
+                </div>
+
+                <!-- Features -->
+                <div class="info-card">
+                    <h3><i data-lucide="check-circle"></i> Itens de Destaque</h3>
+                    <div class="features-chips">
+                        <div class="feature-chip-active"><i data-lucide="check"></i> 7 Airbags</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Apple CarPlay & Android Auto</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Ar digital dual-zone</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Câmera de ré</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Controle de estabilidade</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Chave presencial</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Rodas de liga leve 18"</div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="detail-sidebar">
+                <span style="color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">Preço CarInsight</span>
+                <div class="price-tag-large">R$ 158.900</div>
+                <span class="monthly-estimate">Ou em parcelas de R$ 2.450 /mês</span>
+
+                <a href="" class="btn-card-action-whats"> Falar com Vendedor </a>
+
+
+                <div class="dealer-box-detail">
+                    <div class="dealer-name">RobustCar Veículos</div>
+                    <div class="dealer-rating">
+                        <i data-lucide="star" style="fill:#f59e0b; width:14px;"></i>
+                        <i data-lucide="star" style="fill:#f59e0b; width:14px;"></i>
+                        <i data-lucide="star" style="fill:#f59e0b; width:14px;"></i>
+                        <i data-lucide="star" style="fill:#f59e0b; width:14px;"></i>
+                        <i data-lucide="star" style="fill:#f59e0b; width:14px;"></i>
+                        <span style="color:var(--text-secondary); margin-left:8px;">(48 avaliações)</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Concessionária
+                        Verificada • Há 12 anos no mercado</p>
+                    <a href="#"
+                        style="color: var(--accent-primary); font-weight: 600; font-size: 0.9rem; text-decoration: none;">Ver
+                        estoque completo</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html#carros">Veículos</a></li>
+                    <li><a href="index.html#como-funciona">Processo</a></li>
+                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Falar com Consultor</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <a href="#" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Gallery Data (In a real app, this would come from backend)
+        const galleryImages = [
+            "assets/car1.png",
+            "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=800",
+            "https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&fit=crop&q=80&w=800",
+            "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=800",
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800",
+            "assets/car2.png"
+        ];
+
+        const modal = document.getElementById('gallery-modal');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        let currentIndex = 0;
+
+        // Modal Logic
+        function openModal(index) {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        // Lightbox Logic
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightbox();
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
+
+        function changeSlide(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = galleryImages.length - 1;
+            if (currentIndex >= galleryImages.length) currentIndex = 0;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            lightboxImg.src = galleryImages[currentIndex];
+            currentSlideEl.textContent = currentIndex + 1;
+            totalSlidesEl.textContent = galleryImages.length;
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

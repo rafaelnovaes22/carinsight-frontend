@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparar Veículos | CarInsight</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
     <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
@@ -36,7 +37,7 @@
         <!-- Header Global (Igual index.html) -->
         <header>
             <a href="index.html" class="logo">
-                <img src="assets/logo-car-insght-7.png" alt="CarInsight Logo">
+                <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
             </a>
             <div class="header-right">
                 <button id="menu-toggle" aria-label="Abrir menu">
@@ -57,7 +58,7 @@
             <ul class="sidebar-links">
                 <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
                 <li><a href="comparar.html" class="active"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-                <li><a href="#"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+                <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
             </ul>
         </nav>
 
@@ -172,12 +173,53 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="api.js"></script>
-    <script src="favorites.js"></script>
-    <script src="compare.js"></script>
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="index.html#carros">Veículos</a></li>
+                    <li><a href="index.html#como-funciona">Processo</a></li>
+                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Falar com Consultor</a></li>
+                    <li><a href="#">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <a href="#" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
+    <!-- Reuse main logic for menu -->
     <script src="main.js"></script>
-    <script src="compare-page.js"></script>
     <script>
         // Init Icons
         lucide.createIcons();
@@ -238,6 +280,11 @@
             });
         });
     </script>
+    <script src="api.js"></script>
+    <script src="favorites.js"></script>
+    <script src="compare.js"></script>
+    <script src="main.js"></script>
+    <script src="compare-page.js"></script>
 </body>
 
 </html>

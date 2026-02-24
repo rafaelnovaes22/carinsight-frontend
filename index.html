@@ -8,6 +8,7 @@
     <meta name="description"
         content="Encontre seu carro seminovo ideal com o poder da Inteligência Artificial. Rapidez, segurança e curadoria premium.">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -16,7 +17,7 @@
 
     <header>
         <a href="#" class="logo">
-            <img src="assets/logo-car-insght-5.png" alt="CarInsight Logo">
+            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
         </a>
         <div class="header-right">
             <button id="menu-toggle" aria-label="Abrir menu">
@@ -37,7 +38,7 @@
         <ul class="sidebar-links">
             <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
             <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-            <li><a href="#"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
+            <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
         </ul>
     </nav>
 
@@ -246,7 +247,9 @@
 
                     <form class="search-form" id="search-form-id">
                         <div class="search-input-group">
-                            <i data-lucide="search"></i>
+                            <a href="buscando-carro.html" class="search-icon-link">
+                                <i class="search-icon-logo"></i>
+                            </a>
                             <input type="text" placeholder="O que você está procurando?">
                         </div>
                     </form>
@@ -278,8 +281,10 @@
                             <span class="tooltip">Mais Opções</span>
                         </button>
                     </div>
-                    <a href="buscando-carro.html" class="btn-search">Procurar</a>
+
+
                 </div>
+
             </div>
         </section>
 
@@ -310,7 +315,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -327,7 +332,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -344,7 +349,8 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais
+                                    </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -361,7 +367,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -401,7 +407,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -418,7 +424,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -435,7 +441,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -452,7 +458,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -492,7 +498,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> S-Tronic</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -509,7 +515,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> 9G-Tronic</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -526,7 +532,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -543,7 +549,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Híbrido</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -595,7 +601,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -610,7 +616,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -625,7 +631,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -677,7 +683,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Elétrico</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -739,7 +745,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -754,7 +760,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -769,7 +775,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -784,7 +790,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -822,7 +828,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -837,7 +843,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -852,7 +858,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -867,7 +873,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -905,7 +911,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -920,7 +926,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -935,7 +941,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -950,7 +956,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais</a>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -1413,17 +1419,18 @@
     <footer>
         <div class="container footer-content">
             <div class="footer-brand">
-                <a href="#" class="logo">
-                    <img src="assets/logo-car-insght-1.png" alt="CarInsight Logo">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
                 </a>
                 <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
             </div>
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="#carros">Veículos</a></li>
-                    <li><a href="#como-funciona">Processo</a></li>
-                    <li><a href="#seguranca">Segurança</a></li>
+                    <li><a href="index.html#carros">Veículos</a></li>
+                    <li><a href="index.html#como-funciona">Processo</a></li>
+                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -1444,80 +1451,20 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 CarInsight. Todos os direitos reservados.<br>
-            <span style="font-size: 0.85em; opacity: 0.8;">Uma solução de RAFAEL DE NOVAES CONSULTORIA EM TECNOLOGIA DA
-                INFORMACAO - 44.934.055/0001-44</span>
+            &copy; 2026 CarInsight. Todos os direitos reservados.
         </div>
     </footer>
 
+    <!-- Floating Chatbot Button -->
+    <a href="#" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
     <script src="main.js"></script>
-    <script src="api.js"></script>
-    <script src="chat.js"></script>
     <script>
         lucide.createIcons();
-
-        // Connect search form to results page
-        const searchForm = document.getElementById('search-form-id');
-        const searchInput = searchForm?.querySelector('input');
-
-        if (searchForm) {
-            searchForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const query = searchInput?.value?.trim();
-                if (query) {
-                    window.location.href = `buscando-carro.html?q=${encodeURIComponent(query)}`;
-                } else {
-                    window.location.href = 'buscando-carro.html';
-                }
-            });
-        }
-
-        // Connect "Procurar" button
-        const searchBtn = document.querySelector('.btn-search');
-        if (searchBtn) {
-            searchBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const query = searchInput?.value?.trim() || '';
-                
-                // Collect active filters
-                const params = new URLSearchParams();
-                if (query) params.append('q', query);
-                
-                // Get selected filters from modals (stored in tooltips)
-                const yearTooltip = document.querySelector('.filter-btn[data-tooltip="Ano"] .tooltip');
-                const priceTooltip = document.querySelector('.filter-btn[data-tooltip="Preço"] .tooltip');
-                const brandTooltip = document.querySelector('.filter-btn[data-tooltip="Marca de Carro"] .tooltip');
-                
-                if (yearTooltip && yearTooltip.textContent !== 'Ano') {
-                    params.append('yearMin', yearTooltip.textContent);
-                }
-                if (priceTooltip && priceTooltip.textContent.includes('k')) {
-                    const maxPrice = parseInt(priceTooltip.textContent.replace(/\D/g, '')) * 1000;
-                    params.append('priceMax', maxPrice);
-                }
-                if (brandTooltip && brandTooltip.textContent !== 'Marca de Carro') {
-                    params.append('make', brandTooltip.textContent);
-                }
-                
-                window.location.href = `buscando-carro.html?${params.toString()}`;
-            });
-        }
     </script>
-    
-    <!-- API Client -->
-    <script src="api.js"></script>
-    <!-- Favorites Manager -->
-    <script src="favorites.js"></script>
-    <!-- Compare Manager -->
-    <script src="compare.js"></script>
-    <!-- Chat Manager -->
-    <script src="chat.js"></script>
-    <!-- Auth Manager -->
-    <script src="auth.js"></script>
-    <!-- Search Page Integration (for chat UI) -->
-    <script src="search-page.js"></script>
-    <!-- Home Page Integration -->
-    <script src="home-page.js"></script>
 </body>
 
 </html>
