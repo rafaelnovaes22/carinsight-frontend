@@ -315,7 +315,17 @@
                         </div>
                     </div>
 
-                    <h3 class="results-count">Encontramos 128 veículos para você</h3>
+                    <form id="results-search-form" class="results-search-form"
+                          style="display:flex;gap:8px;margin:12px 0;">
+                        <input type="text" id="results-search-input" placeholder="Buscar por modelo, marca ou descrição..."
+                               style="flex:1;padding:10px 16px;border:1px solid #ddd;border-radius:24px;font-size:0.9rem;outline:none;">
+                        <button type="submit"
+                                style="padding:10px 20px;border:none;border-radius:24px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;font-weight:600;cursor:pointer;">
+                            Buscar
+                        </button>
+                    </form>
+
+                    <h3 class="results-count">Buscando veículos...</h3>
 
 
                     <div class="cars-grid">
@@ -816,7 +826,7 @@
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot">
+    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
@@ -986,7 +996,7 @@
     <script src="favorites.js"></script>
     <script src="compare.js"></script>
     <script src="chat.js"></script>
-    <script src="main.js"></script>
+    <script src="chat-ui.js"></script>
     <script src="search-page.js"></script>
 </body>
 

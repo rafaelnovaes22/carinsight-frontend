@@ -250,20 +250,4 @@ function handleRemoveSaved(button, vehicleId) {
   }
 }
 
-function openChat(vehicleId) {
-  if (window.ChatManager) {
-    ChatManager.init(vehicleId)
-      .then((response) => {
-        if (window.showChatUI) {
-          showChatUI(response.greeting, response.vehicle);
-        } else {
-          console.log('Chat initialized:', response);
-          alert('Chat iniciado! Verifique o console.');
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to start chat:', error);
-        alert('Erro ao iniciar conversa. Tente novamente.');
-      });
-  }
-}
+// openChat agora é fornecido globalmente por chat-ui.js

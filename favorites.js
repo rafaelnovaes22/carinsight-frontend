@@ -42,12 +42,12 @@ const FavoritesManager = {
     if (!favorites.includes(vehicleId)) {
       favorites.push(vehicleId);
       this.saveLocalFavorites(favorites);
-      
-      // Sync with API if logged in
-      if (window.CarInsightAPI?.isLoggedIn()) {
+
+      // Sync com o backend via sessão anônima (x-session-id)
+      if (window.CarInsightAPI) {
         CarInsightAPI.saveVehicle(vehicleId).catch(console.error);
       }
-      
+
       console.log('💜 Added to favorites:', vehicleId);
       return true;
     }
@@ -65,6 +65,12 @@ const FavoritesManager = {
     if (index > -1) {
       favorites.splice(index, 1);
       this.saveLocalFavorites(favorites);
+
+      // Sync com o backend via sessão anônima (x-session-id)
+      if (window.CarInsightAPI) {
+        CarInsightAPI.unsaveVehicle(vehicleId).catch(console.error);
+      }
+
       console.log('💔 Removed from favorites:', vehicleId);
       return true;
     }

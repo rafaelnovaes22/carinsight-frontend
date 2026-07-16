@@ -14,6 +14,17 @@ console.log('📡 API URL:', API_BASE_URL);
 let accessToken = localStorage.getItem('carinsight_token');
 let refreshToken = localStorage.getItem('carinsight_refresh_token');
 
+// Sessão anônima (favoritos/comparação funcionam sem login)
+let anonSessionId = localStorage.getItem('carinsight_session_id');
+if (!anonSessionId) {
+  anonSessionId =
+    'anon-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  localStorage.setItem('carinsight_session_id', anonSessionId);
+}
+
+// Serializa refreshs concorrentes: várias 401 simultâneas geram um único refresh
+let refreshPromise = null;
+
 const CarInsightAPI = {
   // ==================== AUTH ====================
   async register(email, password, name) {
@@ -183,19 +194,34 @@ const CarInsightAPI = {
   },
 
   // ==================== INTERACTIONS ====================
+  // Favoritos/visualizações usam a sessão anônima (header x-session-id),
+  // alinhado aos endpoints /interactions/save|saved|view do backend.
   async saveVehicle(vehicleId) {
-    return this._fetch('/interactions', {
-      method: 'POST',
-      body: JSON.stringify({ vehicleId, type: 'SAVED' }),
-      auth: true,
-    });
+    return this._fetch(`/interactions/save/${vehicleId}`, { method: 'POST' });
+  },
+
+  async unsaveVehicle(vehicleId) {
+    return this._fetch(`/interactions/save/${vehicleId}`, { method: 'DELETE' });
+  },
+
+  async getSavedVehicles() {
+    return this._fetch('/interactions/saved');
+  },
+
+  async isVehicleSaved(vehicleId) {
+    return this._fetch(`/interactions/saved/${vehicleId}/check`);
   },
 
   async viewVehicle(vehicleId) {
-    return this._fetch('/interactions', {
-      method: 'POST',
-      body: JSON.stringify({ vehicleId, type: 'VIEWED' }),
-    });
+    return this._fetch(`/interactions/view/${vehicleId}`, { method: 'POST' });
+  },
+
+  async contactVehicle(vehicleId) {
+    return this._fetch(`/interactions/contact/${vehicleId}`, { method: 'POST' });
+  },
+
+  getSessionId() {
+    return anonSessionId;
   },
 
   // ==================== USER PREFERENCES ====================
@@ -212,6 +238,7 @@ const CarInsightAPI = {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
       'Content-Type': 'application/json',
+      'x-session-id': anonSessionId,
     };
 
     if (options.auth && accessToken) {
@@ -219,7 +246,7 @@ const CarInsightAPI = {
     }
 
     try {
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         method: options.method || 'GET',
         headers,
         body: options.body,
@@ -230,12 +257,11 @@ const CarInsightAPI = {
         const refreshed = await this._refreshTokens();
         if (refreshed) {
           headers['Authorization'] = `Bearer ${accessToken}`;
-          const retryResponse = await fetch(url, {
+          response = await fetch(url, {
             method: options.method || 'GET',
             headers,
             body: options.body,
           });
-          return retryResponse.json();
         }
       }
 
@@ -254,24 +280,33 @@ const CarInsightAPI = {
   async _refreshTokens() {
     if (!refreshToken) return false;
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
-      });
+    // Um único refresh em andamento por vez
+    if (!refreshPromise) {
+      refreshPromise = (async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken }),
+          });
 
-      if (response.ok) {
-        const data = await response.json();
-        this._saveTokens(data);
-        return true;
-      }
-    } catch (error) {
-      console.error('Token refresh failed:', error);
+          if (response.ok) {
+            const data = await response.json();
+            this._saveTokens(data);
+            return true;
+          }
+        } catch (error) {
+          console.error('Token refresh failed:', error);
+        }
+
+        this.logout();
+        return false;
+      })().finally(() => {
+        refreshPromise = null;
+      });
     }
 
-    this.logout();
-    return false;
+    return refreshPromise;
   },
 
   _saveTokens(response) {

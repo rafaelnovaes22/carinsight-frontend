@@ -427,7 +427,7 @@
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot">
+    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
@@ -520,7 +520,7 @@
     <script src="favorites.js"></script>
     <script src="compare.js"></script>
     <script src="chat.js"></script>
-    <script src="main.js"></script>
+    <script src="chat-ui.js"></script>
     <script src="saved-page.js"></script>
     <script src="search-page.js"></script>
 </body>

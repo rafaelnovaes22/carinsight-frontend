@@ -8,6 +8,8 @@ const ChatManager = {
   currentSession: null,
   messages: [],
   isLoading: false,
+  // Last handoff payload (lead pronto para o WhatsApp da loja)
+  lastHandoff: null,
   
   // Callbacks for UI updates (to be set by the page)
   onMessageReceived: null,
@@ -116,6 +118,11 @@ const ChatManager = {
         content.trim()
       );
       
+      // Keep the latest handoff payload for the WhatsApp CTA
+      if (response.handoff?.waLink) {
+        this.lastHandoff = response.handoff;
+      }
+
       // Add assistant response to history
       const assistantMessage = {
         role: 'assistant',
@@ -124,6 +131,7 @@ const ChatManager = {
         suggestedActions: response.suggestedActions,
         recommendations: response.recommendations,
         currentNode: response.currentNode,
+        handoff: response.handoff,
       };
       this.messages.push(assistantMessage);
       
@@ -148,6 +156,14 @@ const ChatManager = {
    * @param {string} action - Action type
    */
   async sendAction(action) {
+    // Lead pronto: abre o WhatsApp da loja com a mensagem pré-preenchida
+    if (action === 'OPEN_WHATSAPP') {
+      if (this.lastHandoff?.waLink) {
+        window.open(this.lastHandoff.waLink, '_blank', 'noopener');
+      }
+      return null;
+    }
+
     const actionMessages = {
       'HANDOFF_HUMAN': 'Quero falar com um vendedor',
       'SHOW_FINANCING': 'Quero simular financiamento',
@@ -155,7 +171,7 @@ const ChatManager = {
       'SHOW_DETAILS': 'Quero ver mais detalhes',
       'MORE_OPTIONS': 'Quero ver mais opções',
     };
-    
+
     const message = actionMessages[action];
     if (message) {
       return this.sendMessage(message);
@@ -240,6 +256,7 @@ const ChatManager = {
    */
   getActionLabel(action) {
     const labels = {
+      'OPEN_WHATSAPP': '📲 Continuar no WhatsApp da loja',
       'HANDOFF_HUMAN': '👨‍💼 Falar com vendedor',
       'SHOW_FINANCING': '💰 Simular financiamento',
       'FINANCING_SIMULATION': '💰 Simular financiamento',
