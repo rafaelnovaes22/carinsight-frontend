@@ -1,3 +1,12 @@
 {
-  "cleanUrls": false
+  "cleanUrls": false,
+  "directoryListing": false,
+  "rewrites": [{ "source": "/", "destination": "/index.html" }],
+  "redirects": [
+    { "source": "/buscando-carro.html", "destination": "/#catalog", "type": 302 },
+    { "source": "/meus-salvos.html", "destination": "/#comparison", "type": 302 },
+    { "source": "/comparar.html", "destination": "/#comparison", "type": 302 },
+    { "source": "/vender-carro.html", "destination": "/#method", "type": 302 },
+    { "source": "/quiz.html", "destination": "/#brief", "type": 302 }
+  ]
 }

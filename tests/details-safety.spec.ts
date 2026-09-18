@@ -17,7 +17,7 @@ test('failed lookups provide a way back to the reference catalog', async ({ page
   await page.goto('/detalhes-carro.html?id=missing');
   await expect(page.getByRole('heading', { name: 'Veículo indisponível' })).toBeVisible();
   await expect(page.locator('#vehicle-details')).toBeHidden();
-  await expect(page.locator('#detail-status a')).toHaveAttribute('href', 'index.html#catalogo');
+  await expect(page.locator('#detail-status a')).toHaveAttribute('href', 'index.html#catalog');
 });
 
 test('vehicle fields cannot inject HTML and absent facts stay absent', async ({ page }) => {

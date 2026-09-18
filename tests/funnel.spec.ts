@@ -1,180 +1,120 @@
-import { test, expect, Page } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-/**
- * E2E do funil de lead: home → busca → detalhe → chat → handoff WhatsApp.
- * Backend mockado via page.route (não requer API rodando).
- */
+const SOURCE = { provider: 'parallelum', name: 'FIPE via Parallelum (provedor independente)', url: 'https://fipe.parallelum.com.br/api/v2/cars/brands/23/models/100/years/2022-1' };
+const MODELS = [{ code: '100', name: 'Modelo Alfa 1.0' }, { code: '200', name: 'Modelo Beta 1.6' }, { code: '300', name: 'Modelo Gama 2.0' }, { code: '400', name: 'Modelo Delta 1.4' }];
 
-const VEHICLE = {
-  id: 'v1',
-  make: 'Jeep',
-  model: 'Renegade',
-  version: 'Longitude',
-  yearModel: 2022,
-  yearFab: 2021,
-  price: 89900,
-  mileage: 35000,
-  bodyType: 'suv',
-  condition: 'USED',
-  title: 'Jeep Renegade Longitude 2022 impecável',
-  features: ['Câmera de ré', 'Central multimídia'],
-  aiTags: ['Familiar', 'Confortável'],
-  technicalSpecs: { transmission: 'Automático', engine: '1.3 Turbo', fuel: 'Flex' },
-  media: [],
-  dealer: { name: 'RobustCar Veículos', verificationStatus: 'VERIFIED' },
-};
-
-const RECOMMENDATION = {
-  vehicleId: 'v1',
-  matchScore: 92,
-  reasoning: 'SUV dentro do orçamento, ideal para família',
-  highlights: [],
-  concerns: [],
-  vehicle: {
-    id: 'v1',
-    make: 'Jeep',
-    model: 'Renegade',
-    yearModel: 2022,
-    price: 89900,
-    mileage: 35000,
-    bodyType: 'suv',
-  },
-};
-
-const WA_LINK = 'https://wa.me/5511999999999?text=Ol%C3%A1%21%20Vim%20do%20site%20CarInsight';
-
-/** Mock central da API: um handler por pathname */
-async function mockApi(page: Page, options: { handoffOnMessage?: boolean } = {}) {
-  let messageCount = 0;
-
+async function mockCatalog(page: Page, unavailable = false): Promise<void> {
   await page.route('**/localhost:3000/**', async (route) => {
     const url = new URL(route.request().url());
-    const path = url.pathname;
-    const method = route.request().method();
-
-    const json = (body: unknown) =>
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
-
-    if (path === '/vehicles' && method === 'GET') {
-      return json({ data: [VEHICLE], meta: { total: 1, page: 1, totalPages: 1 } });
-    }
-    if (path === '/vehicles/v1' && method === 'GET') {
-      return json(VEHICLE);
-    }
-    if (path === '/search' && method === 'GET') {
-      return json([{ ...VEHICLE, score: 0.9 }]);
-    }
-    if (path === '/api/chat/start' && method === 'POST') {
-      return json({
-        sessionId: 'session-e2e',
-        greeting: 'Olá! Sou a assistente do CarInsight. Qual é o seu nome?',
-        vehicle: VEHICLE,
-      });
-    }
-    if (path === '/api/chat/session-e2e/message' && method === 'POST') {
-      messageCount++;
-      if (options.handoffOnMessage && messageCount >= 2) {
-        return json({
-          response: 'Perfeito! Preparei um resumo. Clique no botão abaixo para continuar no WhatsApp da loja.',
-          suggestedActions: ['OPEN_WHATSAPP'],
-          recommendations: [RECOMMENDATION],
-          currentNode: 'negotiation',
-          handoff: { leadId: 'lead-e2e', waLink: WA_LINK, summary: 'resumo' },
-        });
-      }
-      return json({
-        response: 'Encontrei uma ótima opção para você!',
-        suggestedActions: ['SHOW_FINANCING'],
-        recommendations: [RECOMMENDATION],
-        currentNode: 'recommendation',
-      });
-    }
-    if (path.startsWith('/interactions')) {
-      return json({ success: true });
-    }
-
-    return json({});
+    if (unavailable && url.pathname === '/catalog/brands') return route.fulfill({ status: 503, body: '{}' });
+    let payload: object = { items: [], source: SOURCE, retrievedAt: '2026-09-18T12:00:00Z', cached: false };
+    if (url.pathname === '/catalog/brands') payload = { ...payload, items: [{ code: '23', name: 'Marca de teste' }] };
+    if (url.pathname === '/catalog/models') payload = { ...payload, items: MODELS };
+    if (url.pathname === '/catalog/years') payload = { ...payload, items: [{ code: '2022-1', name: '2022 Gasolina' }] };
+    if (url.pathname === '/catalog/valuation') payload = { kind: 'reference_valuation', brand: 'Marca de teste', model: MODELS.find((item) => item.code === url.searchParams.get('modelId'))?.name, modelYear: 2022, fuel: 'Gasolina', codeFipe: '000001-1', price: 65000 + Number(url.searchParams.get('modelId')), priceFormatted: 'R$ 65.100,00', currency: 'BRL', referenceMonth: 'setembro de 2026', source: SOURCE, retrievedAt: '2026-09-18T12:00:00Z', cached: false, disclaimer: 'Referência, não oferta.' };
+    if (url.pathname === '/decision/brief') payload = { profile: { budgetMax: 80000 }, summary: 'Vamos comparar referências com seu limite de compra e confirmar os custos da sua rotina.', followUpQuestions: ['Quanto você roda por mês?'], interpretation: 'rules', suggestedBrands: [{ code: '23', name: 'Marca de teste' }], modelSearchTerms: [], limitations: ['Consumo e condição de um veículo específico precisam ser confirmados.'] };
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(payload) });
   });
 }
 
-test.describe('Funil de lead', () => {
-  test('home: busca propaga o texto para buscando-carro.html?q=', async ({ page }) => {
-    await mockApi(page);
-    await page.goto('/index.html');
+async function chooseReference(page: Page, model = '100'): Promise<void> {
+  await page.locator('#catalog-brand').selectOption('23');
+  await page.locator('#catalog-model').selectOption(model);
+  await page.locator('#catalog-year').selectOption('2022-1');
+  await page.getByRole('button', { name: 'Consultar referência' }).click();
+  await expect(page.locator('#reference-result')).toContainText('setembro de 2026');
+}
 
-    const input = page.locator('#search-form-id input[type="text"]');
-    await input.fill('suv para família');
-    await input.press('Enter');
+test('root serves the decision product and briefing drives the real catalog controls', async ({ page }) => {
+  await mockCatalog(page);
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('O próximo carro.');
+  await page.getByLabel('Como você pretende usar o carro?').fill('Quero um carro para a cidade até 80 mil');
+  await page.getByRole('button', { name: 'Montar meu plano' }).click();
+  await expect(page.locator('#brief-response')).toContainText('pelos seus critérios');
+  await expect(page.locator('#brief-budget')).toHaveValue('80000');
+  await page.getByRole('button', { name: 'Explorar Marca de teste' }).click();
+  await expect(page.locator('#catalog-model')).toBeEnabled();
+  await expect(page.locator('body')).not.toContainText('Parceiros Certificados');
+});
 
-    await expect(page).toHaveURL(/buscando-carro\.html\?q=suv(\+|%20)para(\+|%20)fam/);
-  });
+test('catalog states source and reference month, and duplicate choices stay a single item', async ({ page }) => {
+  await mockCatalog(page); await page.goto('/');
+  await page.locator('#brief-budget').fill('80000');
+  await chooseReference(page);
+  await expect(page.locator('#reference-result')).toContainText('65.100');
+  await expect(page.locator('#reference-result')).toContainText('abaixo do seu limite');
+  await expect(page.locator('#reference-result')).toContainText('Não é anúncio');
+  await page.getByRole('button', { name: 'Adicionar à comparação' }).click();
+  await page.getByRole('button', { name: 'Adicionar à comparação' }).click();
+  await expect(page.locator('.shortlist-card')).toHaveCount(1);
+  await page.reload();
+  await expect(page.locator('.shortlist-card')).toHaveCount(1);
+});
 
-  test('busca: renderiza resultados reais e link com ?id=', async ({ page }) => {
-    await mockApi(page);
-    await page.goto('/buscando-carro.html?q=suv');
+test('shortlist has a hard limit and monthly costs keep unknowns explicit', async ({ page }) => {
+  await mockCatalog(page); await page.goto('/');
+  for (const model of ['100', '200', '300', '400']) { await chooseReference(page, model); await page.getByRole('button', { name: 'Adicionar à comparação' }).click(); }
+  await expect(page.locator('.shortlist-card')).toHaveCount(3);
+  await expect(page.locator('#catalog-status')).toContainText('Você já escolheu 3');
+  const first = page.locator('.cost-card').first();
+  await expect(first.locator('output')).toHaveText('A preencher');
+  await page.getByLabel('Distância por mês (km)').fill('1200');
+  await page.getByLabel('Preço do combustível (R$/litro)').fill('6');
+  await first.getByLabel('Consumo informado (km/l)').fill('12');
+  await expect(first.locator('output')).toContainText('600');
+  await first.getByText('Adicionar despesas anuais').click();
+  await first.getByLabel('Seguro por ano (R$)').fill('2400');
+  await expect(first.locator('output')).toContainText('800');
+  await expect(first).toContainText('IPVA; Manutenção');
+  await expect(page.locator('.cost-card').nth(1).locator('output')).toHaveText('A preencher');
+});
 
-    const grid = page.locator('.cars-grid');
-    await expect(grid.getByText('Jeep Renegade', { exact: false }).first()).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('.results-count')).toContainText('1 veículo');
+test('catalog failure can be retried without fabricating prices or models', async ({ page }) => {
+  await mockCatalog(page, true); await page.goto('/');
+  await expect(page.locator('#catalog-status')).toContainText('HTTP 503');
+  await expect(page.locator('#catalog-brand')).toBeDisabled();
+  await expect(page.locator('#reference-result')).not.toContainText('R$');
+  await page.unroute('**/localhost:3000/**'); await mockCatalog(page);
+  await page.getByRole('button', { name: 'Tentar novamente' }).click();
+  await expect(page.locator('#catalog-brand')).toBeEnabled();
+});
 
-    const detailLink = page.locator('.cars-grid a[href*="detalhes-carro.html?id=v1"]').first();
-    await expect(detailLink).toBeVisible();
-  });
+test('shared links exclude personal preferences and restore API references', async ({ page }) => {
+  await mockCatalog(page); await page.goto('/?compare=23:100:2022-1,23:200:2022-1#comparison');
+  await expect(page.locator('.shortlist-card')).toHaveCount(2);
+  await page.locator('#brief-budget').fill('80000');
+  await page.locator('#brief-city').fill('Cidade privada');
+  await page.getByRole('button', { name: 'Copiar link' }).click();
+  const url = await page.locator('#share-link').inputValue();
+  expect(url).toContain('compare=23'); expect(url).not.toContain('80000'); expect(url).not.toContain('privada');
+});
 
-  test('detalhe: carrega o veículo do ?id= e abre o chat', async ({ page }) => {
-    await mockApi(page);
-    await page.goto('/detalhes-carro.html?id=v1');
+test('mobile 360px remains readable, keyboard operable and free of horizontal overflow', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await mockCatalog(page); await page.goto('/');
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Ir para o assistente' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await chooseReference(page);
+  await page.getByRole('button', { name: 'Adicionar à comparação' }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('decision-mobile-360.png'), fullPage: true });
+});
 
-    await expect(page.locator('.vehicle-header h1')).toContainText('Jeep Renegade', { timeout: 10000 });
-    await expect(page.locator('.price-tag-large')).toContainText('89.900');
+test('production build excludes source files and redirects old marketplace prototypes', async ({ page, request }) => {
+  await mockCatalog(page);
+  for (const route of ['/package.json', '/AGENTS.md', '/tests/funnel.spec.ts', '/search-page.js', '/.git/config']) expect((await request.get(route)).status()).toBe(404);
+  await page.goto('/buscando-carro.html');
+  await expect(page).toHaveURL(/\/#catalog$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+});
 
-    await page.locator('.btn-card-action-whats').click();
-    await expect(page.locator('#chat-modal')).toBeVisible();
-    await expect(page.locator('#chat-messages')).toContainText('assistente do CarInsight');
-  });
-
-  test('chat: recomendações viram cards e handoff vira botão de WhatsApp', async ({ page }) => {
-    await mockApi(page, { handoffOnMessage: true });
-    await page.goto('/detalhes-carro.html?id=v1');
-
-    await page.locator('.btn-card-action-whats').click();
-    await expect(page.locator('#chat-modal')).toBeVisible();
-
-    // 1ª mensagem: recomendação em card
-    await page.locator('#chat-input').fill('Quero um SUV até 90 mil');
-    await page.locator('.chat-send-btn').click();
-    await expect(page.locator('.chat-rec-card')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('.chat-rec-card')).toContainText('Jeep Renegade 2022');
-    await expect(page.locator('.chat-rec-reason')).toContainText('ideal para família');
-
-    // 2ª mensagem: handoff → CTA WhatsApp com wa.me
-    await page.locator('#chat-input').fill('Quero falar com um vendedor');
-    await page.locator('.chat-send-btn').click();
-    const waBtn = page.locator('.chat-whatsapp-btn');
-    await expect(waBtn).toBeVisible({ timeout: 10000 });
-    await expect(waBtn).toHaveAttribute('href', /wa\.me\/5511999999999/);
-    await expect(waBtn).toContainText('WhatsApp');
-  });
-
-  test('chatbot flutuante abre o chat geral em qualquer página', async ({ page }) => {
-    await mockApi(page);
-    await page.goto('/index.html');
-
-    await page.locator('.floating-chatbot').click();
-    await expect(page.locator('#chat-modal')).toBeVisible();
-  });
-
-  test('favoritos: salvar dispara o endpoint com x-session-id', async ({ page }) => {
-    await mockApi(page);
-
-    const saveRequest = page.waitForRequest(
-      (req) => req.url().includes('/interactions/save/') && req.method() === 'POST',
-    );
-
-    await page.goto('/buscando-carro.html?q=suv');
-    await page.locator('.cars-grid').getByText('Salvar', { exact: false }).first().click();
-
-    const request = await saveRequest;
-    expect(request.headers()['x-session-id']).toMatch(/^anon-/);
-  });
+test('desktop reference view has verified hierarchy', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 1440, height: 1000 }); await mockCatalog(page); await page.goto('/');
+  await expect(page.locator('#catalog-brand')).toBeEnabled();
+  await page.screenshot({ path: testInfo.outputPath('decision-desktop.png'), fullPage: true });
+  await chooseReference(page); await page.getByRole('button', { name: 'Adicionar à comparação' }).click();
+  await page.locator('#catalog').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath('decision-catalog-desktop.png') });
 });
