@@ -3,9 +3,10 @@
  * Centralized API communication with the NestJS Backend
  */
 
-const isProduction = window.location.hostname === 'carinsight.com.br' || 
-                     window.location.hostname === 'www.carinsight.com.br';
-const API_BASE_URL = isProduction ? 'https://api.carinsight.com.br' : 'http://localhost:3000';
+// Public Railway previews must never send the visitor's requests to localhost.
+const isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+const configuredOrigin = document.querySelector('meta[name="carinsight-api-origin"]')?.getAttribute('content');
+const API_BASE_URL = configuredOrigin || (isLocal ? 'http://localhost:3000' : 'https://backend-production-8159.up.railway.app');
 
 console.log('🚀 CarInsight API Client loaded');
 console.log('📡 API URL:', API_BASE_URL);
