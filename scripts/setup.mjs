@@ -11,3 +11,4 @@ function runNpm(args) {
 
 runNpm(['ci']);
 runNpm(['exec', '--', 'playwright', 'install', 'chromium']);
+runNpm(['run', 'build']);

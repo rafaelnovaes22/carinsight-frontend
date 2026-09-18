@@ -1,63 +1,329 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CarInsight | Decida seu próximo carro com clareza</title>
-  <meta name="description" content="Compare modelos, referências FIPE e despesas do seu cenário. Um assistente para decidir seu próximo carro com informação e clareza." />
-  <link rel="icon" type="image/png" href="assets/car-insight-icon.png" />
-  <link rel="stylesheet" href="discovery/theme.css" />
-  <link rel="stylesheet" href="discovery/catalog.css" />
-  <link rel="stylesheet" href="discovery/responsive.css" />
-  <script src="runtime-config.js"></script>
-  <script type="module" src="discovery/app.js"></script>
-</head>
-<body>
-  <a class="skip-link" href="#brief">Ir para o assistente</a>
-  <header class="site-header">
-    <a href="/" aria-label="CarInsight, início"><img class="brand-logo" src="assets/car-insight-logo.png" alt="CarInsight" width="145" height="32" /></a>
-    <nav aria-label="Navegação principal"><a href="#catalog">Explorar modelos</a><a class="nav-compare" href="#comparison">Minha comparação <span id="shortlist-count">0</span></a></nav>
-  </header>
-  <main>
-    <section class="decision-hero" aria-labelledby="hero-title">
-      <div class="hero-copy"><p class="eyebrow">Seu assistente de escolha</p><h1 id="hero-title">O próximo carro.<br /><span>A sua melhor decisão.</span></h1><p class="hero-description">Antes de escolher um modelo, entenda o que faz sentido para você. Compare preço, prioridades e o impacto no seu mês.</p><a class="hero-link" href="#brief">Vamos começar pela sua rotina <span aria-hidden="true">↗</span></a></div>
-      <figure class="hero-visual"><img src="assets/car1.png" alt="" width="560" height="420" fetchpriority="high" /><figcaption>Imagem ilustrativa. Explore referências de modelos abaixo.</figcaption></figure>
-    </section>
-    <section class="brief-section page-width" id="brief" aria-labelledby="brief-title">
-      <div class="section-intro"><p class="eyebrow">01 / Seu ponto de partida</p><h2 id="brief-title">Um carro para a sua vida.</h2><p>Conte o que importa. Você pode ajustar cada critério depois.</p></div>
-      <form id="brief-form" class="brief-card">
-        <label for="brief-message">Como você pretende usar o carro?</label><textarea id="brief-message" rows="3" maxlength="1500" placeholder="Ex.: uso na cidade e viajo com a família. Quero gastar até 80 mil." required></textarea>
-        <div class="prompt-chips" aria-label="Ideias para começar"><button type="button" data-prompt="Quero um carro para usar na cidade e entender as despesas do dia a dia.">Dia a dia na cidade</button><button type="button" data-prompt="Quero comparar opções para viajar com minha família, com espaço e conforto a confirmar.">Viagens em família</button><button type="button" data-prompt="Quero trocar meu carro e comparar o valor de referência de outros modelos.">Hora de trocar</button></div>
-        <div class="brief-fields"><label>Limite de compra (R$)<input id="brief-budget" type="number" min="1" step="1" inputmode="numeric" placeholder="Ex.: 80000" /></label><label>Uso principal<select id="brief-usage"><option value="">Quero explorar</option><option value="cidade">Cidade</option><option value="familia">Família</option><option value="estrada">Estrada</option><option value="trabalho">Trabalho</option></select></label><label>Cidade (opcional)<input id="brief-city" type="text" maxlength="100" autocomplete="address-level2" placeholder="Sua região" /></label></div>
-        <div class="form-bottom"><p>Pesquisa de modelos, sem anúncios ou compromisso de compra.</p><button class="primary-button" id="brief-submit" type="submit">Montar meu plano <span aria-hidden="true">↗</span></button></div>
-      </form>
-      <div id="brief-response" class="brief-response" role="status" aria-live="polite" hidden></div>
-    </section>
-    <section class="catalog-section page-width" id="catalog" aria-labelledby="catalog-title">
-      <div class="section-intro"><p class="eyebrow">02 / Informação antes da escolha</p><h2 id="catalog-title">Dê contexto ao preço.</h2><p>Consulte um modelo e ano. Guarde até três referências para comparar.</p></div>
-      <div class="catalog-layout">
-        <form id="catalog-form" class="catalog-form">
-          <label>Marca<select id="catalog-brand" required disabled><option value="">Carregando marcas…</option></select></label>
-          <label>Filtrar modelos<input id="model-filter" type="search" placeholder="Digite parte do nome" disabled autocomplete="off" /></label>
-          <label>Modelo e versão<select id="catalog-model" required disabled><option value="">Escolha uma marca primeiro</option></select></label>
-          <label>Ano e combustível<select id="catalog-year" required disabled><option value="">Escolha um modelo primeiro</option></select></label>
-          <button type="submit" id="valuation-submit" class="primary-button" disabled>Consultar referência <span aria-hidden="true">→</span></button>
-          <p id="catalog-status" class="status-message" role="status" aria-live="polite">Conectando ao catálogo…</p><button type="button" id="catalog-retry" class="text-button" hidden>Tentar novamente</button><p class="source-note">Valores FIPE via Parallelum, provedor independente. A referência não é uma oferta de venda.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarInsight | Decida seu próximo carro com clareza</title>
+    <meta
+      name="description"
+      content="Compare modelos, referências FIPE e despesas do seu cenário. Um assistente para decidir seu próximo carro com informação e clareza."
+    />
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png" />
+    <link rel="stylesheet" href="discovery/theme.css" />
+    <link rel="stylesheet" href="discovery/catalog.css" />
+    <link rel="stylesheet" href="discovery/responsive.css" />
+    <script src="runtime-config.js"></script>
+    <script type="module" src="discovery/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#brief">Ir para o assistente</a>
+    <header class="site-header">
+      <a href="/" aria-label="CarInsight, início"
+        ><img
+          class="brand-logo"
+          src="assets/car-insight-logo.png"
+          alt="CarInsight"
+          width="145"
+          height="32"
+      /></a>
+      <nav aria-label="Navegação principal">
+        <a href="#catalog">Explorar modelos</a
+        ><a class="nav-compare" href="#comparison"
+          >Minha comparação <span id="shortlist-count">0</span></a
+        >
+      </nav>
+    </header>
+    <main>
+      <section class="decision-hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Seu assistente de escolha</p>
+          <h1 id="hero-title">O próximo carro.<br /><span>A sua melhor decisão.</span></h1>
+          <p class="hero-description">
+            Antes de escolher um modelo, entenda o que faz sentido para você. Compare preço,
+            prioridades e o impacto no seu mês.
+          </p>
+          <a class="hero-link" href="#brief"
+            >Vamos começar pela sua rotina <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <figure class="hero-visual">
+          <img src="assets/car1.png" alt="" width="560" height="420" fetchpriority="high" />
+          <figcaption>Imagem ilustrativa. Explore referências de modelos abaixo.</figcaption>
+        </figure>
+      </section>
+      <section class="brief-section page-width" id="brief" aria-labelledby="brief-title">
+        <div class="section-intro">
+          <p class="eyebrow">01 / Seu ponto de partida</p>
+          <h2 id="brief-title">Um carro para a sua vida.</h2>
+          <p>Conte o que importa. Você pode ajustar cada critério depois.</p>
+        </div>
+        <form id="brief-form" class="brief-card">
+          <label for="brief-message">Como você pretende usar o carro?</label
+          ><textarea
+            id="brief-message"
+            rows="3"
+            maxlength="1500"
+            placeholder="Ex.: uso na cidade e viajo com a família. Quero gastar até 80 mil."
+            required
+          ></textarea>
+          <div class="prompt-chips" aria-label="Ideias para começar">
+            <button
+              type="button"
+              data-prompt="Quero um carro para usar na cidade e entender as despesas do dia a dia."
+            >
+              Dia a dia na cidade</button
+            ><button
+              type="button"
+              data-prompt="Quero comparar opções para viajar com minha família, com espaço e conforto a confirmar."
+            >
+              Viagens em família</button
+            ><button
+              type="button"
+              data-prompt="Quero trocar meu carro e comparar o valor de referência de outros modelos."
+            >
+              Hora de trocar
+            </button>
+          </div>
+          <div class="brief-fields">
+            <label
+              >Limite de compra (R$)<input
+                id="brief-budget"
+                type="number"
+                min="1"
+                step="1"
+                inputmode="numeric"
+                placeholder="Ex.: 80000" /></label
+            ><label
+              >Uso principal<select id="brief-usage">
+                <option value="">Quero explorar</option>
+                <option value="cidade">Cidade</option>
+                <option value="familia">Família</option>
+                <option value="estrada">Estrada</option>
+                <option value="trabalho">Trabalho</option>
+              </select></label
+            ><label
+              >Cidade (opcional)<input
+                id="brief-city"
+                type="text"
+                maxlength="100"
+                autocomplete="address-level2"
+                placeholder="Sua região"
+            /></label>
+          </div>
+          <div class="form-bottom">
+            <p>Pesquisa de modelos, sem anúncios ou compromisso de compra.</p>
+            <button class="primary-button" id="brief-submit" type="submit">
+              Montar meu plano <span aria-hidden="true">↗</span>
+            </button>
+          </div>
         </form>
-        <div id="reference-result" class="reference-result" aria-live="polite" aria-busy="false"><div class="reference-empty"><img src="assets/car-insight-icon.png" alt="" width="64" height="64" /><h3>Uma escolha com mais contexto.</h3><p>O valor de referência, o mês consultado e a relação com seu orçamento aparecem aqui.</p><ul><li>Preço com fonte identificada</li><li>Limites e informações que faltam</li><li>Comparação sem pressão para comprar</li></ul></div></div>
-      </div>
-    </section>
-    <section class="comparison-section" id="comparison" aria-labelledby="comparison-title"><div class="page-width">
-      <div class="comparison-heading"><div class="section-intro"><p class="eyebrow">03 / Lado a lado</p><h2 id="comparison-title">Suas opções, na mesma régua.</h2><p id="comparison-description">Adicione até 3 referências do catálogo para começar.</p></div><div class="comparison-actions"><button id="share-shortlist" class="secondary-button" type="button" disabled>Copiar link</button><button id="export-shortlist" class="secondary-button" type="button" disabled>Baixar resumo</button></div></div>
-      <div id="shortlist-status" class="status-message" role="status" aria-live="polite"></div><label id="share-link-wrapper" hidden>Link da comparação<input id="share-link" type="text" readonly /></label>
-      <div id="shortlist-grid" class="shortlist-grid"><div class="shortlist-empty"><span aria-hidden="true">＋</span><p>Sua primeira escolha começa com uma referência.</p><a href="#catalog">Explorar modelos</a></div></div>
-      <section id="expenses-section" class="expenses-section" hidden aria-labelledby="expenses-title"><div><p class="eyebrow">Seu cenário mensal</p><h3 id="expenses-title">Quanto entra na sua conta?</h3><p>Preencha estimativas próprias. Campos vazios continuam desconhecidos.</p></div><div class="expenses-global"><label>Distância por mês (km)<input id="monthly-distance" type="number" min="0" max="100000" step="1" inputmode="numeric" placeholder="Ex.: 1000" /></label><label>Preço do combustível (R$/litro)<input id="fuel-price" type="number" min="0" max="100" step="0.01" inputmode="decimal" placeholder="Ex.: 6,20" /></label></div><p class="source-note">Estimativa parcial das despesas informadas. Não inclui depreciação, financiamento, estacionamento ou outros gastos não preenchidos. Para elétricos, o cálculo por litro não se aplica.</p></section>
-      <div id="cost-comparison" class="cost-grid"></div>
-    </div></section>
-    <section class="decision-guide page-width" id="method" aria-labelledby="method-title"><div class="section-intro"><p class="eyebrow">A decisão continua sua</p><h2 id="method-title">O que vale confirmar antes de comprar.</h2></div><div class="guide-grid"><article><span>01</span><h3>O carro real</h3><p>Quilometragem, manutenção, laudo e histórico dependem do veículo específico. O catálogo não verifica esses itens.</p></article><article><span>02</span><h3>O seu uso</h3><p>Consumo, porta-malas, conforto e segurança variam por versão. Confira fichas técnicas e faça um test drive.</p></article><article><span>03</span><h3>A conta completa</h3><p>Peça cotações de seguro, manutenção e taxas da sua região. Referência de preço não garante o valor da negociação.</p></article></div></section>
-    <section class="sources-section page-width" id="sources"><h2>De onde vêm as informações?</h2><p>Preços de referência FIPE consultados por API da Parallelum, um provedor independente. Cada resultado identifica o mês e a data da consulta. As despesas são calculadas com os valores que você informa.</p><p>Seu plano e sua seleção ficam neste navegador. O link compartilhável contém apenas os identificadores dos modelos selecionados, sem orçamento ou texto pessoal.</p><a href="https://deividfortuna.github.io/fipe/v2/" target="_blank" rel="noopener noreferrer">Conhecer a fonte do catálogo ↗</a></section>
-  </main>
-  <footer class="site-footer page-width"><a href="/" aria-label="CarInsight, início"><img class="brand-logo" src="assets/car-insight-logo.png" alt="CarInsight" width="145" height="32" /></a><p>Clareza para escolher. Liberdade para decidir.</p><nav aria-label="Links de apoio"><a href="#method">Como decidir</a><a href="#sources">Fontes e privacidade</a></nav></footer>
-  <noscript><p class="page-width">Ative JavaScript para consultar o catálogo e montar sua comparação.</p></noscript>
-</body>
+        <div
+          id="brief-response"
+          class="brief-response"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+      </section>
+      <section class="catalog-section page-width" id="catalog" aria-labelledby="catalog-title">
+        <div class="section-intro">
+          <p class="eyebrow">02 / Informação antes da escolha</p>
+          <h2 id="catalog-title">Dê contexto ao preço.</h2>
+          <p>Consulte um modelo e ano. Guarde até três referências para comparar.</p>
+        </div>
+        <div class="catalog-layout">
+          <form id="catalog-form" class="catalog-form">
+            <label
+              >Marca<select id="catalog-brand" required disabled>
+                <option value="">Carregando marcas…</option>
+              </select></label
+            >
+            <label
+              >Filtrar modelos<input
+                id="model-filter"
+                type="search"
+                placeholder="Digite parte do nome"
+                disabled
+                autocomplete="off"
+            /></label>
+            <label
+              >Modelo e versão<select id="catalog-model" required disabled>
+                <option value="">Escolha uma marca primeiro</option>
+              </select></label
+            >
+            <label
+              >Ano e combustível<select id="catalog-year" required disabled>
+                <option value="">Escolha um modelo primeiro</option>
+              </select></label
+            >
+            <button type="submit" id="valuation-submit" class="primary-button" disabled>
+              Consultar referência <span aria-hidden="true">→</span>
+            </button>
+            <p id="catalog-status" class="status-message" role="status" aria-live="polite">
+              Conectando ao catálogo…
+            </p>
+            <button type="button" id="catalog-retry" class="text-button" hidden>
+              Tentar novamente
+            </button>
+            <p class="source-note">
+              Valores FIPE via Parallelum, provedor independente. A referência não é uma oferta de
+              venda.
+            </p>
+          </form>
+          <div id="reference-result" class="reference-result" aria-live="polite" aria-busy="false">
+            <div class="reference-empty">
+              <img src="assets/car-insight-icon.png" alt="" width="64" height="64" />
+              <h3>Uma escolha com mais contexto.</h3>
+              <p>
+                O valor de referência, o mês consultado e a relação com seu orçamento aparecem aqui.
+              </p>
+              <ul>
+                <li>Preço com fonte identificada</li>
+                <li>Limites e informações que faltam</li>
+                <li>Comparação sem pressão para comprar</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="comparison-section" id="comparison" aria-labelledby="comparison-title">
+        <div class="page-width">
+          <div class="comparison-heading">
+            <div class="section-intro">
+              <p class="eyebrow">03 / Lado a lado</p>
+              <h2 id="comparison-title">Suas opções, na mesma régua.</h2>
+              <p id="comparison-description">
+                Adicione até 3 referências do catálogo para começar.
+              </p>
+            </div>
+            <div class="comparison-actions">
+              <button id="share-shortlist" class="secondary-button" type="button" disabled>
+                Copiar link</button
+              ><button id="export-shortlist" class="secondary-button" type="button" disabled>
+                Baixar resumo
+              </button>
+            </div>
+          </div>
+          <div id="shortlist-status" class="status-message" role="status" aria-live="polite"></div>
+          <label id="share-link-wrapper" hidden
+            >Link da comparação<input id="share-link" type="text" readonly
+          /></label>
+          <div id="shortlist-grid" class="shortlist-grid">
+            <div class="shortlist-empty">
+              <span aria-hidden="true">＋</span>
+              <p>Sua primeira escolha começa com uma referência.</p>
+              <a href="#catalog">Explorar modelos</a>
+            </div>
+          </div>
+          <section
+            id="expenses-section"
+            class="expenses-section"
+            hidden
+            aria-labelledby="expenses-title"
+          >
+            <div>
+              <p class="eyebrow">Seu cenário mensal</p>
+              <h3 id="expenses-title">Quanto entra na sua conta?</h3>
+              <p>Preencha estimativas próprias. Campos vazios continuam desconhecidos.</p>
+            </div>
+            <div class="expenses-global">
+              <label
+                >Distância por mês (km)<input
+                  id="monthly-distance"
+                  type="number"
+                  min="0"
+                  max="100000"
+                  step="1"
+                  inputmode="numeric"
+                  placeholder="Ex.: 1000" /></label
+              ><label
+                >Preço do combustível (R$/litro)<input
+                  id="fuel-price"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  inputmode="decimal"
+                  placeholder="Ex.: 6,20"
+              /></label>
+            </div>
+            <p class="source-note">
+              Estimativa parcial das despesas informadas. Não inclui depreciação, financiamento,
+              estacionamento ou outros gastos não preenchidos. Para elétricos, o cálculo por litro
+              não se aplica.
+            </p>
+          </section>
+          <div id="cost-comparison" class="cost-grid"></div>
+        </div>
+      </section>
+      <section class="decision-guide page-width" id="method" aria-labelledby="method-title">
+        <div class="section-intro">
+          <p class="eyebrow">A decisão continua sua</p>
+          <h2 id="method-title">O que vale confirmar antes de comprar.</h2>
+        </div>
+        <div class="guide-grid">
+          <article>
+            <span>01</span>
+            <h3>O carro real</h3>
+            <p>
+              Quilometragem, manutenção, laudo e histórico dependem do veículo específico. O
+              catálogo não verifica esses itens.
+            </p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>O seu uso</h3>
+            <p>
+              Consumo, porta-malas, conforto e segurança variam por versão. Confira fichas técnicas
+              e faça um test drive.
+            </p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>A conta completa</h3>
+            <p>
+              Peça cotações de seguro, manutenção e taxas da sua região. Referência de preço não
+              garante o valor da negociação.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="sources-section page-width" id="sources">
+        <h2>De onde vêm as informações?</h2>
+        <p>
+          Preços de referência FIPE consultados por API da Parallelum, um provedor independente.
+          Cada resultado identifica o mês e a data da consulta. As despesas são calculadas com os
+          valores que você informa.
+        </p>
+        <p>
+          Plano e seleção são salvos neste navegador. Ao montar o plano, o texto é enviado à API do
+          CarInsight e, quando a IA está ativa, ao provedor de IA. Evite dados pessoais sensíveis. O
+          link compartilhável contém apenas os identificadores dos modelos selecionados, sem
+          orçamento ou texto pessoal.
+        </p>
+        <a href="https://deividfortuna.github.io/fipe/v2/" target="_blank" rel="noopener noreferrer"
+          >Conhecer a fonte do catálogo ↗</a
+        >
+      </section>
+    </main>
+    <footer class="site-footer page-width">
+      <a href="/" aria-label="CarInsight, início"
+        ><img
+          class="brand-logo"
+          src="assets/car-insight-logo.png"
+          alt="CarInsight"
+          width="145"
+          height="32"
+      /></a>
+      <p>Clareza para escolher. Liberdade para decidir.</p>
+      <nav aria-label="Links de apoio">
+        <a href="#method">Como decidir</a><a href="#sources">Fontes e privacidade</a>
+      </nav>
+    </footer>
+    <noscript
+      ><p class="page-width">
+        Ative JavaScript para consultar o catálogo e montar sua comparação.
+      </p></noscript
+    >
+  </body>
 </html>

@@ -20,4 +20,9 @@ test('explicit same-origin or HTTPS configuration overrides the default', () => 
     resolveApiOrigin('example.com', 'http://unsafe.example.com'),
     'https://backend-production-8159.up.railway.app',
   );
+  assert.equal(resolveApiOrigin('localhost', 'invalid origin'), 'http://localhost:3000');
+  assert.equal(
+    resolveApiOrigin('example.com', 'https://user:password@example.com'),
+    'https://backend-production-8159.up.railway.app',
+  );
 });

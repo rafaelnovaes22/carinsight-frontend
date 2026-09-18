@@ -72,7 +72,7 @@ export function expenseEstimate(key) {
   const values = valuesFor(key);
   const reference = currentReferences.find((item) => referenceKey(item.selection) === key);
   const electric = /el[eé]tric/i.test(reference?.valuation.fuel || '');
-  return monthlyExpenses({
+  const estimate = monthlyExpenses({
     distance: optionalNumber(input('monthly-distance').value),
     fuelPrice: optionalNumber(input('fuel-price').value),
     efficiency: electric ? null : optionalNumber(values.efficiency),
@@ -80,6 +80,8 @@ export function expenseEstimate(key) {
     tax: optionalNumber(values.tax),
     maintenance: optionalNumber(values.maintenance),
   });
+  if (electric) estimate.missing[0] = 'Energia/recarga: não estimada neste cálculo';
+  return estimate;
 }
 
 /** @param {string} key @returns {void} */
