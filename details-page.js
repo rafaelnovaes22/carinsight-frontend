@@ -1,180 +1,185 @@
 /**
  * CarInsight Vehicle Details Page
  * Lê ?id= da URL, busca o veículo no backend e preenche a página.
- * Sem id (ou com API fora), mantém o conteúdo estático e o chat geral.
+ * Uma consulta ausente ou indisponível nunca é substituída por um anúncio de exemplo.
+ */
+
+/**
+ * @typedef {{id: string, make?: string, model?: string, version?: string,
+ * yearModel?: number, yearFab?: number, price?: number|string, mileage?: number,
+ * bodyType?: string, condition?: string, title?: string, features?: string[],
+ * technicalSpecs?: Record<string, unknown>, media?: {type?: string, url: string}[],
+ * dealer?: {name?: string}}} VehicleDetails
  */
 
 (function () {
-  function formatPrice(price) {
-    const num = typeof price === 'string' ? parseFloat(price) : price;
-    if (!num || isNaN(num)) return 'Consulte';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(num);
-  }
-
-  function monthlyEstimate(price) {
-    // Estimativa simples: 20% de entrada, 48x, mesma taxa default do backend
-    const rate = 0.0179;
-    const months = 48;
-    const financed = price * 0.8;
-    const payment =
-      (financed * rate * Math.pow(1 + rate, months)) /
-      (Math.pow(1 + rate, months) - 1);
-    return formatPrice(Math.round(payment));
-  }
-
+  /** @param {string} selector @param {unknown} text @returns {void} */
   function setText(selector, text) {
-    const el = document.querySelector(selector);
-    if (el && text) el.textContent = text;
+    const element = document.querySelector(selector);
+    if (element) element.textContent = String(text ?? 'Não informado');
   }
 
-  function fillSpecs(vehicle) {
-    const grid = document.querySelector('.specs-list-grid');
-    if (!grid) return;
+  /** @param {string} tag @param {string} className @param {unknown} text @returns {HTMLElement} */
+  function textElement(tag, className, text) {
+    const element = document.createElement(tag);
+    element.className = className;
+    element.textContent = String(text ?? 'Não informado');
+    return element;
+  }
 
+  /** @param {string} selector @param {boolean} hidden @returns {void} */
+  function setHidden(selector, hidden) {
+    const element = document.querySelector(selector);
+    if (element instanceof HTMLElement) element.hidden = hidden;
+  }
+
+  /** @param {unknown} price @returns {string} */
+  function formatPrice(price) {
+    const amount = Number(price);
+    if (!Number.isFinite(amount) || amount <= 0) return 'Preço não informado';
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount);
+  }
+
+  /** @param {VehicleDetails} vehicle @returns {[string, unknown][]} */
+  function specificationRows(vehicle) {
     const specs = vehicle.technicalSpecs || {};
-    const rows = [
-      ['Quilometragem', vehicle.mileage ? `${vehicle.mileage.toLocaleString('pt-BR')} km` : null],
-      ['Ano', `${vehicle.yearFab || vehicle.yearModel}/${vehicle.yearModel}`],
+    return [
+      [
+        'Quilometragem',
+        typeof vehicle.mileage === 'number' && Number.isFinite(vehicle.mileage)
+          ? `${vehicle.mileage.toLocaleString('pt-BR')} km`
+          : null,
+      ],
+      ['Ano de fabricação', vehicle.yearFab],
+      ['Ano do modelo', vehicle.yearModel],
       ['Carroceria', vehicle.bodyType],
       ['Motor', specs.engine],
       ['Transmissão', specs.transmission],
       ['Combustível', specs.fuel || specs.fuelType],
       ['Potência', specs.power],
-      ['Condição', vehicle.condition === 'NEW' ? 'Novo' : 'Seminovo'],
-    ].filter(([, value]) => value);
-
-    grid.innerHTML = rows
-      .map(
-        ([label, value]) =>
-          `<div class="spec-row-detail"><span class="label">${label}</span><span class="value">${value}</span></div>`,
-      )
-      .join('');
+      [
+        'Condição',
+        vehicle.condition === 'NEW' ? 'Novo' : vehicle.condition === 'USED' ? 'Usado' : null,
+      ],
+    ];
   }
 
+  /** @param {VehicleDetails} vehicle @returns {void} */
+  function fillSpecs(vehicle) {
+    const grid = document.querySelector('.specs-list-grid');
+    if (!grid) return;
+    grid.replaceChildren();
+    for (const [label, value] of specificationRows(vehicle)) {
+      const row = textElement('div', 'spec-row-detail', '');
+      row.append(textElement('span', 'label', label), textElement('span', 'value', value));
+      grid.append(row);
+    }
+  }
+
+  /** @param {VehicleDetails} vehicle @returns {void} */
   function fillFeatures(vehicle) {
     const chips = document.querySelector('.features-chips');
     if (!chips) return;
-    const features = (vehicle.features || []).concat(vehicle.aiTags || []);
-    if (features.length === 0) return;
-
-    chips.innerHTML = features
-      .slice(0, 10)
-      .map(
-        (f) =>
-          `<div class="feature-chip-active"><i data-lucide="check"></i> ${f}</div>`,
-      )
-      .join('');
+    const features = Array.isArray(vehicle.features) ? vehicle.features : [];
+    chips.replaceChildren();
+    if (!features.length) chips.append(textElement('p', '', 'Itens não informados.'));
+    features
+      .slice(0, 20)
+      .forEach((feature) => chips.append(textElement('div', 'feature-chip-active', feature)));
   }
 
+  /** @param {unknown} candidate @returns {string|null} */
+  function safePhotoUrl(candidate) {
+    if (typeof candidate !== 'string') return null;
+    try {
+      const url = new URL(candidate, window.location.origin);
+      if (url.username || url.password) return null;
+      return url.protocol === 'https:' || url.origin === window.location.origin ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /** @param {string} url @param {string} title @returns {HTMLImageElement} */
+  function vehicleImage(url, title) {
+    const image = document.createElement('img');
+    image.src = url;
+    image.alt = `Foto informada para ${title}`;
+    image.className = 'vehicle-photo';
+    image.loading = 'lazy';
+    return image;
+  }
+
+  /** @param {VehicleDetails} vehicle @returns {void} */
   function fillGallery(vehicle) {
-    const media = (vehicle.media || []).filter((m) => m.type === 'IMAGE' || !m.type);
-    if (media.length === 0) return;
-
-    const mainImg = document.querySelector('.main-image img');
-    if (mainImg) mainImg.src = media[0].url;
-
-    const sideImgs = document.querySelectorAll('.side-images img');
-    sideImgs.forEach((img, i) => {
-      if (media[i + 1]) img.src = media[i + 1].url;
-    });
-
-    const modalImgs = document.querySelectorAll('.modal-grid img');
-    modalImgs.forEach((img, i) => {
-      if (media[i]) img.src = media[i].url;
-    });
-
-    const galleryTitle = document.querySelector('.modal-header h3');
-    if (galleryTitle) galleryTitle.textContent = `Galeria de Fotos (${media.length})`;
-  }
-
-  function fillBadges(vehicle) {
-    const badges = document.querySelector('.vehicle-badges');
-    if (!badges) return;
-    const tags = (vehicle.aiTags || []).slice(0, 3);
-    if (tags.length === 0) {
-      badges.innerHTML = '<span class="badge-detail badge-premium">CarInsight</span>';
-      return;
+    const gallery = document.getElementById('vehicle-gallery');
+    if (!gallery) return;
+    gallery.replaceChildren();
+    const media = Array.isArray(vehicle.media) ? vehicle.media : [];
+    const photos = media.filter((item) => item.type === 'IMAGE' || !item.type).slice(0, 20);
+    for (const photo of photos) {
+      const url = safePhotoUrl(photo.url);
+      if (url)
+        gallery.append(vehicleImage(url, `${vehicle.make || ''} ${vehicle.model || ''}`.trim()));
     }
-    badges.innerHTML = tags
-      .map((t, i) =>
-        i === 0
-          ? `<span class="badge-detail badge-premium">${t}</span>`
-          : `<span class="badge-detail">${t}</span>`,
-      )
-      .join('');
+    if (!gallery.childElementCount) gallery.append(textElement('p', '', 'Fotos não informadas.'));
+    gallery.hidden = false;
   }
 
+  /** @param {VehicleDetails} vehicle @returns {void} */
   function fillVehicle(vehicle) {
-    document.title = `${vehicle.make} ${vehicle.model} ${vehicle.yearModel} | CarInsight`;
-
-    setText(
-      '.vehicle-header h1',
-      `${vehicle.yearModel} ${vehicle.make} ${vehicle.model}${vehicle.version ? ' ' + vehicle.version : ''}`,
-    );
+    const title = [vehicle.make, vehicle.model, vehicle.version, vehicle.yearModel]
+      .filter(Boolean)
+      .join(' ');
+    document.title = `${title} | CarInsight`;
+    setText('.vehicle-header h1', title);
     setText('.price-tag-large', formatPrice(vehicle.price));
-    setText(
-      '.monthly-estimate',
-      `Ou em parcelas de ${monthlyEstimate(Number(vehicle.price))} /mês`,
-    );
-
-    // Descrição: usa o título do anúncio (backend não tem campo de descrição)
-    const description = document.querySelector('.info-card p');
-    if (description && vehicle.title) description.textContent = vehicle.title;
-
-    // Localização mockada não se aplica: mostra só o nome do lojista
-    const location = document.querySelector('.vehicle-header p');
-    if (location) location.remove();
-
-    if (vehicle.dealer?.name) {
-      setText('.dealer-name', vehicle.dealer.name);
-    }
-
+    // Descrição: usa o título do anúncio (backend não tem campo de descrição).
+    setText('#vehicle-description', vehicle.title || 'Descrição não informada.');
+    // Localização mockada não se aplica: mostra só o nome do lojista.
+    setText('.dealer-name', vehicle.dealer?.name || 'Anunciante não informado');
     fillSpecs(vehicle);
     fillFeatures(vehicle);
     fillGallery(vehicle);
-    fillBadges(vehicle);
-
-    if (window.lucide) lucide.createIcons();
+    setHidden('#detail-status', true);
+    setHidden('#vehicle-details', false);
+    wireConversation(vehicle.id);
   }
 
-  function wireSellerButton(vehicleId) {
-    const btn = document.querySelector('.btn-card-action-whats');
-    if (!btn) return;
-    btn.setAttribute('href', '#');
-    btn.addEventListener('click', (event) => {
-      event.preventDefault();
-      openChat(vehicleId || null);
-    });
+  /** @param {string} vehicleId @returns {void} */
+  function wireConversation(vehicleId) {
+    const button = document.querySelector('.btn-card-action-whats');
+    button?.addEventListener('click', () => window.openChat(vehicleId));
   }
 
+  /** @param {boolean} missingId @returns {void} */
+  function showUnavailable(missingId) {
+    setText(
+      '#detail-status-title',
+      missingId ? 'Escolha um veículo para consultar' : 'Veículo indisponível',
+    );
+    setText(
+      '#detail-status-copy',
+      'Não há informações confirmadas para este link. Você pode explorar modelos e referências no catálogo.',
+    );
+    setHidden('#vehicle-details', true);
+    setHidden('#vehicle-gallery', true);
+  }
+
+  /** @returns {Promise<void>} */
   async function init() {
-    const params = new URLSearchParams(window.location.search);
-    const vehicleId = params.get('id');
-
-    window.currentVehicleId = vehicleId || null;
-    wireSellerButton(vehicleId);
-
-    if (!vehicleId || !window.CarInsightAPI) return;
-
+    const vehicleId = new URLSearchParams(window.location.search).get('id');
+    if (!vehicleId || !window.CarInsightAPI) return showUnavailable(true);
     try {
-      const vehicle = await CarInsightAPI.getVehicle(vehicleId);
-      if (vehicle && vehicle.id) {
-        fillVehicle(vehicle);
-        // Registro de visualização (lead tracking) - não bloqueia
-        if (CarInsightAPI.viewVehicle) {
-          CarInsightAPI.viewVehicle(vehicleId).catch(() => {});
-        }
-      }
-    } catch (error) {
-      console.warn('Detalhes: veículo não encontrado ou API indisponível', error);
+      const vehicle = await window.CarInsightAPI.getVehicle(encodeURIComponent(vehicleId));
+      if (!vehicle || vehicle.id !== vehicleId) return showUnavailable(false);
+      fillVehicle(vehicle);
+      // Registro de visualização (lead tracking) não bloqueia a leitura.
+      window.CarInsightAPI.viewVehicle?.(vehicleId).catch(() => {});
+    } catch {
+      showUnavailable(false);
     }
   }
 
   document.addEventListener('DOMContentLoaded', init);
 })();
-
-console.log('🚗 DetailsPage loaded');
