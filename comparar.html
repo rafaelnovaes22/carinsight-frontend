@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -36,11 +36,13 @@
 
         <!-- Header Global (Igual index.html) -->
         <header>
-            <a href="index.html" class="logo">
-                <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
-            </a>
-            <div class="header-right">
-                <button id="menu-toggle" aria-label="Abrir menu">
+            <div class="logo">
+                <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+            </div>
+            <div class="header-actions">
+                <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i>
+                    Entrar</a>
+                <button id="menu-toggle" class="menu-btn">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
@@ -50,17 +52,116 @@
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
         <nav class="sidebar-menu" id="sidebar-menu">
             <div class="sidebar-header">
-                <h3>Menu</h3>
+                <div>
+                    <h3>Menu Principal</h3>
+                    <p>Navegue por nossas ferramentas e serviços</p>
+                </div>
                 <button id="menu-close" aria-label="Fechar menu">
                     <i data-lucide="x"></i>
                 </button>
             </div>
-            <ul class="sidebar-links">
-                <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
-                <li><a href="comparar.html" class="active"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-                <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
-            </ul>
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Encontre seu Carro</h4>
+                    <div class="sidebar-actions">
+                        <a href="meus-salvos.html" class="sidebar-link-btn">
+                            <i data-lucide="heart"></i> Meus Salvos
+                        </a>
+                        <a href="comparar.html" class="sidebar-link-btn">
+                            <i data-lucide="arrow-right-left"></i> Comparar
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-column">
+                    <h4>Soluções de Venda</h4>
+                    <div class="seller-sections">
+                        <div class="seller-type">
+                            <h5>Vendedores Particulares</h5>
+                            <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                            <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar
+                                meu carro</a>
+                        </div>
+                        <div class="seller-type">
+                            <h5>Lojas e Concessionárias</h5>
+                            <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                            <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i>
+                                Acessar Painel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
+
+        <!-- Login Popup -->
+        <div class="login-popup" id="login-popup">
+            <div class="sidebar-header">
+                <div>
+                    <h3>Bem-vindo de volta</h3>
+                    <p>Escolha sua forma preferida de acesso</p>
+                </div>
+                <button id="login-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="social-login">
+                <button class="social-btn google-btn">
+                    <img src="assets/google.svg" alt="Google" style="width: 18px;">
+                    <span>Entrar com Google</span>
+                </button>
+                <button class="social-btn apple-btn">
+                    <img src="assets/apple.svg" alt="Apple" style="width: 18px;">
+                    <span>Entrar com Apple</span>
+                </button>
+            </div>
+
+            <div class="auth-separator">ou entrar com e-mail</div>
+
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Acesse sua conta</h4>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="E-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Senha" required>
+                            <i data-lucide="lock" class="input-icon"></i>
+                        </div>
+                        <div class="form-extras">
+                            <label class="checkbox-group"
+                                style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox"> Lembrar-me
+                            </label>
+                            <a href="#" class="forgot-link"
+                                style="color: var(--accent-primary); text-decoration: none; font-weight: 500;">Esqueceu
+                                a senha?</a>
+                        </div>
+                        <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                    </form>
+                </div>
+                <div class="sidebar-column" style="background: #f8fafc; padding: 30px; border-radius: 24px;">
+                    <h4>Criar nova conta</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">Junte-se a
+                        milhares de usuários e aproveite benefícios exclusivos.</p>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="text" placeholder="Nome completo" required>
+                            <i data-lucide="user" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder="Seu melhor e-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Crie uma senha forte" required>
+                            <i data-lucide="shield-check" class="input-icon"></i>
+                        </div>
+                        <button type="submit" class="auth-submit">Começar agora</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Main Layout -->
         <div class="container results-layout-container">
@@ -93,11 +194,62 @@
                 <!-- Main Content Area -->
                 <main class="results-main">
 
+                    <!-- Selection Section -->
+                    <section class="saved-selection-section">
+                        <div class="section-header">
+                            <h2>Meus Carros Salvos</h2>
+                            <p>Selecione até 3 veículos para comparar lado a lado</p>
+                        </div>
+                        <div class="saved-selection-grid">
+                            <!-- Car 1 Selection -->
+                            <div class="selection-card">
+                                <div class="selection-img">
+                                    <img src="assets/car1.png" alt="Corolla Cross">
+                                </div>
+                                <div class="selection-info">
+                                    <h5>Toyota Corolla Cross XR</h5>
+                                    <span>2022 â€¢ 18k km</span>
+                                </div>
+                                <button class="btn-select-car active">
+                                    <i data-lucide="check"></i> Selecionado
+                                </button>
+                            </div>
+
+                            <!-- Car 2 Selection -->
+                            <div class="selection-card">
+                                <div class="selection-img">
+                                    <img src="assets/car2.png" alt="Honda Civic">
+                                </div>
+                                <div class="selection-info">
+                                    <h5>Honda Civic Sedan EXL</h5>
+                                    <span>2021 â€¢ 35k km</span>
+                                </div>
+                                <button class="btn-select-car active">
+                                    <i data-lucide="check"></i> Selecionado
+                                </button>
+                            </div>
+
+                            <!-- Car 3 Selection -->
+                            <div class="selection-card">
+                                <div class="selection-img">
+                                    <img src="assets/suv.png" alt="Jeep Compass">
+                                </div>
+                                <div class="selection-info">
+                                    <h5>Jeep Compass Longitude</h5>
+                                    <span>2021 â€¢ 42k km</span>
+                                </div>
+                                <button class="btn-select-car">
+                                    <i data-lucide="plus"></i> Selecionar
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Criteria Section -->
                     <section class="comparison-criteria-section">
                         <div class="criteria-header">
                             <h3>Critérios de Comparação</h3>
-                            <p>Selecione o que é mais importante para você nesta decisão:</p>
+                            <p>Ajuste os filtros para focar no que importa para sua decisão:</p>
                         </div>
                         <div class="criteria-tags">
                             <label class="criteria-tag active">
@@ -112,9 +264,9 @@
                                 <input type="checkbox" checked>
                                 <i data-lucide="check" style="width:14px;"></i> Ano
                             </label>
-                            <label class="criteria-tag">
-                                <input type="checkbox">
-                                Consumo
+                            <label class="criteria-tag active">
+                                <input type="checkbox" checked>
+                                <i data-lucide="check" style="width:14px;"></i> Consumo
                             </label>
                             <label class="criteria-tag">
                                 <input type="checkbox">
@@ -132,41 +284,70 @@
                     </section>
 
                     <!-- Comparison Grid -->
-                    <div class="comparison-grid">
+                    <div class="comparison-grid-modern">
 
-                        <!-- Empty Slot 1 -->
-                        <div class="comparison-slot slot-empty">
-                            <button class="btn-add-car">
-                                <div class="add-icon-circle">
-                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
-                                </div>
-                                <h4>Adicionar Veículo</h4>
-                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
-                            </button>
+                        <!-- Labels Column -->
+                        <div class="comparison-labels">
+                            <div class="label-spacer"></div>
+                            <div class="criteria-label">Preço</div>
+                            <div class="criteria-label">Quilometragem</div>
+                            <div class="criteria-label">Ano</div>
+                            <div class="criteria-label">Consumo (Cidade)</div>
+                            <div class="criteria-label">Consumo (Estrada)</div>
+                            <div class="criteria-label">Combustível</div>
+                            <div class="criteria-label">Câmbio</div>
+                            <div class="criteria-label">Motor</div>
                         </div>
 
-                        <!-- Empty Slot 2 -->
-                        <div class="comparison-slot slot-empty">
-                            <button class="btn-add-car">
-                                <div class="add-icon-circle">
-                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
+                        <!-- Car 1 Comparison -->
+                        <div class="comparison-item-column">
+                            <div class="item-header">
+                                <button class="btn-change-item" title="Mudar veículo">
+                                    <i data-lucide="refresh-cw"></i>
+                                </button>
+                                <div class="item-img">
+                                    <img src="assets/car1.png" alt="Toyota Corolla Cross">
                                 </div>
-                                <h4>Adicionar Veículo</h4>
-                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
-                            </button>
+                                <h4>Toyota Corolla Cross XR</h4>
+                            </div>
+                            <div class="item-value highlight">R$ 158.900</div>
+                            <div class="item-value">18.234 km</div>
+                            <div class="item-value">2022</div>
+                            <div class="item-value">11,5 km/l</div>
+                            <div class="item-value">12,8 km/l</div>
+                            <div class="item-value">Flex</div>
+                            <div class="item-value">Automático CVT</div>
+                            <div class="item-value">2.0L I4</div>
                         </div>
 
-                        <!-- Empty Slot 3 -->
-                        <div class="comparison-slot slot-empty">
-                            <button class="btn-add-car">
-                                <div class="add-icon-circle">
-                                    <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
+                        <!-- Car 2 Comparison -->
+                        <div class="comparison-item-column">
+                            <div class="item-header">
+                                <button class="btn-change-item" title="Mudar veículo">
+                                    <i data-lucide="refresh-cw"></i>
+                                </button>
+                                <div class="item-img">
+                                    <img src="assets/car2.png" alt="Honda Civic">
                                 </div>
-                                <h4>Adicionar Veículo</h4>
-                                <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
-                            </button>
+                                <h4>Honda Civic Sedan EXL</h4>
+                            </div>
+                            <div class="item-value">R$ 124.900</div>
+                            <div class="item-value highlight">35.120 km</div>
+                            <div class="item-value">2021</div>
+                            <div class="item-value highlight">10,5 km/l</div>
+                            <div class="item-value highlight">13,0 km/l</div>
+                            <div class="item-value">Flex</div>
+                            <div class="item-value">CVT 7 Marchas</div>
+                            <div class="item-value">2.0 i-VTEC</div>
                         </div>
 
+                        <!-- Placeholder for Car 3 -->
+                        <div class="comparison-item-column placeholder">
+                            <button class="btn-add-comparison">
+                                <i data-lucide="plus-circle"></i>
+                                <span>Adicionar <br>3º carro</span>
+                            </button>
+                        </div>
                     </div>
                 </main>
             </div>
@@ -184,18 +365,18 @@
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="index.html#carros">Veículos</a></li>
-                    <li><a href="index.html#como-funciona">Processo</a></li>
-                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
                     <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h4>Ajuda</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Falar com Consultor</a></li>
-                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -203,7 +384,6 @@
                 <ul>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">TikTok</a></li>
                 </ul>
             </div>
         </div>
@@ -213,13 +393,19 @@
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
+    <a href="#" class="floating-chatbot">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
 
     <!-- Reuse main logic for menu -->
     <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="favorites.js"></script>
+<script src="compare.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
+<script src="compare-page.js"></script>
     <script>
         // Init Icons
         lucide.createIcons();
@@ -271,21 +457,42 @@
                 });
             });
 
-            // Add Car Interaction (Demo)
-            const addButtons = document.querySelectorAll('.btn-add-car');
-            addButtons.forEach(btn => {
+            // Car Selection Selection Interaction
+            const selectionButtons = document.querySelectorAll('.btn-select-car');
+            selectionButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    alert('Em uma implementação real, isso abriria um modal com sua lista de "Meus Salvos" para você escolher.');
+                    btn.classList.toggle('active');
+                    const icon = btn.querySelector('i');
+                    const span = btn.querySelector('span') || btn.lastChild;
+
+                    if (btn.classList.contains('active')) {
+                        icon.setAttribute('data-lucide', 'check');
+                        span.textContent = ' Selecionado';
+                    } else {
+                        icon.setAttribute('data-lucide', 'plus');
+                        span.textContent = ' Selecionar';
+                    }
+                    lucide.createIcons();
                 });
             });
+
+            // Change Item Interaction
+            const changeButtons = document.querySelectorAll('.btn-change-item');
+            changeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alert('Isso abriria uma lista dos seus carros salvos para você substituir este veículo na comparação.');
+                });
+            });
+
+            // Add comparison button
+            const addComparisonBtn = document.querySelector('.btn-add-comparison');
+            if (addComparisonBtn) {
+                addComparisonBtn.addEventListener('click', () => {
+                    alert('Selecione um 3º carro da sua lista de salvos acima para completar o comparativo.');
+                });
+            }
         });
     </script>
-    <script src="api.js"></script>
-    <script src="favorites.js"></script>
-    <script src="compare.js"></script>
-    <script src="chat.js"></script>
-    <script src="chat-ui.js"></script>
-    <script src="compare-page.js"></script>
 </body>
 
 </html>

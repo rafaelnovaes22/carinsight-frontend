@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="pt-br"><head>
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toyota Corolla Cross 2022 | CarInsight</title>
@@ -11,11 +14,12 @@
 <body class="detail-page">
 
     <header>
-        <a href="index.html" class="logo">
-            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
-        </a>
-        <div class="header-right">
-            <button id="menu-toggle" aria-label="Abrir menu">
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i> Entrar</a>
+            <button id="menu-toggle" class="menu-btn">
                 <i data-lucide="menu"></i>
             </button>
         </div>
@@ -24,17 +28,116 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <nav class="sidebar-menu" id="sidebar-menu">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
             <button id="menu-close" aria-label="Fechar menu">
                 <i data-lucide="x"></i>
             </button>
         </div>
-        <ul class="sidebar-links">
-            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
-            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-            <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
-        </ul>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
+
+    <!-- Login Popup -->
+    <div class="login-popup" id="login-popup">
+        <div class="sidebar-header">
+            <div>
+                <h3>Bem-vindo de volta</h3>
+                <p>Escolha sua forma preferida de acesso</p>
+            </div>
+            <button id="login-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="social-login">
+            <button class="social-btn google-btn">
+                <img src="assets/google.svg" alt="Google" style="width: 18px;">
+                <span>Entrar com Google</span>
+            </button>
+            <button class="social-btn apple-btn">
+                <img src="assets/apple.svg" alt="Apple" style="width: 18px;">
+                <span>Entrar com Apple</span>
+            </button>
+        </div>
+
+        <div class="auth-separator">ou entrar com e-mail</div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Acesse sua conta</h4>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="E-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Senha" required>
+                        <i data-lucide="lock" class="input-icon"></i>
+                    </div>
+                    <div class="form-extras">
+                        <label class="checkbox-group"
+                            style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox"> Lembrar-me
+                        </label>
+                        <a href="#" class="forgot-link"
+                            style="color: var(--accent-primary); text-decoration: none; font-weight: 500;">Esqueceu a
+                            senha?</a>
+                    </div>
+                    <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                </form>
+            </div>
+            <div class="sidebar-column" style="background: #f8fafc; padding: 30px; border-radius: 24px;">
+                <h4>Criar nova conta</h4>
+                <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">Junte-se a milhares de
+                    usuários e aproveite benefícios exclusivos.</p>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Nome completo" required>
+                        <i data-lucide="user" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Seu melhor e-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Crie uma senha forte" required>
+                        <i data-lucide="shield-check" class="input-icon"></i>
+                    </div>
+                    <button type="submit" class="auth-submit">Começar agora</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- Gallery -->
@@ -43,9 +146,11 @@
                 <img src="assets/car1.png" alt="Corolla Cross Main" onclick="openModal(0)">
             </div>
             <div class="side-images">
-                <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Corolla Interior" onclick="openModal(1)">
+                <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=800"
+                    alt="Corolla Interior" onclick="openModal(1)">
                 <div class="more-images-container" onclick="openModal(2)">
-                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Corolla Front">
+                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&fit=crop&q=80&w=800"
+                        alt="Corolla Front">
                     <div class="more-overlay">
                         <i data-lucide="grid"></i>
                         <span>+15 fotos</span>
@@ -66,16 +171,20 @@
                     <img src="assets/car1.png" alt="Car 1">
                 </div>
                 <div class="modal-img-wrapper" onclick="openLightbox(1)">
-                    <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Interior">
+                    <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=800"
+                        alt="Interior">
                 </div>
                 <div class="modal-img-wrapper" onclick="openLightbox(2)">
-                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Front">
+                    <img src="https://images.unsplash.com/photo-1619767886558-efdf259cde1a?auto=format&fit=crop&q=80&w=800"
+                        alt="Front">
                 </div>
                 <div class="modal-img-wrapper" onclick="openLightbox(3)">
-                    <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Detail 1">
+                    <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=800"
+                        alt="Detail 1">
                 </div>
                 <div class="modal-img-wrapper" onclick="openLightbox(4)">
-                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&amp;fit=crop&amp;q=80&amp;w=800" alt="Detail 2">
+                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800"
+                        alt="Detail 2">
                 </div>
                 <div class="modal-img-wrapper full-width" onclick="openLightbox(5)">
                     <img src="assets/car2.png" alt="Side">
@@ -102,12 +211,12 @@
                 <div class="vehicle-header">
                     <div class="vehicle-badges">
                         <span class="badge-detail badge-premium">Destaque CarInsight</span>
-                        <span class="badge-detail">Único Dono</span>
+                        <span class="badge-detail">Ãšnico Dono</span>
                         <span class="badge-detail">Garantia Fábrica</span>
                     </div>
                     <h1>2022 Toyota Corolla Cross XR</h1>
                     <p style="color: var(--text-secondary); font-size: 1.1rem;">
-                        <i data-lucide="map-pin" style="width: 16px; vertical-align: middle;"></i> São Paulo, SP • 12 km
+                        <i data-lucide="map-pin" style="width: 16px; vertical-align: middle;"></i> São Paulo, SP â€¢ 12 km
                         de distância
                     </p>
                 </div>
@@ -120,7 +229,8 @@
                                 km</span></div>
                         <div class="spec-row-detail"><span class="label">Motor</span><span class="value">2.0L Flex
                                 Dynamic Force</span></div>
-                        <div class="spec-row-detail"><span class="label">Transmissão</span><span class="value">Automático CVT</span></div>
+                        <div class="spec-row-detail"><span class="label">Transmissão</span><span
+                                class="value">Automático CVT</span></div>
                         <div class="spec-row-detail"><span class="label">Tração</span><span class="value">Dianteira
                                 (FWD)</span></div>
                         <div class="spec-row-detail"><span class="label">Combustível</span><span class="value">Flex
@@ -147,7 +257,7 @@
                     <h3><i data-lucide="check-circle"></i> Itens de Destaque</h3>
                     <div class="features-chips">
                         <div class="feature-chip-active"><i data-lucide="check"></i> 7 Airbags</div>
-                        <div class="feature-chip-active"><i data-lucide="check"></i> Apple CarPlay &amp; Android Auto</div>
+                        <div class="feature-chip-active"><i data-lucide="check"></i> Apple CarPlay & Android Auto</div>
                         <div class="feature-chip-active"><i data-lucide="check"></i> Ar digital dual-zone</div>
                         <div class="feature-chip-active"><i data-lucide="check"></i> Câmera de ré</div>
                         <div class="feature-chip-active"><i data-lucide="check"></i> Controle de estabilidade</div>
@@ -177,8 +287,9 @@
                         <span style="color:var(--text-secondary); margin-left:8px;">(48 avaliações)</span>
                     </div>
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Concessionária
-                        Verificada • Há 12 anos no mercado</p>
-                    <a href="#" style="color: var(--accent-primary); font-weight: 600; font-size: 0.9rem; text-decoration: none;">Ver
+                        Verificada â€¢ Há 12 anos no mercado</p>
+                    <a href="#"
+                        style="color: var(--accent-primary); font-weight: 600; font-size: 0.9rem; text-decoration: none;">Ver
                         estoque completo</a>
                 </div>
             </aside>
@@ -196,18 +307,18 @@
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="index.html#carros">Veículos</a></li>
-                    <li><a href="index.html#como-funciona">Processo</a></li>
-                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
                     <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h4>Ajuda</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Falar com Consultor</a></li>
-                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -215,22 +326,26 @@
                 <ul>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">TikTok</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            © 2026 CarInsight. Todos os direitos reservados.
+            &copy; 2026 CarInsight. Todos os direitos reservados.
         </div>
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
+    <a href="#" class="floating-chatbot">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
 
     <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
+<script src="details-page.js"></script>
     <script>
         lucide.createIcons();
 
@@ -294,13 +409,6 @@
             }
         });
     </script>
+</body>
 
-
-
-  <!-- 🤖 Engenharia: Core Integration -->
-  <script src="api.js"></script>
-  <script src="auth.js"></script>
-  <script src="chat.js"></script>
-  <script src="chat-ui.js"></script>
-  <script src="details-page.js"></script>
-</body></html>
+</html>

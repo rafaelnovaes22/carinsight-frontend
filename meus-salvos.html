@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -36,11 +36,13 @@
 
         <!-- Header Global (Igual index.html) -->
         <header>
-            <a href="index.html" class="logo">
-                <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
-            </a>
-            <div class="header-right">
-                <button id="menu-toggle" aria-label="Abrir menu">
+            <div class="logo">
+                <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+            </div>
+            <div class="header-actions">
+                <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i>
+                    Entrar</a>
+                <button id="menu-toggle" class="menu-btn">
                     <i data-lucide="menu"></i>
                 </button>
             </div>
@@ -50,17 +52,114 @@
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
         <nav class="sidebar-menu" id="sidebar-menu">
             <div class="sidebar-header">
-                <h3>Menu</h3>
+                <div>
+                    <h3>Menu Principal</h3>
+                    <p>Navegue por nossas ferramentas e serviços</p>
+                </div>
                 <button id="menu-close" aria-label="Fechar menu">
                     <i data-lucide="x"></i>
                 </button>
             </div>
-            <ul class="sidebar-links">
-                <li><a href="meus-salvos.html" class="active"><i data-lucide="heart"></i> Meus Salvos</a></li>
-                <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-                <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
-            </ul>
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Encontre seu Carro</h4>
+                    <div class="sidebar-actions">
+                        <a href="meus-salvos.html" class="sidebar-link-btn">
+                            <i data-lucide="heart"></i> Meus Salvos
+                        </a>
+                        <a href="comparar.html" class="sidebar-link-btn">
+                            <i data-lucide="arrow-right-left"></i> Comparar
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-column">
+                    <h4>Soluções de Venda</h4>
+                    <div class="seller-sections">
+                        <div class="seller-type">
+                            <h5>Vendedores Particulares</h5>
+                            <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                            <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar
+                                meu carro</a>
+                        </div>
+                        <div class="seller-type">
+                            <h5>Lojas e Concessionárias</h5>
+                            <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                            <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i>
+                                Acessar Painel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
+
+        <!-- Login Popup -->
+        <div class="login-popup" id="login-popup">
+            <div class="sidebar-header">
+                <div>
+                    <h3>Bem-vindo de volta</h3>
+                    <p>Escolha sua forma preferida de acesso</p>
+                </div>
+                <button id="login-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="social-login">
+                <button class="social-btn google-btn">
+                    <img src="assets/google.svg" alt="Google" class="w-18">
+                    <span>Entrar com Google</span>
+                </button>
+                <button class="social-btn apple-btn">
+                    <img src="assets/apple.svg" alt="Apple" class="w-18">
+                    <span>Entrar com Apple</span>
+                </button>
+            </div>
+
+            <div class="auth-separator">ou entrar com e-mail</div>
+
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Acesse sua conta</h4>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="E-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Senha" required>
+                            <i data-lucide="lock" class="input-icon"></i>
+                        </div>
+                        <div class="form-extras">
+                            <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
+                                <input type="checkbox"> Lembrar-me
+                            </label>
+                            <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu
+                                a senha?</a>
+                        </div>
+                        <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                    </form>
+                </div>
+                <div class="sidebar-column bg-gray-soft p-30 br-24">
+                    <h4>Criar nova conta</h4>
+                    <p class="text-secondary mb-24 fs-095">Junte-se a
+                        milhares de usuários e aproveite benefícios exclusivos.</p>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="text" placeholder="Nome completo" required>
+                            <i data-lucide="user" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder="Seu melhor e-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Crie uma senha forte" required>
+                            <i data-lucide="shield-check" class="input-icon"></i>
+                        </div>
+                        <button type="submit" class="auth-submit">Começar agora</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Main Results Layout -->
         <div class="container results-layout-container">
@@ -72,7 +171,7 @@
                         <p>Aqui você encontra todos os veículos que chamaram sua atenção. Use esta área para organizar
                             sua busca e tomar a melhor decisão.</p>
 
-                        <div style="margin-top: 32px;">
+                        <div class="mt-32">
                             <h4>Como Comparar</h4>
                             <ul>
                                 <li>
@@ -90,11 +189,10 @@
                             </ul>
                         </div>
 
-                        <div
-                            style="margin-top: 32px; padding: 16px; background: #f0f9ff; border-radius: 12px; border: 1px solid #bae6fd;">
-                            <h4 style="color: #0369a1; margin-bottom: 8px;">Dica de Especialista</h4>
-                            <p style="font-size: 0.85rem; color: #0c4a6e; margin: 0;">Fique de olho na desvalorização e
-                                no custo de manutenção. Veículos com selo "Bom Negócio" costumam ter ótima revenda.</p>
+                        <div class="mt-32 p-16 bg-blue-light br-12 border-blue-soft">
+                            <h4 class="text-blue-dark mb-8">Dica de Especialista</h4>
+                            <p class="fs-085 text-blue-deep m-0">Fique de olho na desvalorização e
+                                seguro de cada veículo antes de decidir.</p>
                         </div>
                     </div>
                 </aside>
@@ -113,7 +211,7 @@
                                 <div class="car-info">
                                     <div class="info-top">
                                         <div class="info-header">
-                                            <div class="header-left-group" style="display: flex; align-items: center;">
+                                            <div class="header-left-group d-flex align-center">
                                                 <label class="compare-checkbox-wrapper">
                                                     <input type="checkbox" name="compare"
                                                         onchange="toggleCompareButton(this)">
@@ -184,7 +282,7 @@
                                 <div class="car-info">
                                     <div class="info-top">
                                         <div class="info-header">
-                                            <div class="header-left-group" style="display: flex; align-items: center;">
+                                            <div class="header-left-group d-flex align-center">
                                                 <label class="compare-checkbox-wrapper">
                                                     <input type="checkbox" name="compare"
                                                         onchange="toggleCompareButton(this)">
@@ -207,7 +305,7 @@
                                         <div class="car-price">R$ 124.900</div>
 
                                         <div class="deal-badge-purple">
-                                            <i data-lucide="arrow-down"></i> Ótimo Preço | R$ 1.200 abaixo da FIPE
+                                            <i data-lucide="arrow-down"></i> Ã“timo Preço | R$ 1.200 abaixo da FIPE
                                         </div>
                                     </div>
 
@@ -253,7 +351,7 @@
                                 <div class="car-info">
                                     <div class="info-top">
                                         <div class="info-header">
-                                            <div class="header-left-group" style="display: flex; align-items: center;">
+                                            <div class="header-left-group d-flex align-center">
                                                 <label class="compare-checkbox-wrapper">
                                                     <input type="checkbox" name="compare"
                                                         onchange="toggleCompareButton(this)">
@@ -316,7 +414,7 @@
                                 <div class="car-info">
                                     <div class="info-top">
                                         <div class="info-header">
-                                            <div class="header-left-group" style="display: flex; align-items: center;">
+                                            <div class="header-left-group d-flex align-center">
                                                 <label class="compare-checkbox-wrapper">
                                                     <input type="checkbox" name="compare"
                                                         onchange="toggleCompareButton(this)">
@@ -339,7 +437,7 @@
                                         <div class="car-price">R$ 285.900</div>
 
                                         <div class="deal-badge-purple">
-                                            <i data-lucide="arrow-down"></i> Impecável | Único Dono
+                                            <i data-lucide="arrow-down"></i> Impecável | Ãšnico Dono
                                         </div>
                                     </div>
 
@@ -375,10 +473,10 @@
                         </div>
                     </div>
 
-                    <div class="load-more-container" style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
-                        <button class="btn-load-more"
-                            style="background: transparent; border: 2px solid #005db9; color: #005db9; padding: 12px 32px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;">
-                            Carregar mais <i data-lucide="chevron-down"></i>
+                    <div class="load-more-container text-center mt-40 mb-40">
+                        <button id="btn-load-more"
+                            class="btn-load-more bg-transparent border-primary text-primary p-12-32 br-50 fw-600 cursor-pointer transition-300 d-inline-flex align-center gap-8">
+                            Carregar Mais <i data-lucide="chevron-down" class="w-20"></i>
                         </button>
                     </div>
 
@@ -398,18 +496,18 @@
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="index.html#carros">Veículos</a></li>
-                    <li><a href="index.html#como-funciona">Processo</a></li>
-                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
                     <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h4>Ajuda</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Falar com Consultor</a></li>
-                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -417,7 +515,6 @@
                 <ul>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">TikTok</a></li>
                 </ul>
             </div>
         </div>
@@ -427,13 +524,20 @@
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
+    <a href="#" class="floating-chatbot">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
 
     <!-- Reuse main logic for menu -->
     <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="favorites.js"></script>
+<script src="compare.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
+<script src="saved-page.js"></script>
+<script src="search-page.js"></script>
     <script>
         // Init Icons
         lucide.createIcons();
@@ -516,13 +620,6 @@
             }
         }
     </script>
-    <script src="api.js"></script>
-    <script src="favorites.js"></script>
-    <script src="compare.js"></script>
-    <script src="chat.js"></script>
-    <script src="chat-ui.js"></script>
-    <script src="saved-page.js"></script>
-    <script src="search-page.js"></script>
 </body>
 
 </html>

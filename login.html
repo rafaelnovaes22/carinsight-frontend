@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | CarInsight Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <a href="index.html" class="back-home">
+        <i data-lucide="arrow-left"></i> Voltar
+    </a>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="assets/logo-carinsight.png" alt="CarInsight Logo">
+                <h1>Bem-vindo de volta</h1>
+                <p>Escolha seu tipo de acesso e entre na conta</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="role-selector">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="user" checked>
+                        <div class="role-box">
+                            <i data-lucide="user"></i>
+                            <span>Usuário</span>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="dealer">
+                        <div class="role-box">
+                            <i data-lucide="building-2"></i>
+                            <span>Loja</span>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="admin">
+                        <div class="role-box">
+                            <i data-lucide="shield-check"></i>
+                            <span>Admin</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">E-mail</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="mail"></i>
+                        <input type="email" placeholder="exemplo@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock"></i>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+
+            <div class="login-footer">
+                Ainda não tem conta? <a href="#">Cadastre-se</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            // Simulação de redirecionamento baseada no perfil
+            if (role === 'user') window.location.href = 'painel-usuario.html';
+            else if (role === 'dealer') window.location.href = 'painel-loja.html';
+            else if (role === 'admin') window.location.href = 'painel-admin.html';
+        }
+    </script>
+</body>
+
+</html>

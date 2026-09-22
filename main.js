@@ -1,4 +1,4 @@
-// CarInsight Premium Interactions
+﻿// CarInsight Premium Interactions
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Reveal Elements on Scroll
@@ -28,9 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Smooth Scroll for Nav Links & Sidebar Menu Toggle
     const sidebarMenu = document.getElementById('sidebar-menu');
+    const loginPopup = document.getElementById('login-popup');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const menuToggle = document.getElementById('menu-toggle');
     const menuClose = document.getElementById('menu-close');
+    const loginLinkBtn = document.getElementById('login-link-btn');
+    const loginClose = document.getElementById('login-close');
 
     // Open sidebar
     if (menuToggle) {
@@ -41,23 +44,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close sidebar
-    function closeSidebar() {
+    // Open login popup
+    if (loginLinkBtn) {
+        loginLinkBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginPopup.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    // Close all popups
+    function closePopups() {
         sidebarMenu.classList.remove('active');
+        if (loginPopup) loginPopup.classList.remove('active');
         sidebarOverlay.classList.remove('active');
         document.body.style.overflow = ''; // Restore scrolling
     }
 
     if (menuClose) {
-        menuClose.addEventListener('click', closeSidebar);
+        menuClose.addEventListener('click', closePopups);
+    }
+
+    if (loginClose) {
+        loginClose.addEventListener('click', closePopups);
     }
 
     if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closePopups);
     }
 
     // Smooth scroll for sidebar links (ONLY for internal anchors)
-    document.querySelectorAll('.sidebar-links a').forEach(anchor => {
+    document.querySelectorAll('.sidebar-link-btn').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
 
@@ -65,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!targetId || !targetId.startsWith('#')) return;
 
             e.preventDefault();
-            closeSidebar();
+            closePopups();
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
@@ -107,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const prevBtn = container.querySelector('.prev-btn');
             const nextBtn = container.querySelector('.next-btn');
             const dotsContainer = container.querySelector('.slider-dots');
-            const cards = container.querySelectorAll('.car-card');
+            const cards = container.querySelectorAll('.car-card, .testimonial-card, .usecase-card');
 
             if (!track || cards.length === 0) return;
 
@@ -224,10 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Typing Effect Animation
     const rotatingText = document.getElementById('rotating-text');
     const texts = [
-        'clio sedan em são paulo',
-        'Gol 2000 em promoção',
+        'clio sedan em sÃ£o paulo',
+        'Gol 2000 em promoÃ§Ã£o',
         'Civic conservado',
-        'SUV híbrido para família',
+        'SUV hÃ­brido para famÃ­lia',
         'Corolla com baixa km',
         'Fiat Uno escada no teto'
     ];
@@ -306,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationModal = document.getElementById('location-modal');
     const locationModalOverlay = document.getElementById('location-modal-overlay');
     const locationClose = document.getElementById('location-close');
-    const locationBtn = document.querySelector('.filter-btn[data-tooltip="Localização"]');
+    const locationBtn = document.querySelector('.filter-btn[data-tooltip="LocalizaÃ§Ã£o"]');
     const searchStateInput = document.getElementById('search-state');
     const stateItems = document.querySelectorAll('.state-item');
 
@@ -527,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceModal = document.getElementById('price-modal');
     const priceModalOverlay = document.getElementById('price-modal-overlay');
     const priceClose = document.getElementById('price-close');
-    const priceBtn = document.querySelector('.filter-btn[data-tooltip="Preço"]');
+    const priceBtn = document.querySelector('.filter-btn[data-tooltip="PreÃ§o"]');
     const priceSlider = document.getElementById('price-slider');
     const priceValue = document.getElementById('price-value');
     const priceSliderFill = document.getElementById('price-slider-fill');
@@ -628,12 +646,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (priceBtn) {
                 const tooltip = priceBtn.querySelector('.tooltip');
                 if (tooltip) {
-                    tooltip.textContent = `Até ${currentPrice / 1000}k`;
+                    tooltip.textContent = `AtÃ© ${currentPrice / 1000}k`;
                 }
                 priceBtn.classList.add('active');
             }
 
-            console.log('Preço selecionado:', currentPrice);
+            console.log('PreÃ§o selecionado:', currentPrice);
             closePriceModal();
         });
     }
@@ -725,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeConditionModal();
             }, 300);
 
-            console.log('Condição selecionada:', label);
+            console.log('CondiÃ§Ã£o selecionada:', label);
         });
     });
 
@@ -827,4 +845,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 13. Dashboard Tabs Interaction
+    const dashboardTabs = document.querySelectorAll('.tab-link');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const navWrapper = document.querySelector('.dashboard-nav-wrapper');
+    const mobileToggle = document.querySelector('.mobile-tab-toggle');
+    const currentTabTitle = document.querySelector('.current-tab-title');
+
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            navWrapper.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+        });
+    }
+
+    dashboardTabs.forEach(tab => {
+        tab.addEventListener('click', function (e) {
+            const tabId = this.getAttribute('data-tab');
+
+            // If it's a tab link with a data-tab attribute
+            if (tabId) {
+                e.preventDefault();
+
+                // Update active tab link
+                dashboardTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update tab panes
+                tabPanes.forEach(pane => {
+                    pane.classList.remove('active');
+                    if (pane.id === tabId) {
+                        pane.classList.add('active');
+                    }
+                });
+
+                // Update mobile UI
+                if (currentTabTitle) {
+                    currentTabTitle.textContent = this.textContent.trim();
+                }
+                if (navWrapper) navWrapper.classList.remove('active');
+                if (mobileToggle) mobileToggle.classList.remove('active');
+
+                // Scroll to top of dashboard content on mobile
+                if (window.innerWidth < 992) {
+                    window.scrollTo({
+                        top: navWrapper.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+
 });
+

@@ -1,8 +1,12 @@
-<!DOCTYPE html><html lang="pt-br"><head>
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CarInsight | Escolha Inteligente de Veículos</title>
-    <meta name="description" content="Encontre seu carro seminovo ideal com o poder da Inteligência Artificial. Rapidez, segurança e curadoria premium.">
+    <meta name="description"
+        content="Encontre seu carro seminovo ideal com o poder da Inteligência Artificial. Rapidez, segurança e curadoria premium.">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
     <!-- Lucide Icons -->
@@ -12,11 +16,12 @@
 <body>
 
     <header>
-        <a href="#" class="logo">
-            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
-        </a>
-        <div class="header-right">
-            <button id="menu-toggle" aria-label="Abrir menu">
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i> Entrar</a>
+            <button id="menu-toggle" class="menu-btn">
                 <i data-lucide="menu"></i>
             </button>
         </div>
@@ -26,17 +31,114 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <nav class="sidebar-menu" id="sidebar-menu">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
             <button id="menu-close" aria-label="Fechar menu">
                 <i data-lucide="x"></i>
             </button>
         </div>
-        <ul class="sidebar-links">
-            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
-            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-            <li><a href="vender-carro.html"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
-        </ul>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
+
+    <!-- Login Popup -->
+    <div class="login-popup" id="login-popup">
+        <div class="sidebar-header">
+            <div>
+                <h3>Bem-vindo de volta</h3>
+                <p>Escolha sua forma preferida de acesso</p>
+            </div>
+            <button id="login-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="social-login">
+            <button class="social-btn google-btn">
+                <img src="assets/google.svg" alt="Google" class="w-18">
+                <span>Entrar com Google</span>
+            </button>
+            <button class="social-btn apple-btn">
+                <img src="assets/apple.svg" alt="Apple" class="w-18">
+                <span>Entrar com Apple</span>
+            </button>
+        </div>
+
+        <div class="auth-separator">ou entrar com e-mail</div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Acesse sua conta</h4>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="E-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Senha" required>
+                        <i data-lucide="lock" class="input-icon"></i>
+                    </div>
+                    <div class="form-extras">
+                        <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
+                            <input type="checkbox"> Lembrar-me
+                        </label>
+                        <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu a
+                            senha?</a>
+                    </div>
+                    <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                </form>
+            </div>
+            <div class="sidebar-column bg-gray-soft p-30 br-24">
+                <h4>Criar nova conta</h4>
+                <p class="text-secondary mb-24 fs-095">Junte-se a milhares de
+                    usuários e aproveite benefícios exclusivos.</p>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Nome completo" required>
+                        <i data-lucide="user" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Seu melhor e-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Crie uma senha forte" required>
+                        <i data-lucide="shield-check" class="input-icon"></i>
+                    </div>
+                    <button type="submit" class="auth-submit">Começar agora</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Location Modal -->
     <div class="location-modal-overlay" id="location-modal-overlay"></div>
@@ -153,7 +255,8 @@
                     <span>R$ 20k</span>
                     <span>R$ 200k</span>
                 </div>
-                <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000" class="year-slider">
+                <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000"
+                    class="year-slider">
                 <div class="year-slider-track">
                     <div class="year-slider-fill" id="price-slider-fill"></div>
                     <div class="year-slider-thumb" id="price-slider-thumb"></div>
@@ -284,85 +387,65 @@
         </section>
 
         <!-- Categories Sliders -->
-        <section class="category-shelf cat-bestsellers">
+        <!-- Use Cases Slider Section -->
+        <section class="category-shelf cat-usecases">
             <div class="container">
                 <div class="shelf-header">
-                    <div class="shelf-icon"><i data-lucide="trending-up"></i></div>
+                    <div class="shelf-icon"><i data-lucide="compass"></i></div>
                     <div class="shelf-info">
-                        <h2>Mais Vendidos</h2>
-                        <p>Os modelos que todo mundo deseja.</p>
+                        <h2>O carro certo pra você</h2>
+                        <p>Encontre a categoria ideal que atende exatamente às suas necessidades diárias.</p>
                     </div>
                 </div>
                 <div class="slider-container">
                     <div class="slider-wrapper">
-                        <div class="slider-track" id="slider-bestsellers">
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Top 1</span>
-                                    <img src="assets/car1.png" alt="Corolla">
+                        <div class="slider-track" id="slider-usecases">
+                            <!-- Card 1 -->
+                            <div class="usecase-card">
+                                <div class="usecase-image">
+                                    <img src="assets/primeiro-carro.png" alt="Primeiro Carro">
+                                    <span class="usecase-tag">Iniciante</span>
                                 </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 158.900</div>
-                                    <div class="car-name">Toyota Corolla Cross XR</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 18k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                <div class="usecase-info">
+                                    <h3>Primeiro carro</h3>
+                                    <p>A escolha perfeita para iniciar sua jornada no volante.</p>
+                                    <a href="veiculos.html?categoria=hatch" class="btn-usecase-action">Explorar Hatchbacks <i data-lucide="arrow-right"></i></a>
                                 </div>
                             </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Destaque</span>
-                                    <img src="assets/car2.png" alt="Civic">
+                            <!-- Card 2 -->
+                            <div class="usecase-card">
+                                <div class="usecase-image">
+                                    <img src="assets/carros-familia.png" alt="Carros para Família">
+                                    <span class="usecase-tag">Família</span>
                                 </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 124.900</div>
-                                    <div class="car-name">Honda Civic Sedan EXL</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 35k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                <div class="usecase-info">
+                                    <h3>Carros para família</h3>
+                                    <p>Espaço e conforto para viagens com quem você ama.</p>
+                                    <a href="veiculos.html?categoria=suv" class="btn-usecase-action">Explorar SUVs <i data-lucide="arrow-right"></i></a>
                                 </div>
                             </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Popular</span>
-                                    <img src="assets/suv.png" alt="Compass">
+                            <!-- Card 3 -->
+                            <div class="usecase-card">
+                                <div class="usecase-image">
+                                    <img src="assets/carros-uber.png" alt="Carros para Uber e 99">
+                                    <span class="usecase-tag">Trabalho</span>
                                 </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 145.900</div>
-                                    <div class="car-name">Jeep Compass Longitude</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 42k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais
-                                    </a>
+                                <div class="usecase-info">
+                                    <h3>Carros para Uber e 99</h3>
+                                    <p>Economia e confiança para rodar todos os dias.</p>
+                                    <a href="veiculos.html?categoria=sedan" class="btn-usecase-action">Explorar Sedans <i data-lucide="arrow-right"></i></a>
                                 </div>
                             </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Oferta</span>
-                                    <img src="assets/car1.png" alt="Corolla">
+                            <!-- Card 4 -->
+                            <div class="usecase-card">
+                                <div class="usecase-image">
+                                    <img src="assets/carros-economicos.png" alt="Carros Econômicos">
+                                    <span class="usecase-tag">Eficiência</span>
                                 </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 155.000</div>
-                                    <div class="car-name">Toyota Corolla Cross XRE</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                <div class="usecase-info">
+                                    <h3>Carros econômicos</h3>
+                                    <p>Consumo baixo e praticidade para a sua rotina.</p>
+                                    <a href="veiculos.html?categoria=eletrico" class="btn-usecase-action">Explorar Híbridos/Elétricos <i data-lucide="arrow-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -376,93 +459,22 @@
             </div>
         </section>
 
-        <section class="category-shelf cat-economy">
+        <!-- Break Banner Section -->
+        <section class="break-banner">
             <div class="container">
-                <div class="shelf-header">
-                    <div class="shelf-icon"><i data-lucide="leaf"></i></div>
-                    <div class="shelf-info">
-                        <h2>Econômicos</h2>
-                        <p>Máxima eficiência para o seu dia a dia.</p>
-                    </div>
-                </div>
-                <div class="slider-container">
-                    <div class="slider-wrapper">
-                        <div class="slider-track" id="slider-economy">
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">20km/L</span>
-                                    <img src="assets/hatch.png" alt="Kwid">
-                                </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 58.900</div>
-                                    <div class="car-name">Renault Kwid Outsider</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 8.120 km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-                                </div>
-                            </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Econômico</span>
-                                    <img src="assets/hatch.png" alt="Mobi">
-                                </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 54.900</div>
-                                    <div class="car-name">Fiat Mobi Trekking</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 12.300 km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-                                </div>
-                            </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Compacto</span>
-                                    <img src="assets/hatch.png" alt="HB20">
-                                </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 75.900</div>
-                                    <div class="car-name">Hyundai HB20 Sense</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-                                </div>
-                            </div>
-                            <div class="car-card">
-                                <div class="car-image">
-                                    <span class="car-tag">Oportunidade</span>
-                                    <img src="assets/hatch.png" alt="Onix">
-                                </div>
-                                <div class="car-info">
-                                    <div class="car-price">R$ 82.500</div>
-                                    <div class="car-name">Chevrolet Onix LT</div>
-                                    <div class="car-specs">
-                                        <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
-                                        <div class="spec-item"><i data-lucide="gauge"></i> 22k km</div>
-                                        <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                        <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-                                </div>
-                            </div>
+                <div class="break-banner-content">
+                    <div class="break-banner-text">
+                        <span class="break-badge">AVALIAÇÃO GRATUITA</span>
+                        <h2>Quer vender seu carro pelo melhor preço do mercado?</h2>
+                        <p>Nossa IA avalia seu veículo em segundos com base em dados de mercado reais. Sem burocracia e com pagamento imediato.</p>
+                        <div class="break-actions">
+                            <a href="vender-carro.html" class="btn-primary">Anunciar meu carro</a>
+                            <a href="falar-consultor.html" class="btn-secondary">Avaliar com especialista</a>
                         </div>
                     </div>
-                    <div class="slider-controls">
-                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
-                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    <div class="break-banner-visual">
+                        <img src="assets/simbol.png" alt="CarInsight Symbol" class="floating-symbol">
                     </div>
-                    <div class="slider-dots"></div>
                 </div>
             </div>
         </section>
@@ -493,7 +505,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> S-Tronic</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -510,7 +522,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> 9G-Tronic</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -527,7 +539,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
@@ -544,7 +556,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Híbrido</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -571,7 +583,8 @@
                     <div class="slider-wrapper">
                         <div class="slider-track" id="slider-pickups">
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Ranger"><span class="car-tag">Turbo Diesel</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Ranger"><span
+                                        class="car-tag">Turbo Diesel</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 245.900</div>
                                     <div class="car-name">Ford Ranger Limited</div>
@@ -584,7 +597,8 @@
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car2.png" alt="Hilux"><span class="car-tag">Indestrutível</span></div>
+                                <div class="car-image"><img src="assets/car2.png" alt="Hilux"><span
+                                        class="car-tag">Indestrutível</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 298.000</div>
                                     <div class="car-name">Toyota Hilux SRX</div>
@@ -594,11 +608,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Amarok"><span class="car-tag">V6</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Amarok"><span
+                                        class="car-tag">V6</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 255.000</div>
                                     <div class="car-name">VW Amarok V6 Extreme</div>
@@ -608,11 +623,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car2.png" alt="S10"><span class="car-tag">Campo</span></div>
+                                <div class="car-image"><img src="assets/car2.png" alt="S10"><span
+                                        class="car-tag">Campo</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 230.000</div>
                                     <div class="car-name">Chemrolet S10 High Country</div>
@@ -622,7 +638,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -649,7 +665,8 @@
                     <div class="slider-wrapper">
                         <div class="slider-track" id="slider-electric">
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/hero.png" alt="Dolphin"><span class="car-tag">100% Elétrico</span></div>
+                                <div class="car-image"><img src="assets/hero.png" alt="Dolphin"><span
+                                        class="car-tag">100% Elétrico</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 149.800</div>
                                     <div class="car-name">BYD Dolphin Plus</div>
@@ -662,7 +679,8 @@
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/hero.png" alt="Ora 03"><span class="car-tag">Tecnológico</span></div>
+                                <div class="car-image"><img src="assets/hero.png" alt="Ora 03"><span
+                                        class="car-tag">Tecnológico</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 152.000</div>
                                     <div class="car-name">GWM Ora 03 Skin</div>
@@ -672,11 +690,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Elétrico</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/hero.png" alt="Yuan Plus"><span class="car-tag">SUV EV</span></div>
+                                <div class="car-image"><img src="assets/hero.png" alt="Yuan Plus"><span
+                                        class="car-tag">SUV EV</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 229.000</div>
                                     <div class="car-name">BYD Yuan Plus</div>
@@ -687,7 +706,8 @@
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/hero.png" alt="Seal"><span class="car-tag">Performance</span></div>
+                                <div class="car-image"><img src="assets/hero.png" alt="Seal"><span
+                                        class="car-tag">Performance</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 296.000</div>
                                     <div class="car-name">BYD Seal AWD</div>
@@ -721,7 +741,8 @@
                     <div class="slider-wrapper">
                         <div class="slider-track" id="slider-notax">
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Civic antigo"><span class="car-tag">Isento</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Civic antigo"><span
+                                        class="car-tag">Isento</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 42.000</div>
                                     <div class="car-name">Honda Civic LXL 2004</div>
@@ -731,11 +752,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car2.png" alt="Corolla antigo"><span class="car-tag">Eterno</span></div>
+                                <div class="car-image"><img src="assets/car2.png" alt="Corolla antigo"><span
+                                        class="car-tag">Eterno</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 38.500</div>
                                     <div class="car-name">Toyota Corolla XEi 2003</div>
@@ -745,11 +767,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Gol"><span class="car-tag">Popular</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Gol"><span
+                                        class="car-tag">Popular</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 25.000</div>
                                     <div class="car-name">VW Gol G4 2008</div>
@@ -759,11 +782,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car2.png" alt="Uno"><span class="car-tag">Raiz</span></div>
+                                <div class="car-image"><img src="assets/car2.png" alt="Uno"><span
+                                        class="car-tag">Raiz</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 22.000</div>
                                     <div class="car-name">Fiat Uno Mille 2007</div>
@@ -773,7 +797,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -800,7 +824,8 @@
                     <div class="slider-wrapper">
                         <div class="slider-track" id="slider-robust">
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/suv.png" alt="Duster"><span class="car-tag">Robusto</span></div>
+                                <div class="car-image"><img src="assets/suv.png" alt="Duster"><span
+                                        class="car-tag">Robusto</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 95.900</div>
                                     <div class="car-name">Renault Duster Iconic</div>
@@ -810,11 +835,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/suv.png" alt="Renegade"><span class="car-tag">4x4</span></div>
+                                <div class="car-image"><img src="assets/suv.png" alt="Renegade"><span
+                                        class="car-tag">4x4</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 138.000</div>
                                     <div class="car-name">Jeep Renegade Trailhawk</div>
@@ -824,11 +850,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/suv.png" alt="Troller"><span class="car-tag">Off-road</span></div>
+                                <div class="car-image"><img src="assets/suv.png" alt="Troller"><span
+                                        class="car-tag">Off-road</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 180.000</div>
                                     <div class="car-name">Troller T4 Connect</div>
@@ -838,11 +865,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/suv.png" alt="Compass"><span class="car-tag">Diesel</span></div>
+                                <div class="car-image"><img src="assets/suv.png" alt="Compass"><span
+                                        class="car-tag">Diesel</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 190.000</div>
                                     <div class="car-name">Jeep Compass Trailhawk</div>
@@ -852,7 +880,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -879,7 +907,8 @@
                     <div class="slider-wrapper">
                         <div class="slider-track" id="slider-family">
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Commander"><span class="car-tag">7 Lugares</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Commander"><span
+                                        class="car-tag">7 Lugares</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 215.000</div>
                                     <div class="car-name">Jeep Commander Overland</div>
@@ -889,11 +918,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Creta"><span class="car-tag">Conforto</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Creta"><span
+                                        class="car-tag">Conforto</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 135.900</div>
                                     <div class="car-name">Hyundai Creta Platinum</div>
@@ -903,11 +933,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Tiguan"><span class="car-tag">Espaço</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Tiguan"><span
+                                        class="car-tag">Espaço</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 180.000</div>
                                     <div class="car-name">VW Tiguan Allspace</div>
@@ -917,11 +948,12 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                             <div class="car-card">
-                                <div class="car-image"><img src="assets/car1.png" alt="Spin"><span class="car-tag">Prático</span></div>
+                                <div class="car-image"><img src="assets/car1.png" alt="Spin"><span
+                                        class="car-tag">Prático</span></div>
                                 <div class="car-info">
                                     <div class="car-price">R$ 95.000</div>
                                     <div class="car-name">Chevrolet Spin Activ7</div>
@@ -931,7 +963,7 @@
                                         <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
                                         <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
                                     </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                    <a href="buscando-carro.html" class="btn-card-action">Saiba mais </a>
                                 </div>
                             </div>
                         </div>
@@ -970,7 +1002,8 @@
                         <span>R$ 20k</span>
                         <span>R$ 200k</span>
                     </div>
-                    <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000" class="year-slider">
+                    <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000"
+                        class="year-slider">
                     <div class="year-slider-track">
                         <div class="year-slider-fill" id="price-slider-fill"></div>
                         <div class="year-slider-thumb" id="price-slider-thumb"></div>
@@ -998,27 +1031,7 @@
 
             <div class="hero-actions">
                 <a href="quiz.html" class="btn-primary">Pesquisa Avançada</a>
-                <a href="#consultor" class="btn-secondary">Falar com Consultor</a>
-            </div>
-        </section>
-
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="container">
-                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 40px; text-align: center;">
-                    <div>
-                        <h3 style="font-size: 2.5rem;">+500</h3>
-                        <p style="color: var(--text-secondary);">Análises Diárias</p>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 2.5rem;">50</h3>
-                        <p style="color: var(--text-secondary);">Parceiros Certificados</p>
-                    </div>
-                    <div>
-                        <h3 style="font-size: 2.5rem;">150+</h3>
-                        <p style="color: var(--text-secondary);">Pontos de Inspeção</p>
-                    </div>
-                </div>
+                <a href="falar-consultor.html" class="btn-secondary">Falar com Consultor</a>
             </div>
         </section>
 
@@ -1256,12 +1269,12 @@
         </section>
 
         <!-- Security Section -->
+                <!-- Security Section -->
         <section id="seguranca">
             <div class="container">
                 <div class="section-title">
-                    <h2 style="font-weight: 700; color: #0f172a;">Descubra o seu carro ideal</h2>
-                    <p style="color: #64748b; max-width: 650px; margin: 12px auto 0;">Sabemos que comprar um seminovo
-                        exige confiança. Por isso, somos rigorosos.</p>
+                    <h2>Sua Segurança é Nossa Prioridade</h2>
+                    <p>Sabemos que comprar um seminovo exige total confiança. Por isso, oferecemos o processo de compra mais seguro e transparente do Brasil.</p>
                 </div>
 
                 <div class="security-grid">
@@ -1270,98 +1283,157 @@
                             <i data-lucide="check-circle-2"></i>
                         </div>
                         <h3>Laudo Cautelar Aprovado</h3>
-                        <p>Todos os carros passam por vistoria completa para garantir estrutura e procedência.</p>
+                        <p>Todos os carros passam por vistoria completa para garantir integridade estrutural e procedência garantida.</p>
                     </div>
                     <div class="security-card">
                         <div class="security-icon-container">
                             <i data-lucide="history"></i>
                         </div>
                         <h3>Histórico Verificado</h3>
-                        <p>Nossa IA analisa o histórico do veículo em bases nacionais para evitar fraudes.</p>
+                        <p>Nossa IA analisa o histórico do veículo em bases nacionais para mitigar qualquer risco de fraude.</p>
                     </div>
                     <div class="security-card">
                         <div class="security-icon-container">
                             <i data-lucide="shield-check"></i>
                         </div>
                         <h3>Garantia de Procedência</h3>
-                        <p>Trabalhamos apenas com concessionárias verificadas e com boa reputação no mercado.</p>
+                        <p>Trabalhamos apenas com parceiros certificados e concessionárias homologadas de alta reputação.</p>
                     </div>
                     <div class="security-card">
                         <div class="security-icon-container">
                             <i data-lucide="search"></i>
                         </div>
                         <h3>Inspeção Detalhada</h3>
-                        <p>Mais de 150 itens verificados antes do carro ser anunciado na plataforma.</p>
+                        <p>Mais de 150 pontos minuciosamente analisados antes do veículo ser disponibilizado no estoque.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Testimonials Section -->
-        <section id="depoimentos">
+                <!-- Testimonials Section -->
+        <section id="depoimentos" style="background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%); padding: 80px 0;">
             <div class="container">
                 <div class="section-title">
-                    <h2 style="font-weight: 700; color: #0f172a;">Quem Já Encontrou Seu Carro</h2>
-                    <p style="color: #64748b; max-width: 600px; margin: 12px auto 0;">Histórias reais de quem comprou
-                        com segurança e agilidade através do CarInsight.</p>
+                    <h2 class="fw-700 text-dark">Quem Já Encontrou Seu Carro</h2>
+                    <p class="text-secondary max-w-600 m-12-auto-0">Histórias reais de quem comprou com segurança e agilidade através do CarInsight.</p>
                 </div>
 
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <div class="user-info">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;q=80&amp;w=100" alt="Ricardo Silva">
-                                <div>
-                                    <h4>Ricardo Silva</h4>
-                                    <span>Comprou um Honda Civic</span>
+                <div class="slider-container">
+                    <div class="slider-wrapper">
+                        <div class="slider-track" id="slider-testimonials">
+                            <!-- Testimonial 1 -->
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="user-info">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" alt="Ricardo Silva">
+                                        <div>
+                                            <h4>Ricardo Silva</h4>
+                                            <span>Comprou um Honda Civic</span>
+                                        </div>
+                                    </div>
+                                    <i class="quote-icon" data-lucide="quote"></i>
                                 </div>
-                            </div>
-                            <i class="quote-icon" data-lucide="quote"></i>
-                        </div>
-                        <div class="stars">
-                            <i data-lucide="star" class="star-fill"></i>
-                            <i data-lucide="star" class="star-fill"></i>
-                            <i data-lucide="star" class="star-fill"></i>
-                            <i data-lucide="star" class="star-fill"></i>
-                            <i data-lucide="star" class="star-fill"></i>
-                        </div>
-                        <p>"Eu estava com medo de comprar um seminovo, mas o CarInsight me ajudou a encontrar um carro
-                            com laudo cautelar aprovado e garantia."</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <div class="user-info">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;q=80&amp;w=100" alt="Ana Costa">
-                                <div>
-                                    <h4>Ana Costa</h4>
-                                    <span>Comprou um Jeep Renegade</span>
+                                <div class="stars">
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
                                 </div>
+                                <p>"Eu estava com medo de comprar um seminovo, mas o CarInsight me ajudou a encontrar um carro com laudo cautelar aprovado e garantia."</p>
                             </div>
-                            <i class="quote-icon" data-lucide="quote"></i>
-                        </div>
-                        <div class="stars">
-                            <i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i>
-                        </div>
-                        <p>"O quiz acertou em cheio! Eu nem sabia que queria um Renegade até ver a recomendação. O
-                            atendimento via WhatsApp foi excelente."</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-header">
-                            <div class="user-info">
-                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;q=80&amp;w=100" alt="Carlos Mendes">
-                                <div>
-                                    <h4>Carlos Mendes</h4>
-                                    <span>Comprou um VW Polo</span>
+                            <!-- Testimonial 2 -->
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="user-info">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="Ana Costa">
+                                        <div>
+                                            <h4>Ana Costa</h4>
+                                            <span>Comprou um Jeep Renegade</span>
+                                        </div>
+                                    </div>
+                                    <i class="quote-icon" data-lucide="quote"></i>
                                 </div>
+                                <div class="stars">
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                </div>
+                                <p>"O quiz acertou em cheio! Eu nem sabia que queria um Renegade até ver a recomendação. O atendimento via WhatsApp foi excelente."</p>
                             </div>
-                            <i class="quote-icon" data-lucide="quote"></i>
+                            <!-- Testimonial 3 -->
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="user-info">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" alt="Carlos Mendes">
+                                        <div>
+                                            <h4>Carlos Mendes</h4>
+                                            <span>Comprou um VW Polo</span>
+                                        </div>
+                                    </div>
+                                    <i class="quote-icon" data-lucide="quote"></i>
+                                </div>
+                                <div class="stars">
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                </div>
+                                <p>"Economizei muito tempo. Em vez de ficar rodando de loja em loja, recebi as melhores opções no meu perfil. Recomendo demais!"</p>
+                            </div>
+                            <!-- Testimonial 4 -->
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="user-info">
+                                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100" alt="Mariana Souza">
+                                        <div>
+                                            <h4>Mariana Souza</h4>
+                                            <span>Comprou um Chevrolet Tracker</span>
+                                        </div>
+                                    </div>
+                                    <i class="quote-icon" data-lucide="quote"></i>
+                                </div>
+                                <div class="stars">
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                </div>
+                                <p>"O processo foi extremamente rápido e transparente. Consegui comparar as opções de forma clara e o consultor tirou todas as minhas dúvidas."</p>
+                            </div>
+                            <!-- Testimonial 5 -->
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="user-info">
+                                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100" alt="Felipe Rocha">
+                                        <div>
+                                            <h4>Felipe Rocha</h4>
+                                            <span>Comprou um Toyota Corolla</span>
+                                        </div>
+                                    </div>
+                                    <i class="quote-icon" data-lucide="quote"></i>
+                                </div>
+                                <div class="stars">
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                    <i data-lucide="star" class="star-fill"></i>
+                                </div>
+                                <p>"A facilidade de visualizar o laudo cautelar direto na plataforma me deu a segurança que eu precisava. O carro chegou impecável!"</p>
+                            </div>
                         </div>
-                        <div class="stars">
-                            <i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i><i data-lucide="star" class="star-fill"></i>
-                        </div>
-                        <p>"Economizei muito tempo. Em vez de ficar rodando de loja em loja, recebi as melhores opções
-                            no meu perfil. Recomendo demais!"</p>
                     </div>
+                    <div class="slider-controls">
+                        <button class="ctrl-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                        <button class="ctrl-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                    <div class="slider-dots"></div>
                 </div>
             </div>
         </section>
@@ -1369,14 +1441,15 @@
         <!-- CTA Section -->
         <section class="cta-section">
             <div class="container">
-                <div class="cta-card">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 24px;">Pronto para encontrar seu seminovo?</h2>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 40px; max-width: 600px; margin: 0 auto 40px;">
-                        Junte-se a centenas de motoristas que economizaram tempo e dinheiro com nossa curadoria.</p>
-                    <a href="quiz.html" class="btn-primary" style="display: inline-block; background: white; color: var(--accent-primary);">Pesquise ser
-                        próximo carro!</a>
+                <div class="container text-center">
+                    <h2 class="fs-25rem mb-24">Pronto para encontrar seu seminovo?</h2>
+                    <p class="text-white-80 mb-40 max-w-600 m-0-auto-40">Use nossa inteligência artificial para
+                        filtrar as melhores oportunidades agora mesmo.</p>
+                    <div class="cta-actions">
+                        <a href="buscando-carro.html"
+                            class="btn-primary-white d-inline-block bg-white text-accent">Pesquise seu Carro</a>
+                    </div>
                 </div>
-            </div>
         </section>
     </main>
 
@@ -1391,18 +1464,18 @@
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="index.html#carros">Veículos</a></li>
-                    <li><a href="index.html#como-funciona">Processo</a></li>
-                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
                     <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h4>Ajuda</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Falar com Consultor</a></li>
-                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -1410,32 +1483,33 @@
                 <ul>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">TikTok</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            © 2026 CarInsight. Todos os direitos reservados.
+            &copy; 2026 CarInsight. Todos os direitos reservados.
         </div>
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
+    <a href="#" class="floating-chatbot">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
 
     <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
+<script src="home-page.js"></script>
     <script>
         lucide.createIcons();
     </script>
+</body>
+
+</html>
 
 
 
-  <!-- 🤖 Engenharia: Core Integration -->
-  <script src="api.js"></script>
-  <script src="auth.js"></script>
-  <script src="chat.js"></script>
-  <script src="chat-ui.js"></script>
-  <script src="home-page.js"></script>
-</body></html>
+

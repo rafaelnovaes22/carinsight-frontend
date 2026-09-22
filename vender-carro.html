@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="pt-br"><head>
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vender meu Carro | CarInsight</title>
@@ -11,30 +14,129 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">
-            <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
-        </a>
-        <div class="header-right">
-            <button id="menu-toggle" aria-label="Abrir menu">
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i> Entrar</a>
+            <button id="menu-toggle" class="menu-btn">
                 <i data-lucide="menu"></i>
             </button>
         </div>
     </header>
 
+    <!-- Sidebar Menu -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <nav class="sidebar-menu" id="sidebar-menu">
         <div class="sidebar-header">
-            <h3>Menu</h3>
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
             <button id="menu-close" aria-label="Fechar menu">
                 <i data-lucide="x"></i>
             </button>
         </div>
-        <ul class="sidebar-links">
-            <li><a href="meus-salvos.html"><i data-lucide="heart"></i> Meus Salvos</a></li>
-            <li><a href="comparar.html"><i data-lucide="arrow-right-left"></i> Comparar</a></li>
-            <li><a href="vender-carro.html" class="active"><i data-lucide="dollar-sign"></i> Vender meu carro</a></li>
-        </ul>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
+
+    <!-- Login Popup -->
+    <div class="login-popup" id="login-popup">
+        <div class="sidebar-header">
+            <div>
+                <h3>Bem-vindo de volta</h3>
+                <p>Escolha sua forma preferida de acesso</p>
+            </div>
+            <button id="login-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="social-login">
+            <button class="social-btn google-btn">
+                <img src="assets/google.svg" alt="Google" class="w-18">
+                <span>Entrar com Google</span>
+            </button>
+            <button class="social-btn apple-btn">
+                <img src="assets/apple.svg" alt="Apple" class="w-18">
+                <span>Entrar com Apple</span>
+            </button>
+        </div>
+
+        <div class="auth-separator">ou entrar com e-mail</div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Acesse sua conta</h4>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="E-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Senha" required>
+                        <i data-lucide="lock" class="input-icon"></i>
+                    </div>
+                    <div class="form-extras">
+                        <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
+                            <input type="checkbox"> Lembrar-me
+                        </label>
+                        <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu a
+                            senha?</a>
+                    </div>
+                    <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                </form>
+            </div>
+            <div class="sidebar-column bg-gray-soft p-30 br-24">
+                <h4>Criar nova conta</h4>
+                <p class="text-secondary mb-24 fs-095">Junte-se a milhares de
+                    usuários e aproveite benefícios exclusivos.</p>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Nome completo" required>
+                        <i data-lucide="user" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Seu melhor e-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Crie uma senha forte" required>
+                        <i data-lucide="shield-check" class="input-icon"></i>
+                    </div>
+                    <button type="submit" class="auth-submit">Começar agora</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <main class="vender-container">
         <div class="step-progress">
@@ -48,8 +150,8 @@
             <div class="step-pill" data-step="8">8</div>
         </div>
 
-        <div class="vender-nav-btns" style="justify-content: space-between; margin-top: 0; margin-bottom: 30px; border-top: none; padding-top: 0;">
-            <button type="button" class="btn-prev" id="btn-prev" style="display: none;">Voltar</button>
+        <div class="vender-nav-btns d-flex justify-between mt-0 mb-30 border-top-none p-top-0">
+            <button type="button" class="btn-prev d-none" id="btn-prev">Voltar</button>
             <button type="button" class="btn-next" id="btn-next">Próximo</button>
         </div>
 
@@ -57,11 +159,17 @@
             <!-- Step 1: Cadastro -->
             <div class="vender-step active" data-step="1">
                 <h2>Vamos começar seu cadastro</h2>
-                <button type="button" class="google-btn">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google">
-                    Continuar com Google
-                </button>
-                <div style="text-align: center; margin: 20px 0; color: #94a3b8;">ou</div>
+                <div class="social-login mb-20">
+                    <button type="button" class="social-btn google-btn">
+                        <img src="assets/google.svg" alt="Google" class="w-18">
+                        Continuar com Google
+                    </button>
+                    <button type="button" class="social-btn apple-btn">
+                        <img src="assets/apple.svg" alt="Apple" class="w-18">
+                        Continuar com Apple
+                    </button>
+                </div>
+                <div class="text-center m-20-0 text-slate-400">ou</div>
 
                 <div class="toggle-auth" id="toggle-auth">
                     <div class="preview-icon"><i data-lucide="user"></i></div>
@@ -98,7 +206,7 @@
                     <div class="preview-icon"><i data-lucide="check"></i></div>
                     <div class="preview-info">
                         <h4 id="preview-car-name">Toyota Corolla XEI 2021</h4>
-                        <p id="preview-car-details">Flex • Automático • 2.0L</p>
+                        <p id="preview-car-details">Flex â€¢ Automático â€¢ 2.0L</p>
                     </div>
                 </div>
             </div>
@@ -106,16 +214,16 @@
             <!-- Step 3: Fotos do Carro (NEW) -->
             <div class="vender-step" data-step="3">
                 <h2>Fotos do Veículo</h2>
-                <p style="margin-bottom: 24px; color: var(--text-secondary);">Boas fotos aumentam em <strong>3x</strong>
+                <p class="mb-24 text-secondary">Boas fotos aumentam em <strong>3x</strong>
                     a chance de venda. Adicione pelo menos 5 fotos.</p>
 
                 <!-- Photo Upload Box -->
                 <div class="photo-upload-container">
                     <label class="photo-dropzone">
-                        <input type="file" multiple="" accept="image/*" style="display: none;">
-                        <i data-lucide="camera" style="width: 40px; height: 40px; color: var(--accent-primary); margin-bottom: 12px;"></i>
-                        <span style="font-weight: 600; color: var(--text-primary);">Adicionar Fotos</span>
-                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Arraste ou clique para
+                        <input type="file" multiple accept="image/*" class="d-none">
+                        <i data-lucide="camera" class="w-40 h-40 text-accent mb-12"></i>
+                        <span class="fw-600 text-primary">Adicionar Fotos</span>
+                        <span class="fs-085 text-secondary">Arraste ou clique para
                             selecionar</span>
                     </label>
                 </div>
@@ -179,7 +287,7 @@
                 <p style="margin-bottom: 20px; color: var(--text-secondary);">Informações que valorizam ou detalham o
                     histórico:</p>
                 <div class="selectable-grid">
-                    <div class="selectable-item" onclick="toggleSelectable(this)">Único Dono</div>
+                    <div class="selectable-item" onclick="toggleSelectable(this)">Ãšnico Dono</div>
                     <div class="selectable-item" onclick="toggleSelectable(this)">Garantia de Fábrica</div>
                     <div class="selectable-item" onclick="toggleSelectable(this)">Todas Revisões</div>
                     <div class="selectable-item" onclick="toggleSelectable(this)">Ipva Pago</div>
@@ -191,7 +299,8 @@
 
                 <div class="form-group" style="margin-top: 32px;">
                     <label>Descrição Completa</label>
-                    <textarea rows="6" placeholder="Fale sobre o estado do veículo, diferenciais, acessórios instalados ou qualquer detalhe importante."></textarea>
+                    <textarea rows="6"
+                        placeholder="Fale sobre o estado do veículo, diferenciais, acessórios instalados ou qualquer detalhe importante."></textarea>
                 </div>
             </div>
 
@@ -250,18 +359,18 @@
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
-                    <li><a href="index.html#carros">Veículos</a></li>
-                    <li><a href="index.html#como-funciona">Processo</a></li>
-                    <li><a href="index.html#seguranca">Segurança</a></li>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
                     <li><a href="vender-carro.html">Vender meu carro</a></li>
                 </ul>
             </div>
             <div class="footer-links">
                 <h4>Ajuda</h4>
                 <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Falar com Consultor</a></li>
-                    <li><a href="#">Termos de Uso</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -269,22 +378,25 @@
                 <ul>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">TikTok</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            © 2026 CarInsight. Todos os direitos reservados.
+            &copy; 2026 CarInsight. Todos os direitos reservados.
         </div>
     </footer>
 
     <!-- Floating Chatbot Button -->
-    <a href="#" class="floating-chatbot" onclick="openChat(window.currentVehicleId || null); return false;">
+    <a href="#" class="floating-chatbot">
         <i data-lucide="message-circle"></i>
         <span>Algo que podemos ajudar?</span>
     </a>
 
     <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="auth.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
     <script>
         lucide.createIcons();
 
@@ -369,12 +481,6 @@
             item.classList.toggle('active');
         }
     </script>
+</body>
 
-
-
-  <!-- 🤖 Engenharia: Core Integration -->
-  <script src="api.js"></script>
-  <script src="auth.js"></script>
-  <script src="chat.js"></script>
-  <script src="chat-ui.js"></script>
-</body></html>
+</html>
