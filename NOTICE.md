@@ -1,4 +1,12 @@
-# Aviso de design
+## 📞 Contact
+
+**Author:** Rafael de Novaes  
+**LinkedIn:** [linkedin.com/in/rafaeldenovaes](https://linkedin.com/in/rafaeldenovaes)  
+**GitHub:** [@rafaelnovaes22](https://github.com/rafaelnovaes22)
+
+---
+
+## 🎨 Crédito de design
 
 O layout, as folhas de estilo, as interações base e os ativos de marca
 (`assets/car-insight-*`, `assets/logo-car-insght-*`, `hero.png`, fotos de
