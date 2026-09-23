@@ -1,0 +1,290 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | CarInsight System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <button id="menu-toggle" class="menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <main class="dashboard-main">
+            <div class="dashboard-nav-wrapper">
+                <div class="mobile-tab-toggle">
+                    <div class="d-flex align-center gap-12">
+                        <i data-lucide="shield-check" class="w-20"></i>
+                        <span class="current-tab-title">Visão Geral</span>
+                    </div>
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <nav class="dashboard-tabs">
+                    <a href="#" class="tab-link active" data-tab="tab-overview" data-color="blue">
+                        <i data-lucide="shield-check"></i> Visão Geral
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-users" data-color="green">
+                        <i data-lucide="users"></i> Usuários
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-lojas" data-color="orange">
+                        <i data-lucide="shopping-bag"></i> Lojas
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-admin-anuncios" data-color="purple">
+                        <i data-lucide="car-front"></i> Anúncios
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-config" data-color="blue">
+                        <i data-lucide="settings"></i> Sistema
+                    </a>
+                    <a href="index.html" class="tab-link text-red" data-color="red">
+                        <i data-lucide="log-out"></i> Sair
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Tab: Visão Geral -->
+            <div id="tab-overview" class="tab-pane active">
+                <header class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h1>Painel Administrativo</h1>
+                        <p>Controle global da plataforma CarInsight.</p>
+                    </div>
+                    <div class="user-profile-nav">
+                        <div class="user-avatar bg-dark">A</div>
+                        <span class="fw-700">Admin Master</span>
+                        <i data-lucide="chevron-down" class="w-16"></i>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">8.420</span>
+                            <span class="label">Total Usuários</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i data-lucide="shopping-bag"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">458</span>
+                            <span class="label">Lojas Parceiras</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i data-lucide="car-front"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">12.840</span>
+                            <span class="label">Anúncios Ativos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i data-lucide="activity"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">98.2%</span>
+                            <span class="label">Uptime Sistema</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Logs de Atividade Recentes</h2>
+                        <button class="nav-link p-8-16 fs-085">Ver todos os
+                            Logs</button>
+                    </div>
+                    <div class="data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ação</th>
+                                    <th>Usuário/Entidade</th>
+                                    <th>Data/Hora</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Aprovação de Loja</td>
+                                    <td>Lux Car Veículos</td>
+                                    <td>Hoje, 10:45</td>
+                                    <td><span class="status-badge active">Sucesso</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Remoção de Anúncio</td>
+                                    <td>Pedro Alcântara</td>
+                                    <td>Hoje, 09:12</td>
+                                    <td><span class="status-badge active">Removido</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tentativa de Login</td>
+                                    <td>IP: 187.45.XX.XX</td>
+                                    <td>Ontem, 23:58</td>
+                                    <td><span class="status-badge pending">Bloqueado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Usuários -->
+            <div id="tab-users" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Gerenciamento de Usuários</h2>
+                    </div>
+                    <div class="p-40 text-center">
+                        <i data-lucide="users" class="w-64 h-64 mb-20 opacity-01"></i>
+                        <p>Total de 8.420 usuários registrados na plataforma.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Lojas -->
+            <div id="tab-lojas" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Lojas Parceiras</h2>
+                    </div>
+                    <div class="p-40 text-center">
+                        <i data-lucide="shopping-bag" class="w-64 h-64 mb-20 opacity-01"></i>
+                        <p>458 lojas ativas com planos de assinatura vigentes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Anúncios -->
+            <div id="tab-admin-anuncios" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Moderação de Anúncios</h2>
+                    </div>
+                    <div class="p-40 text-center">
+                        <i data-lucide="car-front" class="w-64 h-64 mb-20 opacity-01"></i>
+                        <p>158 anúncios aguardando revisão manual.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Configurações -->
+            <div id="tab-config" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Configurações do Sistema</h2>
+                    </div>
+                    <div class="p-30">
+                        <div class="grid-2 gap-30">
+                            <div>
+                                <h4 class="mb-15">Manutenção</h4>
+                                <label class="d-flex align-center gap-10">
+                                    <input type="checkbox"> Modo Manutenção Ativo
+                                </label>
+                            </div>
+                            <div>
+                                <h4 class="mb-15">API Keys</h4>
+                                <button class="nav-link p-8-16">Gerenciar Chaves</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="meus-salvos.html">Meus Salvos</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 CarInsight. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

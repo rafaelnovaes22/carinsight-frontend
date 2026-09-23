@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Loja | CarInsight Business</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <button id="menu-toggle" class="menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <main class="dashboard-main">
+            <div class="dashboard-nav-wrapper">
+                <div class="mobile-tab-toggle">
+                    <div class="d-flex align-center gap-12">
+                        <i data-lucide="bar-chart-3" class="w-20"></i>
+                        <span class="current-tab-title">Analytics</span>
+                    </div>
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <nav class="dashboard-tabs">
+                    <a href="#" class="tab-link active" data-tab="tab-analytics" data-color="blue">
+                        <i data-lucide="bar-chart-3"></i> Analytics
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-estoque" data-color="green">
+                        <i data-lucide="package"></i> Estoque
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-leads" data-color="orange">
+                        <i data-lucide="users"></i> Leads
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-unidades" data-color="purple">
+                        <i data-lucide="building-2"></i> Unidades
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-financeiro" data-color="blue">
+                        <i data-lucide="credit-card"></i> Financeiro
+                    </a>
+                    <a href="index.html" class="tab-link text-red" data-color="red">
+                        <i data-lucide="log-out"></i> Sair
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Tab: Analytics -->
+            <div id="tab-analytics" class="tab-pane active">
+                <header class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h1>Sua Loft de Automóveis</h1>
+                        <p>Performance de vendas e métricas do seu inventário.</p>
+                    </div>
+                    <div class="user-profile-nav">
+                        <div class="user-avatar bg-blue-accent">L</div>
+                        <span class="fw-700">Loja Premium</span>
+                        <i data-lucide="chevron-down" class="w-16"></i>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">42</span>
+                            <span class="label">Vendas no Mês</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">R$ 4.2M</span>
+                            <span class="label">VGV Estimado</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i data-lucide="car-front"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">124</span>
+                            <span class="label">Carros no Estoque</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i data-lucide="users-2"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">+15%</span>
+                            <span class="label">Conversão de Leads</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Performance de Cliques vs. Impressões</h3>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Distribuição por Categoria</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Estoque -->
+            <div id="tab-estoque" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Gestão de Estoque</h2>
+                        <button class="btn-boost bg-accent">Adicionar Veículo</button>
+                    </div>
+                    <div class="p-40 text-center">
+                        <i data-lucide="package" class="w-64 h-64 mb-20 opacity-01"></i>
+                        <p>Você tem 124 veículos ativos no seu estoque.</p>
+                        <button class="nav-link mt-15">Baixar Relatório PDF</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Leads -->
+            <div id="tab-leads" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Ãšltimos Leads Gerados</h2>
+                        <button class="nav-link p-8-16 fs-085">Ver todos</button>
+                    </div>
+                    <div class="data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Interessado</th>
+                                    <th>Veículo</th>
+                                    <th>Data</th>
+                                    <th>Origem</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Mariana Santos</td>
+                                    <td>BMW 320i M Sport</td>
+                                    <td>Hoje, 14:20</td>
+                                    <td><span class="status-badge active">Site</span></td>
+                                    <td><button class="btn-boost bg-green">WhatsApp</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ricardo Oliveira</td>
+                                    <td>Jeep Compass Longitude</td>
+                                    <td>Ontem, 18:45</td>
+                                    <td><span class="status-badge pending">Facebook</span></td>
+                                    <td><button class="btn-boost bg-green">WhatsApp</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Unidades -->
+            <div id="tab-unidades" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Nossas Unidades</h2>
+                    </div>
+                    <div class="p-30 grid-2 gap-20">
+                        <div class="p-20 border-1 br-16">
+                            <h4 class="mb-10">Unidade Matriz - SP</h4>
+                            <p class="fs-09 text-secondary">Av. das Nações Unidas, 12551</p>
+                            <span class="status-badge active mt-10 d-inline-block">Principal</span>
+                        </div>
+                        <div class="p-20 border-1 br-16">
+                            <h4 class="mb-10">Unidade Sul - PR</h4>
+                            <p class="fs-09 text-secondary">Rua das Flores, 450 - Curitiba
+                            </p>
+                            <span class="status-badge active mt-10 d-inline-block">Operacional</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Financeiro -->
+            <div id="tab-financeiro" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Financeiro</h2>
+                    </div>
+                    <div class="p-40 text-center">
+                        <i data-lucide="credit-card" class="w-64 h-64 mb-20 opacity-01"></i>
+                        <h3>Faturamento Previsto</h3>
+                        <div class="fs-25rem fw-800 text-accent mb-20 mt-20">R$ 425.800</div>
+                        <p class="text-secondary">Referente aos leads convertidos no último período.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="meus-salvos.html">Meus Salvos</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 CarInsight. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Chart 1: Line Chart
+        const ctxPerf = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctxPerf, {
+            type: 'line',
+            data: {
+                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
+                datasets: [{
+                    label: 'Cliques',
+                    data: [120, 190, 150, 250, 220, 310, 280],
+                    borderColor: '#0d41e1',
+                    backgroundColor: 'rgba(13, 65, 225, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Impressões',
+                    data: [1200, 1500, 1300, 2100, 1800, 2600, 2400],
+                    borderColor: '#08b6f6',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Chart 2: Pie Chart
+        const ctxCat = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxCat, {
+            type: 'doughnut',
+            data: {
+                labels: ['SUV', 'Sedan', 'Hatch', 'Pickup', 'Elétrico'],
+                datasets: [{
+                    data: [45, 25, 15, 10, 5],
+                    backgroundColor: ['#0d41e1', '#08b6f6', '#22c55e', '#f97316', '#9333ea'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

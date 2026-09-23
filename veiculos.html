@@ -1,0 +1,364 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veículos Disponíveis | CarInsight</title>
+    <meta name="description"
+        content="Explore nosso estoque exclusivo de carros seminovos inspecionados de alta qualidade.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i>
+                Entrar</a>
+            <button id="menu-toggle" class="menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu (Igual index.html) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar
+                            meu carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i>
+                            Acessar Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Popup -->
+    <div class="login-popup" id="login-popup">
+        <div class="sidebar-header">
+            <div>
+                <h3>Bem-vindo de volta</h3>
+                <p>Escolha sua forma preferida de acesso</p>
+            </div>
+            <button id="login-close" aria-label="Fechar">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="social-login">
+            <button class="social-btn google-btn">
+                <img src="assets/google.svg" alt="Google" class="w-18">
+                <span>Entrar com Google</span>
+            </button>
+            <button class="social-btn apple-btn">
+                <img src="assets/apple.svg" alt="Apple" class="w-18">
+                <span>Entrar com Apple</span>
+            </button>
+        </div>
+
+        <div class="auth-separator">ou entrar com e-mail</div>
+
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Acesse sua conta</h4>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="email" placeholder="E-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Senha" required>
+                        <i data-lucide="lock" class="input-icon"></i>
+                    </div>
+                    <div class="form-extras">
+                        <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
+                            <input type="checkbox"> Lembrar-me
+                        </label>
+                        <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu
+                            a senha?</a>
+                    </div>
+                    <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                </form>
+            </div>
+            <div class="sidebar-column bg-gray-soft p-30 br-24">
+                <h4>Criar nova conta</h4>
+                <p class="text-secondary mb-24 fs-095">Junte-se a
+                    milhares de usuários e aproveite benefícios exclusivos.</p>
+                <form class="auth-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Nome completo" required>
+                        <i data-lucide="user" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Seu melhor e-mail" required>
+                        <i data-lucide="mail" class="input-icon"></i>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Crie uma senha forte" required>
+                        <i data-lucide="shield-check" class="input-icon"></i>
+                    </div>
+                    <button type="submit" class="auth-submit">Começar agora</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <main>
+        <section class="catalog-section">
+            <div class="container">
+                <div class="section-title text-center" style="margin-bottom: 50px;">
+                    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 16px;">
+                        Veículos Inspecionados</h1>
+                    <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Escolha o modelo que
+                        combina com seu estilo de vida com garantia de procedência e laudo cautelar aprovado.</p>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterCategory('all', this)">Todos</button>
+                    <button class="filter-tab" onclick="filterCategory('hatch', this)">Hatchback</button>
+                    <button class="filter-tab" onclick="filterCategory('sedan', this)">Sedan</button>
+                    <button class="filter-tab" onclick="filterCategory('suv', this)">SUV</button>
+                    <button class="filter-tab" onclick="filterCategory('pickup', this)">Pickup</button>
+                    <button class="filter-tab" onclick="filterCategory('eletrico', this)">Elétricos/Híbridos</button>
+                </div>
+
+                <div class="grid-container" id="car-grid">
+                    <!-- SUV -->
+                    <div class="car-card" data-category="suv">
+                        <div class="car-image">
+                            <span class="car-tag">Oferta</span>
+                            <img src="assets/car1.png" alt="Corolla Cross">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 155.000</div>
+                            <div class="car-name">Toyota Corolla Cross XRE</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2023</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 15k km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+
+                    <!-- SUV -->
+                    <div class="car-card" data-category="suv">
+                        <div class="car-image">
+                            <span class="car-tag">Destaque</span>
+                            <img src="assets/suv.png" alt="Jeep Renegade">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 115.000</div>
+                            <div class="car-name">Jeep Renegade Longitude</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 25k km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+
+                    <!-- Hatch -->
+                    <div class="car-card" data-category="hatch">
+                        <div class="car-image">
+                            <span class="car-tag">Econômico</span>
+                            <img src="assets/hatch.png" alt="Fiat Mobi">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 54.900</div>
+                            <div class="car-name">Fiat Mobi Trekking</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 12.300 km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Manual</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+
+                    <!-- Sedan -->
+                    <div class="car-card" data-category="sedan">
+                        <div class="car-image">
+                            <span class="car-tag">Premium</span>
+                            <img src="assets/car2.png" alt="Honda Civic">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 148.900</div>
+                            <div class="car-name">Honda Civic Touring</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 30k km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Gasolina</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+
+                    <!-- Pickup -->
+                    <div class="car-card" data-category="pickup">
+                        <div class="car-image">
+                            <span class="car-tag">4x4 Diesel</span>
+                            <img src="assets/car1.png" alt="Ford Ranger">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 245.900</div>
+                            <div class="car-name">Ford Ranger Limited</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 55k km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+
+                    <!-- Eletrico -->
+                    <div class="car-card" data-category="eletrico">
+                        <div class="car-image">
+                            <span class="car-tag">100% Elétrico</span>
+                            <img src="assets/hero.png" alt="BYD Dolphin">
+                        </div>
+                        <div class="car-info">
+                            <div class="car-price">R$ 149.800</div>
+                            <div class="car-name">BYD Dolphin Plus</div>
+                            <div class="car-specs">
+                                <div class="spec-item"><i data-lucide="calendar"></i> 2024</div>
+                                <div class="spec-item"><i data-lucide="gauge"></i> 0 km</div>
+                                <div class="spec-item"><i data-lucide="fuel"></i> Elétrico</div>
+                                <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
+                            </div>
+                            <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <a href="falar-consultor.html" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function filterCategory(category, tabElement) {
+            // Update tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            tabElement.classList.add('active');
+
+            // Filter cards
+            document.querySelectorAll('.car-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Apply URL parameter filter if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const catParam = urlParams.get('categoria');
+        if (catParam) {
+            const matchedTab = Array.from(document.querySelectorAll('.filter-tab')).find(tab =>
+                tab.innerText.toLowerCase().includes(catParam.toLowerCase()) ||
+                (catParam === 'eletrico' && tab.innerText.toLowerCase().includes('elétrico'))
+            );
+            if (matchedTab) {
+                matchedTab.click();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário | CarInsight</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+        </div>
+        <div class="header-actions">
+            <button id="menu-toggle" class="menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <nav class="sidebar-menu" id="sidebar-menu">
+        <div class="sidebar-header">
+            <div>
+                <h3>Menu Principal</h3>
+                <p>Navegue por nossas ferramentas e serviços</p>
+            </div>
+            <button id="menu-close" aria-label="Fechar menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-column">
+                <h4>Encontre seu Carro</h4>
+                <div class="sidebar-actions">
+                    <a href="meus-salvos.html" class="sidebar-link-btn">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="comparar.html" class="sidebar-link-btn">
+                        <i data-lucide="arrow-right-left"></i> Comparar
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-column">
+                <h4>Soluções de Venda</h4>
+                <div class="seller-sections">
+                    <div class="seller-type">
+                        <h5>Vendedores Particulares</h5>
+                        <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar meu
+                            carro</a>
+                    </div>
+                    <div class="seller-type">
+                        <h5>Lojas e Concessionárias</h5>
+                        <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                        <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i> Acessar
+                            Painel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+        <main class="dashboard-main">
+            <div class="dashboard-nav-wrapper">
+                <div class="mobile-tab-toggle">
+                    <div class="d-flex align-center gap-12">
+                        <i data-lucide="layout-dashboard" class="w-20"></i>
+                        <span class="current-tab-title">Dashboard</span>
+                    </div>
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <nav class="dashboard-tabs">
+                    <a href="#" class="tab-link active" data-tab="tab-dashboard" data-color="blue">
+                        <i data-lucide="layout-dashboard"></i> Dashboard
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-anuncios" data-color="blue">
+                        <i data-lucide="car"></i> Meus Anúncios
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-salvos" data-color="red">
+                        <i data-lucide="heart"></i> Meus Salvos
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-perfil" data-color="orange">
+                        <i data-lucide="user"></i> Perfil
+                    </a>
+                    <a href="#" class="tab-link" data-tab="tab-preferencias" data-color="purple">
+                        <i data-lucide="settings"></i> Preferências
+                    </a>
+                    <a href="index.html" class="tab-link text-red" data-color="red">
+                        <i data-lucide="log-out"></i> Sair
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Tab: Dashboard -->
+            <div id="tab-dashboard" class="tab-pane active">
+                <header class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h1>Olá, Diego!</h1>
+                        <p>Gerencie seus carros e veja o desempenho dos seus anúncios.</p>
+                    </div>
+                    <div class="user-profile-nav">
+                        <div class="user-avatar">D</div>
+                        <span class="fw-700">Diego Silva</span>
+                        <i data-lucide="chevron-down" class="w-16"></i>
+                    </div>
+                </header>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i data-lucide="eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">1.284</span>
+                            <span class="label">Visualizações</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i data-lucide="message-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">24</span>
+                            <span class="label">Contatos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i data-lucide="heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">158</span>
+                            <span class="label">Salvos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="value">3.2x</span>
+                            <span class="label">Mais Alcance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Resumo de Atividade</h2>
+                        <span class="text-secondary fs-09">Ãšltimos 30 dias</span>
+                    </div>
+                    <div class="p-24 text-center text-secondary">
+                        <i data-lucide="trending-up" class="w-48 h-48 mb-16 opacity-02"></i>
+                        <p>Seu perfil teve um crescimento de 15% em visualizações esta semana.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Meus Anúncios -->
+            <div id="tab-anuncios" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Meus Anúncios</h2>
+                        <a href="vender-carro.html" class="btn-boost bg-accent">
+                            <i data-lucide="plus"></i> Novo Anúncio
+                        </a>
+                    </div>
+
+                    <div class="data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Veículo</th>
+                                    <th>Status</th>
+                                    <th>Preço</th>
+                                    <th>Visualizações</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="car-thumb-cell">
+                                            <img src="assets/car1.png" alt="Toyota Corolla">
+                                            <div>
+                                                <div class="fw-800">Toyota Corolla Cross</div>
+                                                <div class="fs-075 text-secondary">2022 â€¢
+                                                    Flex
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge active">Ativo</span></td>
+                                    <td>R$ 158.900</td>
+                                    <td>842</td>
+                                    <td>
+                                        <button class="btn-boost"
+                                            onclick="alert('Funcionalidade de Impulsionar em breve!')">
+                                            <i data-lucide="zap"></i> Impulsionar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="car-thumb-cell">
+                                            <img src="assets/car2.png" alt="Honda Civic">
+                                            <div>
+                                                <div class="fw-800">Honda Civic Sedan EXL</div>
+                                                <div class="fs-075 text-secondary">2021 â€¢
+                                                    Flex
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge pending">Pendente</span></td>
+                                    <td>R$ 124.900</td>
+                                    <td>442</td>
+                                    <td>
+                                        <button class="btn-boost opacity-05" disabled>
+                                            <i data-lucide="zap"></i> Impulsionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Meus Salvos -->
+            <div id="tab-salvos" class="tab-pane">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <h2>Carros Favoritos</h2>
+                        <a href="meus-salvos.html" class="nav-link fs-09">Ver todos na página
+                            cheia</a>
+                    </div>
+                    <div class="p-40 text-center bg-red-light br-20">
+                        <i data-lucide="heart" class="w-48 h-48 text-red mb-16"></i>
+                        <h3>Você tem 4 carros salvos</h3>
+                        <p class="text-secondary mb-24">Continue sua pesquisa ou comece a
+                            comparar os modelos que você mais gostou.</p>
+                        <a href="meus-salvos.html" class="btn-boost bg-red">Acessar meus
+                            Salvos</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Perfil -->
+            <div id="tab-perfil" class="tab-pane">
+                <div class="content-card dashboard-card-wide">
+                    <div class="content-card-header">
+                        <h2>Meu Perfil</h2>
+                    </div>
+                    <div class="p-30">
+                        <div class="d-flex align-center gap-24 mb-32">
+                            <div class="user-avatar w-80 h-80 fs-2rem">D</div>
+                            <div>
+                                <h3 class="mb-4">Diego Silva</h3>
+                                <p class="text-secondary">Usuário desde Janeiro 2026</p>
+                            </div>
+                            <button class="btn-boost ml-auto bg-gray-light text-primary border-none">Alterar
+                                Foto</button>
+                        </div>
+
+                        <form class="grid-2 gap-20">
+                            <div class="input-group">
+                                <label class="dashboard-label">Nome</label>
+                                <input type="text" value="Diego Silva" class="dashboard-input">
+                            </div>
+                            <div class="input-group">
+                                <label class="dashboard-label">E-mail</label>
+                                <input type="email" value="diego@exemplo.com" class="dashboard-input">
+                            </div>
+                            <div class="input-group">
+                                <label class="dashboard-label">Telefone</label>
+                                <input type="tel" value="(11) 98765-4321" class="dashboard-input">
+                            </div>
+                            <div class="input-group">
+                                <label class="dashboard-label">Localização</label>
+                                <input type="text" value="São Paulo, SP" class="dashboard-input">
+                            </div>
+                        </form>
+                        <button class="btn-boost bg-accent mt-30 w-200">Salvar
+                            Alterações</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Preferências -->
+            <div id="tab-preferencias" class="tab-pane">
+                <div class="content-card dashboard-card-wide">
+                    <div class="content-card-header">
+                        <h2>Preferências</h2>
+                    </div>
+                    <div class="p-30">
+                        <div class="mb-30">
+                            <h4 class="mb-16">Notificações por E-mail</h4>
+                            <div class="d-flex flex-column gap-12">
+                                <label class="d-flex align-center gap-10 cursor-pointer">
+                                    <input type="checkbox" checked> Novos carros que combinam com meu perfil
+                                </label>
+                                <label class="d-flex align-center gap-10 cursor-pointer">
+                                    <input type="checkbox" checked> Atualizações de preço em carros salvos
+                                </label>
+                                <label class="d-flex align-center gap-10 cursor-pointer">
+                                    <input type="checkbox"> Newsletter semanal com tendências do mercado
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="mb-16">Segurança</h4>
+                            <button class="nav-link p-10-20 border-1">Alterar
+                                Senha</button>
+                            <button class="nav-link p-10-20 border-1 ml-10">Ativar
+                                Verificação em Duas Etapas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="meus-salvos.html">Meus Salvos</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 CarInsight. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

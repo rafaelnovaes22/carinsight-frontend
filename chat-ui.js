@@ -461,6 +461,18 @@ function addChatStyles() {
   document.head.appendChild(styles);
 }
 
+// Liga o botão flutuante do design ao chat geral, sem alterar o HTML.
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.floating-chatbot').forEach((button) => {
+    if (button.dataset.chatBound) return;
+    button.dataset.chatBound = '1';
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      openChat(window.currentVehicleId || null);
+    });
+  });
+});
+
 // Exposição global (páginas usam onclick inline)
 window.openChat = openChat;
 window.showChatUI = showChatUI;

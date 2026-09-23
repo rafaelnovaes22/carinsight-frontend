@@ -1,41 +1,22 @@
-# ⚠️ AVISO IMPORTANTE / IMPORTANT NOTICE
-
-## 🇧🇷 Português
-
-Este é um **SOFTWARE PROPRIETÁRIO** disponibilizado publicamente **APENAS**
-para fins de avaliação técnica por recrutadores e potenciais empregadores.
-
-### ✅ Permitido
-- Visualizar o código para avaliar qualidade e arquitetura
-- Discutir as decisões técnicas em contexto de entrevista
-
-### ❌ Proibido
-- Copiar, clonar ou fazer download para uso comercial
-- Usar qualquer parte do código em sistemas de produção
-- Redistribuir ou compartilhar com terceiros
-- Extrair prompts de IA, lógica de negócio ou algoritmos
-
----
-
-## 🇺🇸 English
-
-This is **PROPRIETARY SOFTWARE** made publicly visible **ONLY** for technical
-evaluation by recruiters and potential employers.
-
-### ✅ Permitted
-- View the code to assess quality and architecture
-- Discuss technical decisions in interview contexts
-
-### ❌ Prohibited
-- Copy, clone, or download for commercial use
-- Use any part of this codebase in production systems
-- Redistribute or share with third parties
-- Extract AI prompts, business logic, or algorithms
-
----
-
 ## 📞 Contact
 
 **Author:** Rafael de Novaes  
 **LinkedIn:** [linkedin.com/in/rafaeldenovaes](https://linkedin.com/in/rafaeldenovaes)  
 **GitHub:** [@rafaelnovaes22](https://github.com/rafaelnovaes22)
+
+---
+
+## 🎨 Crédito de design
+
+O layout, as folhas de estilo, as interações base e os ativos de marca
+(`assets/car-insight-*`, `assets/logo-car-insght-*`, `hero.png`, fotos de
+veículos) são criação de Diego (Diegowebdesign), referência:
+https://github.com/Diegowebdesign/carinsght, versão de 08/08/2026, usada aqui
+de forma fiel como base visual.
+
+Camada própria deste repositório, sem sobreposição ao design: cliente de API
+(`api.js`), autenticação (`auth.js`), chat (`chat.js`, `chat-ui.js`),
+favoritos, comparação e páginas (`*-page.js`, `search-page.js`, `details-page.js`),
+além dos testes em `tests/`.
+
+Mudanças visuais no design base exigem alinhamento prévio com o designer.

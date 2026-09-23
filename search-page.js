@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="info-top">
             <div class="info-header">
               <span class="condition-badge">${condition}</span>
-              <button class="${saveButtonClass}" onclick="toggleSave(this, '${vehicle.id}')">
+              <button class="${saveButtonClass}" onclick="toggleSaveVehicle(this, '${vehicle.id}')">
                 ${saveButtonContent}
               </button>
             </div>
@@ -414,7 +414,9 @@ function toggleDetails(element) {
   }
 }
 
-function toggleSave(button, vehicleId) {
+function toggleSaveVehicle(button, vehicleId) {
+  // PORQUÊ: nome próprio da camada de integração. O toggleSave(button) do
+  // design cuida dos cards estáticos; este cuida dos cards da API com sync.
   // Use FavoritesManager if available
   if (window.FavoritesManager) {
     const isFavorite = FavoritesManager.toggle(vehicleId);
