@@ -3,9 +3,11 @@
  * Centralized API communication with the NestJS Backend
  */
 
-const isProduction = window.location.hostname === 'carinsight.com.br' || 
-                     window.location.hostname === 'www.carinsight.com.br';
-const API_BASE_URL = isProduction ? 'https://api.carinsight.com.br' : 'http://localhost:3000';
+const isProduction = window.location.hostname !== 'localhost' &&
+                     window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = isProduction
+  ? (window.CARINSIGHT_API_BASE || 'https://carinsight-backend-consultoria-bethesda.vercel.app')
+  : 'http://localhost:3000';
 
 console.log('🚀 CarInsight API Client loaded');
 console.log('📡 API URL:', API_BASE_URL);
