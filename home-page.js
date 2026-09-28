@@ -21,14 +21,20 @@
     const specs = vehicle.technicalSpecs || {};
     const transmission = specs.transmission || (vehicle.aiTags || []).find((t) => /autom|manual/i.test(t)) || '';
     const km = vehicle.mileage ? `${Math.round(vehicle.mileage / 1000)}k km` : '';
-    const img = (vehicle.media && vehicle.media[0] && vehicle.media[0].url) || 'assets/car1.png';
+    const VI = window.VehicleImages;
+    const img = VI
+      ? VI.resolve(vehicle)
+      : (vehicle.media && vehicle.media[0] && vehicle.media[0].url) || 'assets/car1.png';
+    const imgSafe = VI
+      ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
+      : 'assets/car1.png';
 
     return `
       <div class="car-card">
         <div class="car-image">
           ${tag ? `<span class="car-tag">${tag}</span>` : ''}
-          <img src="${img}" alt="${vehicle.make} ${vehicle.model}" loading="lazy"
-               onerror="this.src='assets/car1.png'">
+           <img src="${img}" alt="${vehicle.make} ${vehicle.model}" loading="lazy"
+                onerror="this.onerror=null;this.src='${imgSafe}'">
         </div>
         <div class="car-info">
           <div class="car-price">${formatPrice(vehicle.price)}</div>

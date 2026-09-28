@@ -142,7 +142,11 @@ document.addEventListener('DOMContentLoaded', () => {
       ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
       : 'N/A';
     const condition = vehicle.condition === 'NEW' ? 'Novo' : 'Seminovo';
-    const imageUrl = vehicle.media?.[0]?.url || 'assets/car1.png';
+    const VI = window.VehicleImages;
+    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/car1.png';
+    const imageSafe = VI
+      ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
+      : 'assets/car1.png';
     const dealerName = vehicle.dealer?.name || 'Vendedor';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model} ${vehicle.yearModel}`;
     const year = vehicle.yearFab && vehicle.yearModel
@@ -182,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="match-tag" style="position:absolute; top:12px; left:12px; z-index:2; padding:4px 8px; background:rgba(0,0,0,0.7); color:white; border-radius:4px; font-weight:700; font-size:0.75rem;">
             1/${vehicle.media?.length || 1}
           </span>
-          <img src="${imageUrl}" alt="${title}" onerror="this.src='assets/car1.png'">
+          <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='${imageSafe}'">
         </div>
         <div class="car-info">
           <div class="info-top">

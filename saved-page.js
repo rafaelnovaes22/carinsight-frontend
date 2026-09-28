@@ -72,7 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const mileage = vehicle.mileage
       ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
       : 'N/A';
-    const imageUrl = vehicle.media?.[0]?.url || 'assets/car1.png';
+    const VI = window.VehicleImages;
+    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/car1.png';
+    const imageSafe = VI
+      ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
+      : 'assets/car1.png';
     const dealerName = vehicle.dealer?.name || 'Vendedor';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model}`;
     const year = vehicle.yearFab && vehicle.yearModel 
@@ -85,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.innerHTML = `
       <div class="card-main-content">
         <div class="car-image">
-          <img src="${imageUrl}" alt="${title}" onerror="this.src='assets/car1.png'">
+          <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='${imageSafe}'">
         </div>
         <div class="car-info">
           <div class="info-top">
