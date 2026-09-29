@@ -6,7 +6,7 @@
 const isProduction = window.location.hostname !== 'localhost' &&
                      window.location.hostname !== '127.0.0.1';
 const API_BASE_URL = isProduction
-  ? (window.CARINSIGHT_API_BASE || 'https://carinsight-backend-consultoria-bethesda.vercel.app')
+  ? (window.CARINSIGHT_API_BASE || 'https://api.carinsight.com.br')
   : 'http://localhost:3000';
 
 console.log('🚀 CarInsight API Client loaded');
