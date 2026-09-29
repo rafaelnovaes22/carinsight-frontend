@@ -82,7 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const mileage = vehicle.mileage
       ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
       : 'N/A';
-    const imageUrl = vehicle.media?.[0]?.url || 'assets/car1.png';
+    const VI = window.VehicleImages;
+    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/car1.png';
+    const imageSafe = VI
+      ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
+      : 'assets/car1.png';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model}`;
     const year = vehicle.yearModel;
 
@@ -92,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <i data-lucide="x"></i>
         </button>
         <div class="compare-vehicle-image">
-          <img src="${imageUrl}" alt="${title}" onerror="this.src='assets/car1.png'">
+          <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='${imageSafe}'">
         </div>
         <div class="compare-vehicle-info">
           <h4>${year} ${title}</h4>
@@ -388,12 +392,17 @@ document.addEventListener('DOMContentLoaded', () => {
       savedVehicles.forEach(v => {
         const isInCompare = compareIds.includes(v.id);
         const price = v.price ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v.price) : '';
-        const imageUrl = v.media?.[0]?.url || 'assets/car1.png';
+        const imageUrl = window.VehicleImages
+          ? window.VehicleImages.resolve(v)
+          : v.media?.[0]?.url || 'assets/car1.png';
+        const imageSafe = window.VehicleImages
+          ? window.VehicleImages.curatedFor(v.make, v.model) || window.VehicleImages.GENERIC_FALLBACK
+          : 'assets/car1.png';
         
         listHTML += `
           <div class="vehicle-selector-item ${isInCompare ? 'disabled' : ''}" 
                onclick="${isInCompare ? '' : `selectVehicleForCompare('${v.id}', ${slotIndex})`}">
-            <img src="${imageUrl}" alt="${v.make} ${v.model}" onerror="this.src='assets/car1.png'">
+            <img src="${imageUrl}" alt="${v.make} ${v.model}" onerror="this.onerror=null;this.src='${imageSafe}'">
             <div class="vehicle-selector-item-info">
               <h4>${v.yearModel} ${v.make} ${v.model}</h4>
               <span>${price} ${isInCompare ? '• Já na comparação' : ''}</span>

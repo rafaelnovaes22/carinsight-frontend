@@ -71,24 +71,38 @@
   }
 
   function fillGallery(vehicle) {
+    const VI = window.VehicleImages;
     const media = (vehicle.media || []).filter((m) => m.type === 'IMAGE' || !m.type);
-    if (media.length === 0) return;
+    const curated = VI ? VI.curatedFor(vehicle.make, vehicle.model) : null;
+    const urls = media
+      .map((m) => m.url)
+      .filter((u) => u && !/via\.placeholder\.com|placehold\.co|placeholder/i.test(u));
+    if (urls.length === 0 && curated) urls.push(curated);
+    if (urls.length === 0) return;
+
+    const arm = (img, url) => {
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = curated && url !== curated ? curated : 'assets/car1.png';
+      };
+      img.src = url;
+    };
 
     const mainImg = document.querySelector('.main-image img');
-    if (mainImg) mainImg.src = media[0].url;
+    if (mainImg) arm(mainImg, urls[0]);
 
     const sideImgs = document.querySelectorAll('.side-images img');
     sideImgs.forEach((img, i) => {
-      if (media[i + 1]) img.src = media[i + 1].url;
+      if (urls[i + 1]) arm(img, urls[i + 1]);
     });
 
     const modalImgs = document.querySelectorAll('.modal-grid img');
     modalImgs.forEach((img, i) => {
-      if (media[i]) img.src = media[i].url;
+      if (urls[i]) arm(img, urls[i]);
     });
 
     const galleryTitle = document.querySelector('.modal-header h3');
-    if (galleryTitle) galleryTitle.textContent = `Galeria de Fotos (${media.length})`;
+    if (galleryTitle) galleryTitle.textContent = `Galeria de Fotos (${urls.length})`;
   }
 
   function fillBadges(vehicle) {
