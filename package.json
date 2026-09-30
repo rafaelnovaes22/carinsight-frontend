@@ -4,7 +4,8 @@
   "description": "Frontend for CarInsight",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve . -l 8080"
+    "start": "npx serve . -l 8080",
+    "test": "playwright test"
   },
   "dependencies": {
     "serve": "^14.2.0"
