@@ -1,0 +1,19 @@
+{
+  "name": "carinsight-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for CarInsight",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -l 8080",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  },
+  "keywords": [],
+  "author": "Rafael Novaes",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0"
+  }
+}

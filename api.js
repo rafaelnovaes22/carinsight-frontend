@@ -1,0 +1,330 @@
+/**
+ * CarInsight API Client
+ * Centralized API communication with the NestJS Backend
+ */
+
+const isProduction = window.location.hostname !== 'localhost' &&
+                     window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = isProduction
+  ? (window.CARINSIGHT_API_BASE || 'https://api.carinsight.com.br')
+  : 'http://localhost:3000';
+
+console.log('🚀 CarInsight API Client loaded');
+console.log('📡 API URL:', API_BASE_URL);
+
+// Token management
+let accessToken = localStorage.getItem('carinsight_token');
+let refreshToken = localStorage.getItem('carinsight_refresh_token');
+
+// Sessão anônima (favoritos/comparação funcionam sem login)
+let anonSessionId = localStorage.getItem('carinsight_session_id');
+if (!anonSessionId) {
+  anonSessionId =
+    'anon-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+  localStorage.setItem('carinsight_session_id', anonSessionId);
+}
+
+// Serializa refreshs concorrentes: várias 401 simultâneas geram um único refresh
+let refreshPromise = null;
+
+const CarInsightAPI = {
+  // ==================== AUTH ====================
+  async register(email, password, name) {
+    const response = await this._fetch('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, name }),
+    });
+    this._saveTokens(response);
+    return response;
+  },
+
+  async login(email, password) {
+    const response = await this._fetch('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
+    this._saveTokens(response);
+    return response;
+  },
+
+  async logout() {
+    localStorage.removeItem('carinsight_token');
+    localStorage.removeItem('carinsight_refresh_token');
+    localStorage.removeItem('carinsight_user');
+    accessToken = null;
+    refreshToken = null;
+  },
+
+  async getProfile() {
+    return this._fetch('/auth/profile', { auth: true });
+  },
+
+  isLoggedIn() {
+    return !!accessToken;
+  },
+
+  getUser() {
+    const user = localStorage.getItem('carinsight_user');
+    return user ? JSON.parse(user) : null;
+  },
+
+  // ==================== VEHICLES ====================
+  async getVehicles(filters = {}) {
+    const params = new URLSearchParams();
+    if (filters.page) params.append('page', filters.page);
+    if (filters.limit) params.append('limit', filters.limit);
+    if (filters.make) params.append('make', filters.make);
+    if (filters.model) params.append('model', filters.model);
+    if (filters.priceMin) params.append('priceMin', filters.priceMin);
+    if (filters.priceMax) params.append('priceMax', filters.priceMax);
+
+    const query = params.toString();
+    return this._fetch(`/vehicles${query ? '?' + query : ''}`);
+  },
+
+  async getVehicle(id) {
+    return this._fetch(`/vehicles/${id}`);
+  },
+
+  // ==================== SEARCH ====================
+  async search(query, filters = {}) {
+    const params = new URLSearchParams();
+    params.append('q', query);
+    if (filters.limit) params.append('limit', filters.limit);
+    if (filters.priceMin) params.append('priceMin', filters.priceMin);
+    if (filters.priceMax) params.append('priceMax', filters.priceMax);
+    if (filters.yearMin) params.append('yearMin', filters.yearMin);
+    if (filters.yearMax) params.append('yearMax', filters.yearMax);
+    if (filters.make) params.append('make', filters.make);
+    if (filters.bodyType) params.append('bodyType', filters.bodyType);
+    if (filters.condition) params.append('condition', filters.condition);
+
+    return this._fetch(`/search?${params.toString()}`);
+  },
+
+  async getSimilarVehicles(vehicleId, limit = 5) {
+    return this._fetch(`/search/similar/${vehicleId}?limit=${limit}`);
+  },
+
+  async getSearchStats() {
+    return this._fetch('/search/stats');
+  },
+
+  // ==================== CHAT ====================
+  /**
+   * Start a new chat session
+   * @param {string} vehicleId - Optional vehicle ID for contextual chat
+   * @returns {Promise<{sessionId: string, greeting: string, vehicle?: object}>}
+   */
+  async startChat(vehicleId = null) {
+    const user = this.getUser();
+    const body = {};
+    
+    if (vehicleId) body.vehicleId = vehicleId;
+    if (user?.id) body.userId = user.id;
+    
+    const response = await this._fetch('/api/chat/start', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+    
+    // Store session ID
+    if (response.sessionId) {
+      const sessionKey = vehicleId ? `chat_session_${vehicleId}` : 'chat_session_general';
+      localStorage.setItem(sessionKey, response.sessionId);
+    }
+    
+    return response;
+  },
+
+  /**
+   * Send a message in an existing chat session
+   * @param {string} sessionId - Chat session ID
+   * @param {string} content - Message content
+   * @returns {Promise<{response: string, suggestedActions?: string[], recommendations?: array, currentNode?: string}>}
+   */
+  async sendChatMessage(sessionId, content) {
+    return this._fetch(`/api/chat/${sessionId}/message`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+  },
+
+  /**
+   * Get chat session state
+   * @param {string} sessionId - Chat session ID
+   * @returns {Promise<object>}
+   */
+  async getChatState(sessionId) {
+    return this._fetch(`/api/chat/${sessionId}/state`);
+  },
+
+  /**
+   * Reset/delete a chat session
+   * @param {string} sessionId - Chat session ID
+   */
+  async resetChat(sessionId) {
+    await this._fetch(`/api/chat/${sessionId}`, {
+      method: 'DELETE',
+    });
+    
+    // Clear from localStorage
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('chat_session_'));
+    keys.forEach(key => {
+      if (localStorage.getItem(key) === sessionId) {
+        localStorage.removeItem(key);
+      }
+    });
+  },
+
+  /**
+   * Get existing session ID for a vehicle (if any)
+   * @param {string} vehicleId - Vehicle ID
+   * @returns {string|null}
+   */
+  getChatSessionId(vehicleId = null) {
+    const sessionKey = vehicleId ? `chat_session_${vehicleId}` : 'chat_session_general';
+    return localStorage.getItem(sessionKey);
+  },
+
+  /**
+   * Get chat stats
+   * @returns {Promise<{activeSessions: number}>}
+   */
+  async getChatStats() {
+    return this._fetch('/api/chat/stats/active');
+  },
+
+  // ==================== INTERACTIONS ====================
+  // Favoritos/visualizações usam a sessão anônima (header x-session-id),
+  // alinhado aos endpoints /interactions/save|saved|view do backend.
+  async saveVehicle(vehicleId) {
+    return this._fetch(`/interactions/save/${vehicleId}`, { method: 'POST' });
+  },
+
+  async unsaveVehicle(vehicleId) {
+    return this._fetch(`/interactions/save/${vehicleId}`, { method: 'DELETE' });
+  },
+
+  async getSavedVehicles() {
+    return this._fetch('/interactions/saved');
+  },
+
+  async isVehicleSaved(vehicleId) {
+    return this._fetch(`/interactions/saved/${vehicleId}/check`);
+  },
+
+  async viewVehicle(vehicleId) {
+    return this._fetch(`/interactions/view/${vehicleId}`, { method: 'POST' });
+  },
+
+  async contactVehicle(vehicleId) {
+    return this._fetch(`/interactions/contact/${vehicleId}`, { method: 'POST' });
+  },
+
+  getSessionId() {
+    return anonSessionId;
+  },
+
+  // ==================== USER PREFERENCES ====================
+  async updatePreferences(preferences) {
+    return this._fetch('/users/me/preferences', {
+      method: 'PATCH',
+      body: JSON.stringify(preferences),
+      auth: true,
+    });
+  },
+
+  // ==================== INTERNAL ====================
+  async _fetch(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-session-id': anonSessionId,
+    };
+
+    if (options.auth && accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    try {
+      let response = await fetch(url, {
+        method: options.method || 'GET',
+        headers,
+        body: options.body,
+      });
+
+      // Handle 401 - try refresh token
+      if (response.status === 401 && refreshToken && options.auth) {
+        const refreshed = await this._refreshTokens();
+        if (refreshed) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+          response = await fetch(url, {
+            method: options.method || 'GET',
+            headers,
+            body: options.body,
+          });
+        }
+      }
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.message || `HTTP ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error(`❌ API Error [${endpoint}]:`, error.message);
+      throw error;
+    }
+  },
+
+  async _refreshTokens() {
+    if (!refreshToken) return false;
+
+    // Um único refresh em andamento por vez
+    if (!refreshPromise) {
+      refreshPromise = (async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            this._saveTokens(data);
+            return true;
+          }
+        } catch (error) {
+          console.error('Token refresh failed:', error);
+        }
+
+        this.logout();
+        return false;
+      })().finally(() => {
+        refreshPromise = null;
+      });
+    }
+
+    return refreshPromise;
+  },
+
+  _saveTokens(response) {
+    if (response.accessToken) {
+      accessToken = response.accessToken;
+      localStorage.setItem('carinsight_token', accessToken);
+    }
+    if (response.refreshToken) {
+      refreshToken = response.refreshToken;
+      localStorage.setItem('carinsight_refresh_token', refreshToken);
+    }
+    if (response.user) {
+      localStorage.setItem('carinsight_user', JSON.stringify(response.user));
+    }
+  },
+};
+
+// Export for use in other scripts
+window.CarInsightAPI = CarInsightAPI;

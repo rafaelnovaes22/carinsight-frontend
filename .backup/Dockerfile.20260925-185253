@@ -1,0 +1,38 @@
+# Multi-stage build for carinsight-frontend (static site with serve)
+# Otimizado para Windows Server 2025: baixa RAM, sem elevação, non-root
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Dependências de build
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copiar código e buildar (se houver build step)
+COPY . .
+RUN npm run build 2>/dev/null || echo "No build script, serving static files"
+
+# Runtime stage - imagem mínima com serve
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Non-root user
+RUN adduser -D -u 10000 appuser
+
+# Apenas serve como dependência de produção
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Copiar arquivos estáticos
+COPY --from=builder /app . --chown=appuser:appuser
+
+EXPOSE 8080
+
+USER appuser
+
+# Healthcheck leve
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
+
+CMD ["npx", "serve", ".", "-l", "8080"]

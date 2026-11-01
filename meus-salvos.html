@@ -1,0 +1,626 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Salvos | CarInsight</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body class="meus-salvos-page">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader">
+            <div class="car-loader-container">
+                <div class="moving-car">
+                    <i data-lucide="car"></i>
+                </div>
+                <div class="loading-bar-track">
+                    <div class="loading-bar-fill"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Carregando seus favoritos...</h2>
+            <p>Preparando sua seleção exclusiva</p>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen">
+
+        <!-- Header Global (Igual index.html) -->
+        <header>
+            <div class="logo">
+                <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
+            </div>
+            <div class="header-actions">
+                <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i>
+                    Entrar</a>
+                <button id="menu-toggle" class="menu-btn">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Menu -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <nav class="sidebar-menu" id="sidebar-menu">
+            <div class="sidebar-header">
+                <div>
+                    <h3>Menu Principal</h3>
+                    <p>Navegue por nossas ferramentas e serviços</p>
+                </div>
+                <button id="menu-close" aria-label="Fechar menu">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Encontre seu Carro</h4>
+                    <div class="sidebar-actions">
+                        <a href="meus-salvos.html" class="sidebar-link-btn">
+                            <i data-lucide="heart"></i> Meus Salvos
+                        </a>
+                        <a href="comparar.html" class="sidebar-link-btn">
+                            <i data-lucide="arrow-right-left"></i> Comparar
+                        </a>
+                    </div>
+                </div>
+                <div class="sidebar-column">
+                    <h4>Soluções de Venda</h4>
+                    <div class="seller-sections">
+                        <div class="seller-type">
+                            <h5>Vendedores Particulares</h5>
+                            <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
+                            <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar
+                                meu carro</a>
+                        </div>
+                        <div class="seller-type">
+                            <h5>Lojas e Concessionárias</h5>
+                            <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
+                            <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i>
+                                Acessar Painel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Login Popup -->
+        <div class="login-popup" id="login-popup">
+            <div class="sidebar-header">
+                <div>
+                    <h3>Bem-vindo de volta</h3>
+                    <p>Escolha sua forma preferida de acesso</p>
+                </div>
+                <button id="login-close" aria-label="Fechar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="social-login">
+                <button class="social-btn google-btn">
+                    <img src="assets/google.svg" alt="Google" class="w-18">
+                    <span>Entrar com Google</span>
+                </button>
+                <button class="social-btn apple-btn">
+                    <img src="assets/apple.svg" alt="Apple" class="w-18">
+                    <span>Entrar com Apple</span>
+                </button>
+            </div>
+
+            <div class="auth-separator">ou entrar com e-mail</div>
+
+            <div class="sidebar-content">
+                <div class="sidebar-column">
+                    <h4>Acesse sua conta</h4>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="E-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Senha" required>
+                            <i data-lucide="lock" class="input-icon"></i>
+                        </div>
+                        <div class="form-extras">
+                            <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
+                                <input type="checkbox"> Lembrar-me
+                            </label>
+                            <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu
+                                a senha?</a>
+                        </div>
+                        <button type="submit" class="auth-submit">Entrar na CarInsight</button>
+                    </form>
+                </div>
+                <div class="sidebar-column bg-gray-soft p-30 br-24">
+                    <h4>Criar nova conta</h4>
+                    <p class="text-secondary mb-24 fs-095">Junte-se a
+                        milhares de usuários e aproveite benefícios exclusivos.</p>
+                    <form class="auth-form">
+                        <div class="input-group">
+                            <input type="text" placeholder="Nome completo" required>
+                            <i data-lucide="user" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" placeholder="Seu melhor e-mail" required>
+                            <i data-lucide="mail" class="input-icon"></i>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" placeholder="Crie uma senha forte" required>
+                            <i data-lucide="shield-check" class="input-icon"></i>
+                        </div>
+                        <button type="submit" class="auth-submit">Começar agora</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Results Layout -->
+        <div class="container results-layout-container">
+            <div class="results-layout">
+                <!-- Sidebar Info -->
+                <aside class="filters-sidebar">
+                    <div class="saved-sidebar-content">
+                        <h4>Sua Garagem Virtual</h4>
+                        <p>Aqui você encontra todos os veículos que chamaram sua atenção. Use esta área para organizar
+                            sua busca e tomar a melhor decisão.</p>
+
+                        <div class="mt-32">
+                            <h4>Como Comparar</h4>
+                            <ul>
+                                <li>
+                                    <i data-lucide="check-square"></i>
+                                    <span>Selecione até 3 veículos marcando a caixa "Comparar".</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="arrow-right-left"></i>
+                                    <span>Clique no botão "Comparar Selecionados" que aparecerá.</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="bar-chart-2"></i>
+                                    <span>Analise lado a lado as especificações e preços.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-32 p-16 bg-blue-light br-12 border-blue-soft">
+                            <h4 class="text-blue-dark mb-8">Dica de Especialista</h4>
+                            <p class="fs-085 text-blue-deep m-0">Fique de olho na desvalorização e
+                                seguro de cada veículo antes de decidir.</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Results Main Area -->
+                <main class="results-main">
+                    <h3 class="results-count">Você tem 4 veículos salvos</h3>
+
+                    <div class="cars-grid">
+                        <!-- Car 1: Corolla Cross -->
+                        <div class="car-card">
+                            <div class="card-main-content">
+                                <div class="car-image">
+                                    <img src="assets/car1.png" alt="Toyota Corolla Cross">
+                                </div>
+                                <div class="car-info">
+                                    <div class="info-top">
+                                        <div class="info-header">
+                                            <div class="header-left-group d-flex align-center">
+                                                <label class="compare-checkbox-wrapper">
+                                                    <input type="checkbox" name="compare"
+                                                        onchange="toggleCompareButton(this)">
+                                                    <span class="checkmark-fancy"></span>
+                                                    Comparar
+                                                </label>
+                                                <a href="comparar.html" class="btn-go-compare"
+                                                    style="display: none; opacity: 0; transition: all 0.3s ease;">
+                                                    Ir para comparar <i data-lucide="arrow-right"
+                                                        style="width: 14px; height: 14px;"></i>
+                                                </a>
+                                            </div>
+                                            <button class="btn-delete-saved" onclick="removeSaved(this)"
+                                                title="Remover dos salvos">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                        <h2 class="car-name">2022 Toyota Corolla Cross XR</h2>
+                                        <div class="mileage-text">18.234 km</div>
+                                        <div class="car-price">R$ 158.900</div>
+
+                                        <div class="deal-badge-purple">
+                                            <i data-lucide="arrow-down"></i> Bom Negócio | R$ 3.500 abaixo
+                                        </div>
+                                    </div>
+
+                                    <div class="dealer-section">
+                                        <div class="dealer-details">
+                                            <h4>RobustCar Veículos</h4>
+
+                                            <div class="dealer-location">São Paulo, SP (12 km)</div>
+                                        </div>
+                                    </div>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                </div>
+                            </div>
+                            <div class="card-details-expanded">
+                                <div class="details-grid-section">
+                                    <h3>Informações do Veículo</h3>
+                                    <div class="specs-grid">
+                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
+                                                class="spec-value">Branco Polar</span></div>
+                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
+                                                class="spec-value">Preto</span></div>
+                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
+                                                class="spec-value">Dianteira (FWD)</span></div>
+                                        <div class="spec-row"><span class="spec-label">Combustível:</span> <span
+                                                class="spec-value">Flex</span></div>
+                                        <div class="spec-row"><span class="spec-label">Câmbio:</span> <span
+                                                class="spec-value">Automático CVT</span></div>
+                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
+                                                class="spec-value">2.0L I4</span></div>
+                                        <div class="spec-row"><span class="spec-label">Estoque:</span> <span
+                                                class="spec-value">6022</span></div>
+                                        <div class="spec-row"><span class="spec-label">VIN:</span> <span
+                                                class="spec-value">9BRB123X...</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Car 2: Honda Civic -->
+                        <div class="car-card">
+                            <div class="card-main-content">
+                                <div class="car-image">
+                                    <img src="assets/car2.png" alt="Honda Civic">
+                                </div>
+                                <div class="car-info">
+                                    <div class="info-top">
+                                        <div class="info-header">
+                                            <div class="header-left-group d-flex align-center">
+                                                <label class="compare-checkbox-wrapper">
+                                                    <input type="checkbox" name="compare"
+                                                        onchange="toggleCompareButton(this)">
+                                                    <span class="checkmark-fancy"></span>
+                                                    Comparar
+                                                </label>
+                                                <a href="comparar.html" class="btn-go-compare"
+                                                    style="display: none; opacity: 0; transition: all 0.3s ease;">
+                                                    Ir para comparar <i data-lucide="arrow-right"
+                                                        style="width: 14px; height: 14px;"></i>
+                                                </a>
+                                            </div>
+                                            <button class="btn-delete-saved" onclick="removeSaved(this)"
+                                                title="Remover dos salvos">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                        <h2 class="car-name">2021 Honda Civic Sedan EXL</h2>
+                                        <div class="mileage-text">35.120 km</div>
+                                        <div class="car-price">R$ 124.900</div>
+
+                                        <div class="deal-badge-purple">
+                                            <i data-lucide="arrow-down"></i> Ã“timo Preço | R$ 1.200 abaixo da FIPE
+                                        </div>
+                                    </div>
+
+                                    <div class="dealer-section">
+                                        <div class="dealer-details">
+                                            <h4>City Motors Premium</h4>
+
+                                            <div class="dealer-location">Curitiba, PR (Online)</div>
+                                        </div>
+                                    </div>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                </div>
+                            </div>
+                            <div class="card-details-expanded">
+                                <div class="details-grid-section">
+                                    <h3>Informações do Veículo</h3>
+                                    <div class="specs-grid">
+                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
+                                                class="spec-value">Prata Bari</span></div>
+                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
+                                                class="spec-value">Cinza</span></div>
+                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
+                                                class="spec-value">FWD</span></div>
+                                        <div class="spec-row"><span class="spec-label">Combustível:</span> <span
+                                                class="spec-value">Flex</span></div>
+                                        <div class="spec-row"><span class="spec-label">Câmbio:</span> <span
+                                                class="spec-value">CVT 7 Marchas</span></div>
+                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
+                                                class="spec-value">2.0 i-VTEC</span></div>
+                                        <div class="spec-row"><span class="spec-label">Estoque:</span> <span
+                                                class="spec-value">CM-2021</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Car 3: Jeep Compass -->
+                        <div class="car-card">
+                            <div class="card-main-content">
+                                <div class="car-image">
+                                    <img src="assets/suv.png" alt="Jeep Compass">
+                                </div>
+                                <div class="car-info">
+                                    <div class="info-top">
+                                        <div class="info-header">
+                                            <div class="header-left-group d-flex align-center">
+                                                <label class="compare-checkbox-wrapper">
+                                                    <input type="checkbox" name="compare"
+                                                        onchange="toggleCompareButton(this)">
+                                                    <span class="checkmark-fancy"></span>
+                                                    Comparar
+                                                </label>
+                                                <a href="comparar.html" class="btn-go-compare"
+                                                    style="display: none; opacity: 0; transition: all 0.3s ease;">
+                                                    Ir para comparar <i data-lucide="arrow-right"
+                                                        style="width: 14px; height: 14px;"></i>
+                                                </a>
+                                            </div>
+                                            <button class="btn-delete-saved" onclick="removeSaved(this)"
+                                                title="Remover dos salvos">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                        <h2 class="car-name">2021 Jeep Compass Longitude</h2>
+                                        <div class="mileage-text">42.500 km</div>
+                                        <div class="car-price">R$ 145.900</div>
+
+                                        <div class="deal-badge-purple">
+                                            <i data-lucide="arrow-down"></i> Preço Justo
+                                        </div>
+                                    </div>
+
+                                    <div class="dealer-section">
+                                        <div class="dealer-details">
+                                            <h4>Adventure Veículos</h4>
+
+                                            <div class="dealer-location">Belo Horizonte, MG</div>
+                                        </div>
+                                    </div>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                </div>
+                            </div>
+                            <div class="card-details-expanded">
+                                <div class="details-grid-section">
+                                    <h3>Informações do Veículo</h3>
+                                    <div class="specs-grid">
+                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
+                                                class="spec-value">Verde Recon</span></div>
+                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
+                                                class="spec-value">Preto</span></div>
+                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
+                                                class="spec-value">Dianteira</span></div>
+                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
+                                                class="spec-value">2.0 Turbo Diesel</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Car 4: BMW 320i -->
+                        <div class="car-card">
+                            <div class="card-main-content">
+                                <div class="car-image">
+                                    <img src="assets/car1.png" alt="BMW 320i">
+                                </div>
+                                <div class="car-info">
+                                    <div class="info-top">
+                                        <div class="info-header">
+                                            <div class="header-left-group d-flex align-center">
+                                                <label class="compare-checkbox-wrapper">
+                                                    <input type="checkbox" name="compare"
+                                                        onchange="toggleCompareButton(this)">
+                                                    <span class="checkmark-fancy"></span>
+                                                    Comparar
+                                                </label>
+                                                <a href="comparar.html" class="btn-go-compare"
+                                                    style="display: none; opacity: 0; transition: all 0.3s ease;">
+                                                    Ir para comparar <i data-lucide="arrow-right"
+                                                        style="width: 14px; height: 14px;"></i>
+                                                </a>
+                                            </div>
+                                            <button class="btn-delete-saved" onclick="removeSaved(this)"
+                                                title="Remover dos salvos">
+                                                <i data-lucide="trash-2"></i>
+                                            </button>
+                                        </div>
+                                        <h2 class="car-name">2021 BMW 320i M Sport</h2>
+                                        <div class="mileage-text">28.000 km</div>
+                                        <div class="car-price">R$ 285.900</div>
+
+                                        <div class="deal-badge-purple">
+                                            <i data-lucide="arrow-down"></i> Impecável | Ãšnico Dono
+                                        </div>
+                                    </div>
+
+                                    <div class="dealer-section">
+                                        <div class="dealer-details">
+                                            <h4>Euro Motors</h4>
+
+                                            <div class="dealer-location">São Paulo, SP</div>
+                                        </div>
+                                    </div>
+                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
+                                </div>
+                            </div>
+                            <div class="card-details-expanded">
+                                <div class="details-grid-section">
+                                    <h3>Informações do Veículo</h3>
+                                    <div class="specs-grid">
+                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
+                                                class="spec-value">Azul Portimão</span></div>
+                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
+                                                class="spec-value">Cognac</span></div>
+                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
+                                                class="spec-value">Traseira (RWD)</span></div>
+                                        <div class="spec-row"><span class="spec-label">Combustível:</span> <span
+                                                class="spec-value">Gasolina/Flex</span></div>
+                                        <div class="spec-row"><span class="spec-label">Câmbio:</span> <span
+                                                class="spec-value">Automático 8M</span></div>
+                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
+                                                class="spec-value">2.0 Turbo</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="load-more-container text-center mt-40 mb-40">
+                        <button id="btn-load-more"
+                            class="btn-load-more bg-transparent border-primary text-primary p-12-32 br-50 fw-600 cursor-pointer transition-300 d-inline-flex align-center gap-8">
+                            Carregar Mais <i data-lucide="chevron-down" class="w-20"></i>
+                        </button>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
+                </a>
+                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="veiculos.html">Veículos</a></li>
+                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="seguranca.html">Segurança</a></li>
+                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ajuda</h4>
+                <ul>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="falar-consultor.html">Falar com Consultor</a></li>
+                    <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Social</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 CarInsight. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Floating Chatbot Button -->
+    <a href="#" class="floating-chatbot">
+        <i data-lucide="message-circle"></i>
+        <span>Algo que podemos ajudar?</span>
+    </a>
+
+    <!-- Reuse main logic for menu -->
+    <script src="main.js"></script>
+<script src="api.js"></script>
+<script src="vehicle-images.js"></script>
+<script src="favorites.js"></script>
+<script src="compare.js"></script>
+<script src="chat.js"></script>
+<script src="chat-ui.js"></script>
+<script src="saved-page.js"></script>
+<script src="search-page.js"></script>
+    <script>
+        // Init Icons
+        lucide.createIcons();
+
+        // Loading Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const resultsScreen = document.getElementById('results-screen');
+
+            if (loadingScreen && resultsScreen) {
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        resultsScreen.style.display = 'block';
+                        // Trigger reflow
+                        void resultsScreen.offsetWidth;
+                        resultsScreen.style.opacity = '1';
+                    }, 500);
+                }, 1000); // 1 segundo (faster for saved)
+            }
+        });
+
+        // Toggle Details Function
+        function toggleDetails(element) {
+            // Find parent car-card
+            const card = element.closest('.car-card');
+            const expandedSection = card.querySelector('.card-details-expanded');
+            const icon = element.querySelector('i');
+            const text = element.querySelector('.toggle-text');
+
+            // Toggle active class
+            if (expandedSection.style.display === 'block') {
+                expandedSection.style.display = 'none';
+                text.textContent = 'Mostrar detalhes';
+                element.classList.remove('active');
+                icon.setAttribute('data-lucide', 'chevron-down');
+                lucide.createIcons();
+            } else {
+                expandedSection.style.display = 'block';
+                expandedSection.classList.add('active');
+                text.textContent = 'Ocultar detalhes';
+                element.classList.add('active');
+                icon.setAttribute('data-lucide', 'chevron-up');
+                lucide.createIcons();
+            }
+        }
+
+        function toggleCompareButton(checkbox) {
+            const wrapper = checkbox.closest('.header-left-group');
+            const btn = wrapper.querySelector('.btn-go-compare');
+
+            if (checkbox.checked) {
+                btn.style.display = 'inline-flex';
+                // Trigger reflow
+                void btn.offsetWidth;
+                btn.style.opacity = '1';
+                btn.style.transform = 'translateY(0)';
+                if (window.lucide) lucide.createIcons();
+            } else {
+                btn.style.opacity = '0';
+                btn.style.transform = 'translateY(-2px)';
+                setTimeout(() => {
+                    if (!checkbox.checked) btn.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        function removeSaved(button) {
+            if (confirm('Tem certeza que deseja remover este veículo dos seus salvos?')) {
+                const card = button.closest('.car-card');
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    card.remove();
+                    // Update count
+                    const count = document.querySelectorAll('.car-card').length;
+                    document.querySelector('.results-count').textContent = `Você tem ${count} veículos salvos`;
+                }, 300);
+            }
+        }
+    </script>
+</body>
+
+</html>
