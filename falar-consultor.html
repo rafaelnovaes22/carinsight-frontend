@@ -183,7 +183,7 @@
                             </div>
                         </div>
 
-                        <a href="https://wa.me/5511999999999" target="_blank" class="btn-whatsapp-direct">
+                        <a href="https://wa.me/5511949105033" target="_blank" class="btn-whatsapp-direct">
                             <i data-lucide="message-circle"></i> Iniciar Conversa por WhatsApp
                         </a>
                     </div>
@@ -220,7 +220,11 @@
                                 <textarea id="client-message" rows="4"
                                     placeholder="Ex: Gostaria de saber mais sobre a simulação de financiamento do Toyota Corolla..."></textarea>
                             </div>
-                            <button type="submit" class="btn-submit">Enviar Solicitação</button>
+                            <button type="submit" class="btn-submit">Continuar no WhatsApp</button>
+                            <p id="form-feedback" role="status" hidden style="margin-top: 12px;">
+                                Sua mensagem está pronta no WhatsApp: toque em enviar para falar com a loja.
+                                <a id="form-feedback-link" href="#" target="_blank" rel="noopener">Não abriu? Clique aqui.</a>
+                            </p>
                         </form>
                     </div>
                 </div>
@@ -275,10 +279,29 @@
     <script src="main.js"></script>
     <script>
         lucide.createIcons();
+        const STORE_WHATSAPP = '5511949105033';
+
         function handleFormSubmit(e) {
             e.preventDefault();
-            alert("Sua solicitação foi enviada! Um consultor entrará em contato em breve pelo WhatsApp.");
-            document.getElementById('consultant-form').reset();
+            const field = id => document.getElementById(id).value.trim();
+            const interest = document.getElementById('interest-car');
+
+            const lines = [
+                'Olá! Vim do site CarInsight e gostaria de atendimento.',
+                `Nome: ${field('client-name')}`,
+                `WhatsApp: ${field('client-phone')}`,
+                `E-mail: ${field('client-email')}`,
+            ];
+            if (interest.value) lines.push(`Interesse: ${interest.selectedOptions[0].text}`);
+            if (field('client-message')) lines.push(`Mensagem: ${field('client-message')}`);
+
+            const url = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(lines.join('\n'))}`;
+
+            // O lead só chega quando o cliente envia no WhatsApp: o formulário fica preenchido
+            // e o aviso oferece o link caso o navegador bloqueie a nova aba.
+            document.getElementById('form-feedback-link').href = url;
+            document.getElementById('form-feedback').hidden = false;
+            window.open(url, '_blank', 'noopener');
         }
     </script>
 </body>
