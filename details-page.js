@@ -225,6 +225,10 @@
       {
         fillVehicle(vehicle);
         wireSellerButton(vehicle);
+        var acoesCarro = document.querySelector('.btn-card-action-whats');
+        if (acoesCarro && window.VehicleActions && !document.querySelector('.vehicle-actions')) {
+          acoesCarro.insertAdjacentHTML('afterend', VehicleActions.html(vehicle.id));
+        }
         // Registro de visualização (lead tracking) - não bloqueia
         if (CarInsightAPI.viewVehicle) {
           CarInsightAPI.viewVehicle(vehicleId).catch(() => {});

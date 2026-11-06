@@ -55,6 +55,7 @@
               .map(([icone, valor]) => `<div class="spec-item"><i data-lucide="${icone}"></i> ${escapar(valor)}</div>`)
               .join('')}
           </div>
+          ${window.VehicleActions ? VehicleActions.html(veiculo.id) : ''}
           <a href="detalhes-carro.html?id=${encodeURIComponent(veiculo.id)}" class="btn-card-action">Saiba mais</a>
         </div>
       </div>`;

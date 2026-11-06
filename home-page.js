@@ -44,6 +44,7 @@
             <div class="spec-item"><i data-lucide="car"></i> ${vehicle.bodyType || ''}</div>
             ${transmission ? `<div class="spec-item"><i data-lucide="settings"></i> ${transmission}</div>` : ''}
           </div>
+          ${window.VehicleActions ? VehicleActions.html(vehicle.id) : ''}
           <a href="detalhes-carro.html?id=${encodeURIComponent(vehicle.id)}" class="btn-card-action">Saiba mais</a>
         </div>
       </div>
