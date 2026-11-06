@@ -39,6 +39,13 @@ for (const arquivo of ARQUIVOS) {
   });
 }
 
+for (const arquivo of ARQUIVOS) {
+  test(`${arquivo} sem acento quebrado`, () => {
+    const texto = readFileSync(join(RAIZ, arquivo), 'utf8');
+    expect(texto.match(/Ã[£¡¢©ª³µ§­‰“š•]|â€/)?.[0] ?? null).toBeNull();
+  });
+}
+
 for (const arquivo of HTML) {
   test(`${arquivo} sem links para o que não existe`, () => {
     const html = readFileSync(join(RAIZ, arquivo), 'utf8');
@@ -170,6 +177,40 @@ test.describe('páginas', () => {
       expect(erros).toEqual([]);
     });
   }
+
+  test('detalhe: mostra todos os itens da ficha e o vídeo', async ({ page }) => {
+    const itens = Array.from({ length: 24 }, (_, i) => `Item ${i + 1}`);
+    const completo = {
+      ...carro(1, 'COMPLETO'),
+      features: itens,
+      media: [
+        { url: 'https://exemplo.test/1.jpg', type: 'IMAGE' },
+        { url: 'https://exemplo.test/video.mp4', type: 'VIDEO' },
+      ],
+    };
+    await page.route('**/localhost:3000/vehicles/v1', (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(completo) }),
+    );
+    await page.goto('/detalhes-carro.html?id=v1');
+    await expect(page.locator('.features-chips .feature-chip-active')).toHaveCount(24);
+    await expect(page.locator('.detail-main video')).toHaveAttribute('src', /video\.mp4/);
+    const fotos = await page.evaluate(() => (window as unknown as { galleryImages: string[] }).galleryImages);
+    expect(fotos).toEqual(['https://exemplo.test/1.jpg']);
+  });
+
+  test('a foto do card nunca é o vídeo, mesmo vindo antes', async ({ page }) => {
+    await page.goto('/veiculos.html');
+    await page.waitForFunction(() => 'VehicleImages' in window);
+    const url = await page.evaluate(() =>
+      (window as unknown as { VehicleImages: { resolve: (v: unknown) => string } }).VehicleImages.resolve({
+        media: [
+          { url: 'https://exemplo.test/video.mp4', type: 'VIDEO' },
+          { url: 'https://exemplo.test/1.jpg', type: 'IMAGE' },
+        ],
+      }),
+    );
+    expect(url).toBe('https://exemplo.test/1.jpg');
+  });
 
   test('quem vende fica claro, sem prometer vistoria', async ({ page }) => {
     await page.goto('/seguranca.html');

@@ -243,12 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Typing Effect Animation
     const rotatingText = document.getElementById('rotating-text');
     const texts = [
-        'clio sedan em sÃ£o paulo',
-        'Gol 2000 em promoÃ§Ã£o',
-        'Civic conservado',
-        'SUV hÃ­brido para famÃ­lia',
-        'Corolla com baixa km',
-        'Fiat Uno escada no teto'
+        'hatch automático',
+        'SUV até 130 mil',
+        'pickup a diesel',
+        'Honda Fit',
+        'carro até 50 mil'
     ];
     let textIndex = 0;
     let charIndex = 0;
@@ -325,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationModal = document.getElementById('location-modal');
     const locationModalOverlay = document.getElementById('location-modal-overlay');
     const locationClose = document.getElementById('location-close');
-    const locationBtn = document.querySelector('.filter-btn[data-tooltip="LocalizaÃ§Ã£o"]');
+    const locationBtn = document.querySelector('.filter-btn[data-tooltip="Localização"]');
     const searchStateInput = document.getElementById('search-state');
     const stateItems = document.querySelectorAll('.state-item');
 
@@ -546,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceModal = document.getElementById('price-modal');
     const priceModalOverlay = document.getElementById('price-modal-overlay');
     const priceClose = document.getElementById('price-close');
-    const priceBtn = document.querySelector('.filter-btn[data-tooltip="PreÃ§o"]');
+    const priceBtn = document.querySelector('.filter-btn[data-tooltip="Preço"]');
     const priceSlider = document.getElementById('price-slider');
     const priceValue = document.getElementById('price-value');
     const priceSliderFill = document.getElementById('price-slider-fill');
@@ -647,12 +646,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (priceBtn) {
                 const tooltip = priceBtn.querySelector('.tooltip');
                 if (tooltip) {
-                    tooltip.textContent = `AtÃ© ${currentPrice / 1000}k`;
+                    tooltip.textContent = `Até ${currentPrice / 1000}k`;
                 }
                 priceBtn.classList.add('active');
             }
 
-            console.log('PreÃ§o selecionado:', currentPrice);
+            console.log('Preço selecionado:', currentPrice);
             closePriceModal();
         });
     }
@@ -744,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeConditionModal();
             }, 300);
 
-            console.log('CondiÃ§Ã£o selecionada:', label);
+            console.log('Condição selecionada:', label);
         });
     });
 

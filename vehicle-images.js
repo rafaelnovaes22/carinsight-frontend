@@ -23,6 +23,7 @@
     var media = vehicle.media || [];
     for (var i = 0; i < media.length; i++) {
       var url = media[i] && media[i].url;
+      if (media[i] && media[i].type === 'VIDEO') continue;
       if (url && !DEAD_PATTERNS.test(url)) return url;
     }
     return null;

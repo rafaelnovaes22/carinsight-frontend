@@ -53,7 +53,6 @@
     }
 
     chips.innerHTML = features
-      .slice(0, 10)
       .map(
         (f) =>
           `<div class="feature-chip-active"><i data-lucide="check"></i> ${f}</div>`,
@@ -110,6 +109,23 @@
     }
   }
 
+  function fillVideo(vehicle) {
+    const video = (vehicle.media || []).find((m) => m.type === 'VIDEO' && m.url);
+    const primeiro = document.querySelector('.detail-main .info-card');
+    if (!video || !primeiro) return;
+    const card = document.createElement('div');
+    card.className = 'info-card';
+    card.innerHTML = '<h3><i data-lucide="video"></i> Vídeo</h3>';
+    const player = document.createElement('video');
+    player.controls = true;
+    player.preload = 'metadata';
+    player.playsInline = true;
+    player.src = video.url;
+    player.style.cssText = 'display: block; width: 100%; max-height: 520px; background: #000; border-radius: 12px;';
+    card.appendChild(player);
+    primeiro.parentNode.insertBefore(card, primeiro);
+  }
+
   function fillBadges(vehicle) {
     const badges = document.querySelector('.vehicle-badges');
     if (!badges) return;
@@ -150,6 +166,7 @@
     fillSpecs(vehicle);
     fillFeatures(vehicle);
     fillGallery(vehicle);
+    fillVideo(vehicle);
     fillBadges(vehicle);
 
     if (window.lucide) lucide.createIcons();
