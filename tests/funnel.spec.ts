@@ -121,14 +121,23 @@ test.describe('Funil de lead', () => {
     await expect(detailLink).toBeVisible();
   });
 
-  test('detalhe: carrega o veículo do ?id= e abre o chat', async ({ page }) => {
+  test('detalhe: carrega o veículo do ?id= e o vendedor abre o WhatsApp 5033', async ({ page }) => {
     await mockApi(page);
     await page.goto('/detalhes-carro.html?id=v1');
 
     await expect(page.locator('.vehicle-header h1')).toContainText('Jeep Renegade', { timeout: 10000 });
     await expect(page.locator('.price-tag-large')).toContainText('89.900');
 
-    await page.locator('.btn-card-action-whats').click();
+    const href = await page.locator('.btn-card-action-whats').getAttribute('href');
+    expect(href).toMatch(/^https:\/\/wa\.me\/5511949105033\?text=/);
+    expect(decodeURIComponent(href ?? '')).toContain('Jeep Renegade');
+  });
+
+  test('detalhe: o chatbot flutuante continua abrindo o chat', async ({ page }) => {
+    await mockApi(page);
+    await page.goto('/detalhes-carro.html?id=v1');
+
+    await page.locator('.floating-chatbot').click();
     await expect(page.locator('#chat-modal')).toBeVisible();
     await expect(page.locator('#chat-messages')).toContainText('assistente do CarInsight');
   });
@@ -137,7 +146,7 @@ test.describe('Funil de lead', () => {
     await mockApi(page, { handoffOnMessage: true });
     await page.goto('/detalhes-carro.html?id=v1');
 
-    await page.locator('.btn-card-action-whats').click();
+    await page.locator('.floating-chatbot').click();
     await expect(page.locator('#chat-modal')).toBeVisible();
 
     // 1ª mensagem: recomendação em card
