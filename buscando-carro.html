@@ -40,8 +40,6 @@
                 <a href="index.html"><img src="assets/car-insight-logo.png" alt="CarInsight Logo"></a>
             </div>
             <div class="header-actions">
-                <a href="javascript:void(0)" class="login-link" id="login-link-btn"><i data-lucide="user"></i>
-                    Entrar</a>
                 <button id="menu-toggle" class="menu-btn">
                     <i data-lucide="menu"></i>
                 </button>
@@ -75,92 +73,15 @@
                 <div class="sidebar-column">
                     <h4>Soluções de Venda</h4>
                     <div class="seller-sections">
-                        <div class="seller-type">
-                            <h5>Vendedores Particulares</h5>
-                            <p>Venda seu carro para milhões de compradores de forma rápida e segura.</p>
-                            <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar
-                                meu carro</a>
-                        </div>
-                        <div class="seller-type">
-                            <h5>Lojas e Concessionárias</h5>
-                            <p>Gerencie seu estoque e impulsione suas vendas com nossas ferramentas exclusivas.</p>
-                            <a href="painel-loja.html" class="seller-link"><i data-lucide="layout-dashboard"></i>
-                                Acessar Painel</a>
-                        </div>
+                    <div class="seller-type">
+                        <h5>Tem carros para anunciar?</h5>
+                        <p>Lojas e vendedores: fale com a gente pelo WhatsApp.</p>
+                        <a href="vender-carro.html" class="seller-link"><i data-lucide="plus-circle"></i> Anunciar carros</a>
                     </div>
+                </div>
                 </div>
             </div>
         </nav>
-
-        <!-- Login Popup -->
-        <div class="login-popup" id="login-popup">
-            <div class="sidebar-header">
-                <div>
-                    <h3>Bem-vindo de volta</h3>
-                    <p>Escolha sua forma preferida de acesso</p>
-                </div>
-                <button id="login-close" aria-label="Fechar">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="social-login">
-                <button class="social-btn google-btn">
-                    <img src="assets/google.svg" alt="Google" class="w-18">
-                    <span>Entrar com Google</span>
-                </button>
-                <button class="social-btn apple-btn">
-                    <img src="assets/apple.svg" alt="Apple" class="w-18">
-                    <span>Entrar com Apple</span>
-                </button>
-            </div>
-
-            <div class="auth-separator">ou entrar com e-mail</div>
-
-            <div class="sidebar-content">
-                <div class="sidebar-column">
-                    <h4>Acesse sua conta</h4>
-                    <form class="auth-form">
-                        <div class="input-group">
-                            <input type="email" placeholder="E-mail" required>
-                            <i data-lucide="mail" class="input-icon"></i>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" placeholder="Senha" required>
-                            <i data-lucide="lock" class="input-icon"></i>
-                        </div>
-                        <div class="form-extras">
-                            <label class="checkbox-group d-flex align-center gap-8 cursor-pointer">
-                                <input type="checkbox"> Lembrar-me
-                            </label>
-                            <a href="#" class="forgot-link text-accent no-underline fw-500">Esqueceu
-                                a senha?</a>
-                        </div>
-                        <button type="submit" class="auth-submit">Entrar na CarInsight</button>
-                    </form>
-                </div>
-                <div class="sidebar-column bg-gray-soft p-30 br-24">
-                    <h4>Criar nova conta</h4>
-                    <p class="text-secondary mb-24 fs-095">Junte-se a
-                        milhares de usuários e aproveite benefícios exclusivos.</p>
-                    <form class="auth-form">
-                        <div class="input-group">
-                            <input type="text" placeholder="Nome completo" required>
-                            <i data-lucide="user" class="input-icon"></i>
-                        </div>
-                        <div class="input-group">
-                            <input type="email" placeholder="Seu melhor e-mail" required>
-                            <i data-lucide="mail" class="input-icon"></i>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" placeholder="Crie uma senha forte" required>
-                            <i data-lucide="shield-check" class="input-icon"></i>
-                        </div>
-                        <button type="submit" class="auth-submit">Começar agora</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!-- Main Results Layout -->
         <div class="container results-layout-container">
             <div class="results-layout">
@@ -180,17 +101,12 @@
                                 <label class="checkbox-item">
                                     <input type="checkbox" checked>
                                     <span class="checkmark"></span>
-                                    <span>Novos (50)</span>
+                                    <span>Novos</span>
                                 </label>
                                 <label class="checkbox-item">
                                     <input type="checkbox" checked>
                                     <span class="checkmark"></span>
-                                    <span>Usados (78)</span>
-                                </label>
-                                <label class="checkbox-item">
-                                    <input type="checkbox">
-                                    <span class="checkmark"></span>
-                                    <span>Certificados (12)</span>
+                                    <span>Usados</span>
                                 </label>
                             </div>
                         </div>
@@ -413,241 +329,10 @@
                         </div>
                     </div>
 
-                    <h3 class="results-count">Encontramos 128 veículos para você</h3>
+                    <h3 class="results-count">Buscando veículos…</h3>
 
 
-                    <div class="cars-grid">
-                        <!-- Car 1: Corolla Cross -->
-                        <div class="car-card">
-                            <div class="card-main-content">
-                                <div class="car-image">
-                                    <img src="assets/car1.png" alt="Toyota Corolla Cross">
-
-                                </div>
-
-
-                                <div class="car-info">
-                                    <div class="info-top">
-                                        <div class="info-header">
-                                            <span class="condition-badge">Seminovo</span>
-                                            <button class="save-btn" onclick="toggleSave(this)"><i
-                                                    data-lucide="heart"></i> Salvar</button>
-                                        </div>
-                                        <h2 class="car-name">2022 Toyota Corolla Cross XR</h2>
-                                        <div class="mileage-text">18.234 km</div>
-                                        <div class="car-price">R$ 158.900</div>
-
-                                        <div class="car-specs">
-                                            <div class="spec-item"><i data-lucide="calendar"></i> 2022</div>
-                                            <div class="spec-item"><i data-lucide="gauge"></i> 18k km</div>
-                                            <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                            <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                        </div>
-
-                                        <div class="deal-badge-purple">
-                                            <i data-lucide="arrow-down"></i> Bom Negócio | R$ 3.500 abaixo
-                                        </div>
-                                    </div>
-
-                                    <div class="dealer-section">
-                                        <div class="dealer-details">
-                                            <h4>RobustCar Veículos</h4>
-
-                                            <div class="dealer-location">São Paulo, SP (12 km)</div>
-                                        </div>
-                                    </div>
-                                    <div class="btn-more-details-container">
-                                        <a href="detalhes-carro.html" class="btn-more-details">
-                                            Mais detalhes</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-details-expanded">
-                                <div class="details-grid-section">
-                                    <h3>Informações do Veículo</h3>
-                                    <div class="specs-grid">
-                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
-                                                class="spec-value">Branco Polar</span></div>
-                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
-                                                class="spec-value">Preto</span></div>
-                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
-                                                class="spec-value">Dianteira (FWD)</span></div>
-                                        <div class="spec-row"><span class="spec-label">Combustível:</span> <span
-                                                class="spec-value">Flex</span></div>
-                                        <div class="spec-row"><span class="spec-label">Câmbio:</span> <span
-                                                class="spec-value">Automático CVT</span></div>
-                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
-                                                class="spec-value">2.0L I4</span></div>
-                                        <div class="spec-row"><span class="spec-label">Estoque:</span> <span
-                                                class="spec-value">6022</span></div>
-                                        <div class="spec-row"><span class="spec-label">VIN:</span> <span
-                                                class="spec-value">9BRB123X...</span></div>
-                                    </div>
-                                </div>
-                                <div class="details-grid-section">
-                                    <h3>Recursos</h3>
-                                    <div class="features-list">
-                                        <div class="feature-group">
-                                            <strong>Conveniência:</strong> <span>Ar condicionado digital, Vidros
-                                                elétricos, Chave presencial, Retrovisores elétricos</span>
-                                        </div>
-                                        <div class="feature-group">
-                                            <strong>Entretenimento:</strong> <span>Bluetooth, Apple CarPlay, Android
-                                                Auto, USB, Tela Touch</span>
-                                        </div>
-                                        <div class="feature-group">
-                                            <strong>Segurança:</strong> <span>7 Airbags, Freio ABS, Controle de
-                                                Estabilidade, Câmera de ré</span>
-                                        </div>
-                                        <div class="feature-group">
-                                            <strong>Bancos:</strong> <span>Couro sintético, Ajuste de altura</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Car 2: Honda Civic -->
-                        <div class="car-card">
-                            <div class="card-main-content">
-                                <div class="car-image">
-                                    <img src="assets/car2.png" alt="Honda Civic">
-                                </div>
-                                <div class="car-info">
-                                    <div class="info-top">
-                                        <div class="info-header">
-                                            <span class="condition-badge">Usado</span>
-                                            <button class="save-btn" onclick="toggleSave(this)"><i
-                                                    data-lucide="heart"></i>
-                                                Salvar</button>
-                                        </div>
-                                        <h2 class="car-name">2021 Honda Civic Sedan EXL</h2>
-                                        <div class="mileage-text">35.120 km</div>
-                                        <div class="car-price">R$ 124.900</div>
-
-                                        <div class="car-specs">
-                                            <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
-                                            <div class="spec-item"><i data-lucide="gauge"></i> 35k km</div>
-                                            <div class="spec-item"><i data-lucide="fuel"></i> Flex</div>
-                                            <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                        </div>
-
-                                        <div class="deal-badge-purple">
-                                            <i data-lucide="arrow-down"></i> Ã“timo Preço | R$ 1.200 abaixo da FIPE
-                                        </div>
-                                    </div>
-
-                                    <div class="dealer-section">
-                                        <div class="dealer-details">
-                                            <h4>City Motors Premium</h4>
-
-                                            <div class="dealer-location">Curitiba, PR (Online)</div>
-                                        </div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-                                </div>
-                            </div>
-                            <div class="card-details-expanded">
-                                <div class="details-grid-section">
-                                    <h3>Informações do Veículo</h3>
-                                    <div class="specs-grid">
-                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
-                                                class="spec-value">Prata Bari</span></div>
-                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
-                                                class="spec-value">Cinza</span></div>
-                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
-                                                class="spec-value">FWD</span></div>
-                                        <div class="spec-row"><span class="spec-label">Combustível:</span> <span
-                                                class="spec-value">Flex</span></div>
-                                        <div class="spec-row"><span class="spec-label">Câmbio:</span> <span
-                                                class="spec-value">CVT 7 Marchas</span></div>
-                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
-                                                class="spec-value">2.0 i-VTEC</span></div>
-                                        <div class="spec-row"><span class="spec-label">Estoque:</span> <span
-                                                class="spec-value">CM-2021</span></div>
-                                    </div>
-                                </div>
-                                <div class="details-grid-section">
-                                    <h3>Recursos</h3>
-                                    <div class="features-list">
-                                        <div class="feature-group">
-                                            <strong>Conveniência:</strong> <span>Ar digital dual zone, Freio de mão
-                                                eletrônico, Brake Hold</span>
-                                        </div>
-                                        <div class="feature-group">
-                                            <strong>Entretenimento:</strong> <span>Multimídia 7", GPS Nativo, Apple
-                                                CarPlay</span>
-                                        </div>
-                                        <div class="feature-group">
-                                            <strong>Segurança:</strong> <span>6 Airbags, ISOFIX, Controle de
-                                                Tração</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="car-card">
-                            <div class="card-main-content">
-                                <div class="car-image">
-                                    <img src="assets/suv.png" alt="Jeep Compass">
-                                </div>
-                                <div class="car-info">
-                                    <div class="info-top">
-                                        <div class="info-header">
-                                            <span class="condition-badge">Usado</span>
-                                            <button class="save-btn" onclick="toggleSave(this)"><i
-                                                    data-lucide="heart"></i>
-                                                Salvar</button>
-                                        </div>
-                                        <h2 class="car-name">2021 Jeep Compass Longitude</h2>
-                                        <div class="mileage-text">42.500 km</div>
-                                        <div class="car-price">R$ 145.900</div>
-
-                                        <div class="car-specs">
-                                            <div class="spec-item"><i data-lucide="calendar"></i> 2021</div>
-                                            <div class="spec-item"><i data-lucide="gauge"></i> 42k km</div>
-                                            <div class="spec-item"><i data-lucide="fuel"></i> Diesel</div>
-                                            <div class="spec-item"><i data-lucide="settings"></i> Automático</div>
-                                        </div>
-
-                                        <div class="deal-badge-purple">
-                                            <i data-lucide="arrow-down"></i> Preço Justo
-                                        </div>
-                                    </div>
-
-                                    <div class="dealer-section">
-                                        <div class="dealer-details">
-                                            <h4>Adventure Veículos</h4>
-
-                                            <div class="dealer-location">Belo Horizonte, MG</div>
-                                        </div>
-                                    </div>
-                                    <a href="detalhes-carro.html" class="btn-card-action">Saiba mais </a>
-
-                                </div>
-                            </div>
-                            <div class="card-details-expanded">
-                                <div class="details-grid-section">
-                                    <h3>Informações do Veículo</h3>
-                                    <div class="specs-grid">
-                                        <div class="spec-row"><span class="spec-label">Cor Ext.:</span> <span
-                                                class="spec-value">Verde
-                                                Recon</span></div>
-                                        <div class="spec-row"><span class="spec-label">Cor Int.:</span> <span
-                                                class="spec-value">Preto</span></div>
-                                        <div class="spec-row"><span class="spec-label">Tração:</span> <span
-                                                class="spec-value">Dianteira</span></div>
-                                        <div class="spec-row"><span class="spec-label">Motor:</span> <span
-                                                class="spec-value">2.0
-                                                Turbo
-                                                Diesel</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="cars-grid"></div>
                     <!-- ... -->
                 </main>
             </div>
@@ -698,17 +383,12 @@
                         <label class="checkbox-item">
                             <input type="checkbox" checked>
                             <span class="checkmark"></span>
-                            <span>Novos (50)</span>
+                            <span>Novos</span>
                         </label>
                         <label class="checkbox-item">
                             <input type="checkbox" checked>
                             <span class="checkmark"></span>
-                            <span>Usados (78)</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox">
-                            <span class="checkmark"></span>
-                            <span>Certificados (12)</span>
+                            <span>Usados</span>
                         </label>
                     </div>
                 </div>
@@ -869,7 +549,7 @@
             </div>
 
             <div class="mobile-filter-footer">
-                <button class="btn-primary full-width">Aplicar Filtros (140)</button>
+                <button class="btn-primary full-width">Aplicar Filtros</button>
             </div>
         </div>
     </div>
@@ -880,15 +560,15 @@
                 <a href="index.html" class="logo">
                     <img src="assets/car-insight-logo.png" alt="CarInsight Logo">
                 </a>
-                <p>A nova era na compra de seminovos. Curadoria, transparência e tecnologia.</p>
+                <p>Carros à venda em lojas parceiras, com uma IA para ajudar na busca.</p>
             </div>
             <div class="footer-links">
                 <h4>Navegação</h4>
                 <ul>
                     <li><a href="veiculos.html">Veículos</a></li>
-                    <li><a href="processo.html">Processo</a></li>
+                    <li><a href="processo.html">Como funciona</a></li>
                     <li><a href="seguranca.html">Segurança</a></li>
-                    <li><a href="vender-carro.html">Vender meu carro</a></li>
+                    <li><a href="vender-carro.html">Anunciar carros</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -899,13 +579,7 @@
                     <li><a href="termos-de-uso.html">Termos de Uso</a></li>
                 </ul>
             </div>
-            <div class="footer-links">
-                <h4>Social</h4>
-                <ul>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                </ul>
-            </div>
+            
         </div>
         <div class="footer-bottom">
             &copy; 2026 CarInsight. Todos os direitos reservados.

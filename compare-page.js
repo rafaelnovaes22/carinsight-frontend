@@ -83,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
       : 'N/A';
     const VI = window.VehicleImages;
-    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/car1.png';
+    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/sem-foto.svg';
     const imageSafe = VI
       ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
-      : 'assets/car1.png';
+      : 'assets/sem-foto.svg';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model}`;
     const year = vehicle.yearModel;
 
@@ -394,10 +394,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const price = v.price ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v.price) : '';
         const imageUrl = window.VehicleImages
           ? window.VehicleImages.resolve(v)
-          : v.media?.[0]?.url || 'assets/car1.png';
+          : v.media?.[0]?.url || 'assets/sem-foto.svg';
         const imageSafe = window.VehicleImages
           ? window.VehicleImages.curatedFor(v.make, v.model) || window.VehicleImages.GENERIC_FALLBACK
-          : 'assets/car1.png';
+          : 'assets/sem-foto.svg';
         
         listHTML += `
           <div class="vehicle-selector-item ${isInCompare ? 'disabled' : ''}" 

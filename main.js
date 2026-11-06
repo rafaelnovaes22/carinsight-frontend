@@ -117,8 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Multi-Instance Car Slider Logic
-    function initSliders() {
-        const sliderContainers = document.querySelectorAll('.slider-container');
+    window.initSliders = initSliders;
+    function initSliders(raiz = document) {
+        const sliderContainers = raiz.querySelectorAll('.slider-container');
 
         sliderContainers.forEach(container => {
             const track = container.querySelector('.slider-track');

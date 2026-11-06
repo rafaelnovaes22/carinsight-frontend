@@ -8181,3 +8181,116 @@ summary::after {
     flex-direction: column;
     justify-content: space-between;
 }
+/* Comparação: vagas preenchidas por compare-page.js */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+.comparison-slot {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    min-height: 240px;
+    display: flex;
+}
+
+.comparison-slot.slot-empty {
+    border: 2px dashed #cbd5e1;
+    box-shadow: none;
+    background: transparent;
+}
+
+.btn-add-car {
+    width: 100%;
+    padding: 32px 16px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-primary);
+    font: inherit;
+}
+
+.add-icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: var(--accent-primary);
+}
+
+@media (max-width: 900px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .comparison-slot {
+        min-height: 160px;
+    }
+}
+
+/* Cards alinhados: mesma altura, foto do mesmo tamanho e botão sempre embaixo. */
+.slider-track {
+    align-items: stretch;
+}
+
+.car-card {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-card .car-image {
+    flex: 0 0 220px;
+    height: 220px;
+    overflow: hidden;
+}
+
+.car-card .car-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.car-card .car-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.car-card .car-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    min-height: 2.6em;
+    line-height: 1.3;
+}
+
+.car-card .car-specs {
+    margin-bottom: 16px;
+}
+
+.car-card .btn-card-action {
+    margin-top: auto;
+}
+
+.car-card:not(.cars-grid .car-card) .car-name,
+.cars-grid .car-card .car-name,
+.car-card .car-name {
+    line-height: 1.3;
+    height: 2.6em;
+    min-height: 0;
+    margin-bottom: 12px;
+}

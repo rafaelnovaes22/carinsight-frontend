@@ -45,7 +45,7 @@ test('envio abre o WhatsApp da loja com os dados do formulário', async ({ page 
       'Nome: João & Silva',
       'WhatsApp: (11) 91234-5678',
       'E-mail: joao@example.com',
-      'Interesse: SUV para Família',
+      'Interesse: SUV',
       'Mensagem: Quero financiar?',
     ].join('\n')
   );

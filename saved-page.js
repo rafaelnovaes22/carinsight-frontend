@@ -73,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
       : 'N/A';
     const VI = window.VehicleImages;
-    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/car1.png';
+    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/sem-foto.svg';
     const imageSafe = VI
       ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
-      : 'assets/car1.png';
+      : 'assets/sem-foto.svg';
     const dealerName = vehicle.dealer?.name || 'Vendedor';
     const title = vehicle.title || `${vehicle.make} ${vehicle.model}`;
     const year = vehicle.yearFab && vehicle.yearModel 

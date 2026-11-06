@@ -1,7 +1,8 @@
 /**
  * CarInsight Vehicle Details Page
  * Lê ?id= da URL, busca o veículo no backend e preenche a página.
- * Sem id (ou com API fora), mantém o conteúdo estático e o chat geral.
+ * Sem id, leva ao catálogo. Carro vendido, inexistente ou API fora vira aviso:
+ * a página não tem conteúdo de exemplo para mostrar.
  */
 
 (function () {
@@ -13,20 +14,7 @@
       currency: 'BRL',
       maximumFractionDigits: 0,
     }).format(num);
-  }
-
-  function monthlyEstimate(price) {
-    // Estimativa simples: 20% de entrada, 48x, mesma taxa default do backend
-    const rate = 0.0179;
-    const months = 48;
-    const financed = price * 0.8;
-    const payment =
-      (financed * rate * Math.pow(1 + rate, months)) /
-      (Math.pow(1 + rate, months) - 1);
-    return formatPrice(Math.round(payment));
-  }
-
-  function setText(selector, text) {
+  }  function setText(selector, text) {
     const el = document.querySelector(selector);
     if (el && text) el.textContent = text;
   }
@@ -59,7 +47,10 @@
     const chips = document.querySelector('.features-chips');
     if (!chips) return;
     const features = (vehicle.features || []).concat(vehicle.aiTags || []);
-    if (features.length === 0) return;
+    if (features.length === 0) {
+      chips.closest('.info-card')?.remove();
+      return;
+    }
 
     chips.innerHTML = features
       .slice(0, 10)
@@ -71,19 +62,20 @@
   }
 
   function fillGallery(vehicle) {
-    const VI = window.VehicleImages;
     const media = (vehicle.media || []).filter((m) => m.type === 'IMAGE' || !m.type);
-    const curated = VI ? VI.curatedFor(vehicle.make, vehicle.model) : null;
     const urls = media
       .map((m) => m.url)
       .filter((u) => u && !/via\.placeholder\.com|placehold\.co|placeholder/i.test(u));
-    if (urls.length === 0 && curated) urls.push(curated);
+    window.galleryImages = urls;
+
+    const galleryTitle = document.querySelector('.modal-header h3');
+    if (galleryTitle) galleryTitle.textContent = `Galeria de Fotos (${urls.length})`;
     if (urls.length === 0) return;
 
     const arm = (img, url) => {
       img.onerror = () => {
         img.onerror = null;
-        img.src = curated && url !== curated ? curated : 'assets/car1.png';
+        img.src = 'assets/sem-foto.svg';
       };
       img.src = url;
     };
@@ -91,18 +83,31 @@
     const mainImg = document.querySelector('.main-image img');
     if (mainImg) arm(mainImg, urls[0]);
 
-    const sideImgs = document.querySelectorAll('.side-images img');
-    sideImgs.forEach((img, i) => {
-      if (urls[i + 1]) arm(img, urls[i + 1]);
-    });
+    const sideImg = document.querySelector('.side-images > img');
+    if (sideImg && urls[1]) {
+      arm(sideImg, urls[1]);
+      sideImg.hidden = false;
+    }
 
-    const modalImgs = document.querySelectorAll('.modal-grid img');
-    modalImgs.forEach((img, i) => {
-      if (urls[i]) arm(img, urls[i]);
-    });
+    const more = document.querySelector('.more-images-container');
+    if (more && urls[2]) {
+      arm(more.querySelector('img'), urls[2]);
+      const restantes = urls.length - 3;
+      const contagem = more.querySelector('.more-count');
+      if (contagem) contagem.textContent = restantes > 1 ? `+${restantes} fotos` : 'Ver fotos';
+      more.hidden = false;
+    }
 
-    const galleryTitle = document.querySelector('.modal-header h3');
-    if (galleryTitle) galleryTitle.textContent = `Galeria de Fotos (${urls.length})`;
+    const grid = document.querySelector('.modal-grid');
+    if (grid) {
+      grid.innerHTML = urls
+        .map(
+          (_, i) =>
+            `<div class="modal-img-wrapper${i === 0 ? ' full-width' : ''}" onclick="openLightbox(${i})"><img alt="Foto ${i + 1} do veículo"></div>`,
+        )
+        .join('');
+      grid.querySelectorAll('img').forEach((img, i) => arm(img, urls[i]));
+    }
   }
 
   function fillBadges(vehicle) {
@@ -110,7 +115,7 @@
     if (!badges) return;
     const tags = (vehicle.aiTags || []).slice(0, 3);
     if (tags.length === 0) {
-      badges.innerHTML = '<span class="badge-detail badge-premium">CarInsight</span>';
+      badges.innerHTML = '';
       return;
     }
     badges.innerHTML = tags
@@ -130,11 +135,6 @@
       `${vehicle.yearModel} ${vehicle.make} ${vehicle.model}${vehicle.version ? ' ' + vehicle.version : ''}`,
     );
     setText('.price-tag-large', formatPrice(vehicle.price));
-    setText(
-      '.monthly-estimate',
-      `Ou em parcelas de ${monthlyEstimate(Number(vehicle.price))} /mês`,
-    );
-
     // Descrição: usa o título do anúncio (backend não tem campo de descrição)
     const description = document.querySelector('.info-card p');
     if (description && vehicle.title) description.textContent = vehicle.title;
@@ -155,6 +155,20 @@
     if (window.lucide) lucide.createIcons();
   }
 
+  function showUnavailable() {
+    document.title = 'Veículo indisponível | CarInsight';
+    document.querySelector('.gallery-container')?.remove();
+    const layout = document.querySelector('.detail-layout');
+    if (layout) {
+      layout.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+          <h1 style="margin-bottom: 12px;">Este veículo não está mais disponível</h1>
+          <p style="margin-bottom: 24px;">Veja os outros carros do estoque.</p>
+          <a href="veiculos.html" class="btn-card-action" style="display: inline-block;">Ver estoque</a>
+        </div>`;
+    }
+  }
+
   function wireSellerButton(vehicleId) {
     const btn = document.querySelector('.btn-card-action-whats');
     if (!btn) return;
@@ -172,11 +186,22 @@
     window.currentVehicleId = vehicleId || null;
     wireSellerButton(vehicleId);
 
-    if (!vehicleId || !window.CarInsightAPI) return;
+    if (!vehicleId) {
+      window.location.replace('veiculos.html');
+      return;
+    }
+    if (!window.CarInsightAPI) {
+      showUnavailable();
+      return;
+    }
 
     try {
       const vehicle = await CarInsightAPI.getVehicle(vehicleId);
-      if (vehicle && vehicle.id) {
+      if (!vehicle || !vehicle.id || (vehicle.status && vehicle.status !== 'AVAILABLE')) {
+        showUnavailable();
+        return;
+      }
+      {
         fillVehicle(vehicle);
         // Registro de visualização (lead tracking) - não bloqueia
         if (CarInsightAPI.viewVehicle) {
@@ -185,6 +210,7 @@
       }
     } catch (error) {
       console.warn('Detalhes: veículo não encontrado ou API indisponível', error);
+      showUnavailable();
     }
   }
 

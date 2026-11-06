@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Foto indisponível">
+  <rect width="640" height="400" fill="#eef2f7"/>
+  <g fill="none" stroke="#94a3b8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 235l28-72a20 20 0 0 1 19-13h206a20 20 0 0 1 19 13l28 72"/>
+    <path d="M150 235h340a20 20 0 0 1 20 20v45H130v-45a20 20 0 0 1 20-20z"/>
+    <path d="M165 300v22M475 300v22"/>
+  </g>
+  <text x="320" y="370" font-family="Arial, sans-serif" font-size="24" fill="#64748b" text-anchor="middle">Foto indisponível</text>
+</svg>
