@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { test, expect, Page } from '@playwright/test';
 
-/** O telefone da loja não aparece nas fotos, e a mensagem do WhatsApp diz de qual concessionária é o carro. */
+/** As fotos não mostram contato da loja nem cortam o carro, e a mensagem do WhatsApp diz de qual concessionária ele é. */
 
 const texto = readFileSync('fotos-recortadas.js', 'utf8');
 const manifesto = JSON.parse(texto.slice(texto.indexOf('{'), texto.lastIndexOf('}') + 1).replace(/(\w+):/g, (m, chave) => (['origem', 'destino', 'nomes'].includes(chave) ? `"${chave}":` : m)));
@@ -34,7 +34,7 @@ const carro = (id: string, extra: Record<string, unknown> = {}) => ({
 
 const ESTOQUE = [
   carro('recortado'),
-  carro('sem-recorte', { media: [{ url: `${ORIGEM}foto-nova-sem-recorte.jpg`, type: 'IMAGE', order: 0 }] }),
+  carro('sem-recorte', { media: [{ url: `${ORIGEM}394_999_1-1.jpg`, type: 'IMAGE', order: 0 }] }),
   carro('sem-loja', { dealer: undefined }),
 ];
 
@@ -54,54 +54,58 @@ async function preparar(page: Page) {
 const card = (page: Page, posicao: number) => page.locator('.cars-grid .car-card').nth(posicao);
 const textoDoLink = async (link: ReturnType<Page['locator']>) => decodeURIComponent((await link.getAttribute('href'))!.split('?text=')[1]);
 
-test.describe('fotos sem o telefone da loja', () => {
-  test('cada foto listada existe no site e tem o tamanho do recorte', async ({ page }) => {
+const retoques = JSON.parse(readFileSync('scripts/retoques.json', 'utf8'));
+
+test.describe('fotos sem contato da loja', () => {
+  test('cada foto listada existe no site e não foi cortada em cima nem embaixo', async ({ page }) => {
     expect(manifesto.nomes.length).toBeGreaterThan(0);
     for (const nome of manifesto.nomes) expect(existsSync(`fotos/renatinhus/${nome}`), nome).toBe(true);
 
     await page.goto('/index.html');
-    for (const nome of [FOTO_A, FOTO_B]) {
-      const altura = await page.evaluate(async (caminho) => {
+    const alturas: Record<string, number> = await page.evaluate(async (nomes: string[]) => {
+      const pares = await Promise.all(nomes.map(async (nome) => {
         const img = new Image();
-        img.src = caminho;
+        img.src = `/fotos/renatinhus/${nome}`;
         await img.decode();
-        return img.naturalHeight;
-      }, `/fotos/renatinhus/${nome}`);
-      expect(altura).toBeLessThanOrEqual(354);
+        return [nome, img.naturalHeight];
+      }));
+      return Object.fromEntries(pares);
+    }, manifesto.nomes);
+    for (const nome of manifesto.nomes) {
+      const esperada = retoques[nome.replace('.jpg', '')]?.fimY ?? 480;
+      expect(alturas[nome], nome).toBe(esperada);
     }
   });
 
-  test('todo corte extra se refere a uma foto da lista', () => {
-    const cortes = JSON.parse(readFileSync('scripts/cortes-extras.json', 'utf8'));
-    for (const nome of Object.keys(cortes)) expect(manifesto.nomes, nome).toContain(`${nome}.jpg`);
+  test('todo retoque se refere a uma foto da lista', () => {
+    for (const nome of Object.keys(retoques).filter((chave) => !chave.startsWith('_'))) {
+      expect(manifesto.nomes, nome).toContain(`${nome}.jpg`);
+    }
   });
 
-  test('nos resultados o card usa a foto recortada e carro novo mantém a original', async ({ page }) => {
+  test('nos resultados o card usa a foto tratada e carro novo usa a versão sem a tarja', async ({ page }) => {
     await preparar(page);
     await page.goto('/buscando-carro.html');
     await expect(page.locator('.cars-grid .car-card')).toHaveCount(3, { timeout: 15000 });
     await expect(card(page, 0).locator('img').first()).toHaveAttribute('src', `/fotos/renatinhus/${FOTO_A}`);
-    await expect(card(page, 1).locator('img').first()).toHaveAttribute('src', `${ORIGEM}foto-nova-sem-recorte.jpg`);
+    await expect(card(page, 1).locator('img').first()).toHaveAttribute('src', `${ORIGEM}394_999_1-0.jpg`);
   });
 
-  test('no celular o card desce o enquadramento até o carro', async ({ page }) => {
-    await preparar(page);
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/buscando-carro.html');
-    await expect(page.locator('.cars-grid .car-card')).toHaveCount(3, { timeout: 15000 });
-    const foto = card(page, 0).locator('.car-image img').first();
-    // A tela de carregamento esconde os resultados: antes de sair, a foto mede 0 por 0.
-    await expect(foto).toBeVisible({ timeout: 15000 });
-    await expect(foto).toHaveCSS('object-position', '50% 70%');
-    await expect(foto).toHaveCSS('object-fit', 'cover');
-    // Só faz efeito se a caixa cortar a foto na altura: mais larga que a proporção da imagem.
-    const medida = await foto.evaluate(async (img: HTMLImageElement) => {
-      await img.decode();
-      const caixa = img.getBoundingClientRect();
-      return { caixa: caixa.width / caixa.height, foto: img.naturalWidth / img.naturalHeight };
+  for (const [nome, largura, altura] of [['no computador', 1440, 900], ['no celular', 390, 844]] as const) {
+    test(`o card mostra a foto inteira ${nome}`, async ({ page }) => {
+      await preparar(page);
+      await page.setViewportSize({ width: largura, height: altura });
+      await page.goto('/buscando-carro.html');
+      await expect(page.locator('.cars-grid .car-card')).toHaveCount(3, { timeout: 15000 });
+      const foto = card(page, 0).locator('.car-image img').first();
+      // A tela de carregamento esconde os resultados: antes de sair, a foto mede 0 por 0.
+      await expect(foto).toBeVisible({ timeout: 15000 });
+      await expect(foto).toHaveCSS('object-fit', 'contain');
+      const caixa = (await foto.boundingBox())!;
+      expect(Math.abs(caixa.width - caixa.height)).toBeLessThanOrEqual(1);
+      expect(caixa.width).toBeGreaterThanOrEqual(largura >= 1025 ? 340 : 300);
     });
-    expect(medida.caixa).toBeGreaterThan(medida.foto);
-  });
+  }
 
   test('a página do carro não carrega nenhuma foto com telefone', async ({ page }) => {
     await preparar(page);
@@ -109,9 +113,9 @@ test.describe('fotos sem o telefone da loja', () => {
     page.on('request', (r) => { if (r.url().startsWith(ORIGEM)) originais.push(r.url()); });
     await page.goto('/detalhes-carro.html?id=recortado');
     await expect(page.locator('img[src*="/fotos/renatinhus/"]').first()).toBeAttached({ timeout: 15000 });
-    // A foto principal desce o enquadramento até o carro, sem cortar o teto de quem está centrado.
+    // A foto principal aparece inteira.
     const principal = page.locator('.main-image img').first();
-    await expect(principal).toHaveCSS('object-position', '50% 70%');
+    await expect(principal).toHaveCSS('object-fit', 'contain');
     // A regra só vale se a foto couber na galeria: maior que ela, a parte de baixo é cortada.
     await expect(principal).toHaveAttribute('src', /fotos\/renatinhus/);
     const caixas = await page.evaluate(() => {

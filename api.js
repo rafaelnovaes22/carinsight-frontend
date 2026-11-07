@@ -236,7 +236,7 @@ const CarInsightAPI = {
   },
 
   // ==================== INTERNAL ====================
-  // Troca a foto original, que traz o telefone da loja, pela cópia recortada. Foto sem cópia segue a original.
+  // Troca a foto da API, que traz o telefone da loja, pela cópia tratada. Carro novo, ainda sem cópia, usa a versão sem a tarja.
   _trocarFotos(dados) {
     const fotos = window.FotosRecortadas;
     if (!fotos) return dados;
@@ -245,8 +245,9 @@ const CarInsightAPI = {
       if (!valor || typeof valor !== 'object') return;
       Object.keys(valor).forEach((chave) => {
         const item = valor[chave];
-        if (typeof item === 'string' && item.startsWith(fotos.origem) && nomes.has(item.slice(fotos.origem.length))) {
-          valor[chave] = fotos.destino + item.slice(fotos.origem.length);
+        if (typeof item === 'string' && item.startsWith(fotos.origem)) {
+          const nome = item.slice(fotos.origem.length);
+          valor[chave] = nomes.has(nome) ? fotos.destino + nome : item.replace(/-\d+\.jpg$/, '-0.jpg');
         } else {
           visitar(item);
         }

@@ -8344,9 +8344,14 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
   color: #6b7280;
 }
 
-/* Nas fotos da loja o carro fica abaixo do meio e o letreiro em cima. Colado embaixo, cortaria o teto de quem está centrado. */
-.main-image img {
-  object-position: center 70%;
+/* A foto do carro aparece inteira: quem compra precisa ver rodas, para-choques e teto. O que sobra no quadro fica neutro. */
+.main-image img,
+.side-images img,
+.modal-img-wrapper img,
+.car-card .car-image img {
+  object-fit: contain;
+  object-position: center;
+  background: #eef1f5;
 }
 
 /* Sem isto a foto cresce além da altura da galeria e é cortada embaixo, sem enquadrar o carro. */
@@ -8361,9 +8366,27 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
   }
 }
 
-/* No celular a foto do card é mais baixa que a original: usa o mesmo enquadramento da foto principal. */
-.car-card .car-image img {
-  object-position: center 70%;
+/* A foto do card volta aos 340 por 340 do desenho: a regra de 220px, feita para o card vertical, a deixava estreita. */
+@media (min-width: 1025px) {
+  .cars-grid .card-main-content .car-image {
+    flex: 0 0 340px;
+  }
+}
+
+/* No celular o quadro é quadrado, porque a maioria das fotos é em pé e ficaria pequena num quadro baixo. */
+@media (max-width: 1024px) {
+  .main-image {
+    height: auto;
+    aspect-ratio: 1;
+    max-height: 480px;
+  }
+
+  .cars-grid .card-main-content .car-image {
+    flex: 0 0 auto;
+    height: auto;
+    aspect-ratio: 1;
+    max-height: 480px;
+  }
 }
 
 /* Filtros escolhidos na home, antes de buscar. */
