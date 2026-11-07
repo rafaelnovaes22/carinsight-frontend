@@ -692,6 +692,31 @@ test.describe('Botões da home', () => {
     await expect(cards(page)).toHaveCount(20, { timeout: 15000 });
   });
 
+  test('Preço escolhido na home é o que vale: o teto vai para a busca e nada passa dele', async ({ page }) => {
+    await preparar(page);
+    await page.goto('/index.html');
+    const escolher = async (valor: string) => {
+      await botao(page, 'Preço').click();
+      await page.locator('#price-slider').evaluate((el: HTMLInputElement, v: string) => {
+        el.value = v;
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }, valor);
+      await page.locator('#price-confirm').click();
+    };
+    await escolher('30000');
+    await expect(etiquetasDaHome(page)).toHaveText(['Até R$ 30.000']);
+    await expect(verCarros(page)).toBeDisabled();
+    await expect(verCarros(page)).toHaveText('Nenhum carro com esses filtros');
+
+    await escolher('50000');
+    await expect(etiquetasDaHome(page)).toHaveText(['Até R$ 50.000']);
+    await verCarros(page).click();
+    await page.waitForURL(/precoMax=50000/);
+    await expect(cards(page)).toHaveCount(20, { timeout: 15000 });
+    const precos = await cards(page).evaluateAll((els) => els.map((el) => Number((el.textContent || '').match(/R$s*([d.]+)/)?.[1].replace(/./g, '') || 0)));
+    expect(Math.max(...precos)).toBeLessThanOrEqual(50000);
+  });
+
   test('sem filtro, Mais Opções abre todos os carros', async ({ page }) => {
     await preparar(page);
     await page.goto('/index.html');

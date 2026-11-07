@@ -389,51 +389,6 @@
             </div>
         </section>
 
-        <!-- Price Modal -->
-        <div class="price-modal-overlay" id="price-modal-overlay"></div>
-        <div class="price-modal" id="price-modal">
-            <div class="price-modal-header">
-                <h3>Faixa de Preço</h3>
-                <button id="price-close" aria-label="Fechar">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="price-modal-body">
-                <div class="year-display"> <!-- Reusing year-display class for consistent style -->
-                    <button class="year-nav-btn" id="price-prev">
-                        <i data-lucide="minus"></i>
-                    </button>
-                    <div class="year-value" id="price-value" style="font-size: 3rem;">R$ 80.000</div>
-                    <button class="year-nav-btn" id="price-next">
-                        <i data-lucide="plus"></i>
-                    </button>
-                </div>
-
-                <div class="year-slider-wrapper"> <!-- Reusing year-slider-wrapper class -->
-                    <div class="year-range-labels">
-                        <span>R$ 20k</span>
-                        <span>R$ 200k</span>
-                    </div>
-                    <input type="range" id="price-slider" min="20000" max="200000" step="1000" value="80000"
-                        class="year-slider">
-                    <div class="year-slider-track">
-                        <div class="year-slider-fill" id="price-slider-fill"></div>
-                        <div class="year-slider-thumb" id="price-slider-thumb"></div>
-                    </div>
-                </div>
-
-                <div class="year-quick-select">
-                    <button class="year-quick-btn price-quick-btn" data-price="30000">30k</button>
-                    <button class="year-quick-btn price-quick-btn" data-price="50000">50k</button>
-                    <button class="year-quick-btn price-quick-btn" data-price="80000">80k</button>
-                    <button class="year-quick-btn price-quick-btn" data-price="120000">120k</button>
-                    <button class="year-quick-btn price-quick-btn" data-price="150000">150k</button>
-                </div>
-
-                <button class="year-confirm-btn" id="price-confirm">Confirmar</button>
-            </div>
-        </div>
-
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-badge">BUSCA COM IA</div>
