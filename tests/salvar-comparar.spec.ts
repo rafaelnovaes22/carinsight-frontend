@@ -53,7 +53,7 @@ test.describe('salvar e comparar', () => {
     await expect(page.locator('.vehicle-actions')).toHaveCount(3, { timeout: 10000 });
 
     await page.locator('.vehicle-actions').nth(0).locator('[data-acao="salvar"]').click();
-    await expect(page.locator('.vehicle-actions').nth(0).locator('[data-acao="salvar"]')).toHaveText('Salvo');
+    await expect(page.locator('.vehicle-actions').nth(0).locator('[data-acao="salvar"]')).toHaveClass(/ativo/);
     expect(await page.evaluate(() => localStorage.getItem('carinsight_favorites'))).toContain('a1');
 
     await page.locator('.vehicle-actions').nth(0).locator('[data-acao="comparar"]').click();
@@ -83,8 +83,9 @@ test.describe('salvar e comparar', () => {
 
     expect(await bloco.locator('[data-acao="salvar"]').innerHTML()).toContain('heart');
     await bloco.locator('[data-acao="salvar"]').click();
-    await expect(bloco.locator('[data-acao="salvar"]')).toHaveText('Salvo');
+    await expect(bloco.locator('[data-acao="salvar"]')).toHaveClass(/ativo/);
     expect(await bloco.locator('[data-acao="salvar"]').innerHTML()).toContain('heart');
+    expect(await bloco.locator('[data-acao="salvar"]').textContent()).toBe('');
     expect(await page.evaluate(() => localStorage.getItem('carinsight_favorites'))).toContain('a2');
 
     await bloco.locator('[data-acao="comparar"]').click();
@@ -99,7 +100,7 @@ test.describe('salvar e comparar', () => {
     await expect(bloco).toBeVisible({ timeout: 10000 });
     await bloco.locator('[data-acao="salvar"]').click();
     await bloco.locator('[data-acao="salvar"]').click();
-    await expect(bloco.locator('[data-acao="salvar"]')).toHaveText('Salvar');
+    await expect(bloco.locator('[data-acao="salvar"]')).not.toHaveClass(/ativo/);
     expect(await page.evaluate(() => localStorage.getItem('carinsight_favorites'))).not.toContain('a1');
   });
 });
