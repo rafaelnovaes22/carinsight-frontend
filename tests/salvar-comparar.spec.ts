@@ -66,6 +66,9 @@ test.describe('salvar e comparar', () => {
     expect(texto).toContain('ALFA');
     expect(texto).toContain('BETA');
     expect(texto).not.toContain('GAMA');
+    // Combustível e câmbio vêm de technicalSpecs e não podem aparecer como N/A.
+    expect(texto).toContain('Flex');
+    expect(texto).toContain('Manual');
   });
 
   test('na página do carro: salvar e comparar pelo botão do detalhe', async ({ page }) => {

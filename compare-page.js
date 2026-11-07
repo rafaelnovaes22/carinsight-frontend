@@ -1,3 +1,12 @@
+// Combustível, câmbio e motor vêm de technicalSpecs na API; o restante vem direto do carro.
+function valorDaSpec(vehicle, chave) {
+  const t = vehicle.technicalSpecs || {};
+  if (chave === 'fuelType') return vehicle.fuelType || t.fuel || t.fuelType;
+  if (chave === 'transmission') return vehicle.transmission || t.transmission;
+  if (chave === 'engineSize') return vehicle.engineSize || t.engine;
+  return vehicle[chave];
+}
+
 /**
  * CarInsight Compare Page Integration
  * Handles comparar.html functionality
@@ -153,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td class="spec-label">${spec.label}</td>
         ${compareVehicles.map((v, i) => {
           const isBest = highlight && highlight.bestIndex === i;
-          return `<td class="${isBest ? 'best-value' : ''}">${spec.format(v[spec.key])}${isBest ? ' ✓' : ''}</td>`;
+          return `<td class="${isBest ? 'best-value' : ''}">${spec.format(valorDaSpec(v, spec.key))}${isBest ? ' ✓' : ''}</td>`;
         }).join('')}
       </tr>`;
     });
