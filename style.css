@@ -8336,3 +8336,10 @@ summary::after {
 .category-filter-btn.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
 .category-filter-btn.active i, .category-filter-btn.active span { color: #fff; }
 button.active-filter-chip { font: inherit; cursor: pointer; }
+
+.aviso-categoria {
+  margin: 6px 0 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #6b7280;
+}

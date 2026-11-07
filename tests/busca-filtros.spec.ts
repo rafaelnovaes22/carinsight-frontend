@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { test, expect, Page } from '@playwright/test';
 
 /** Todos os botões de busca precisam mudar o resultado: home, filtros laterais e categorias. */
@@ -28,7 +29,7 @@ const ESPECIAIS = [
   carro('fit', 'HONDA', 'FIT', 2019, 79990, {}, { transmission: 'Automático', engine: '1.5' }),
   carro('city', 'HONDA', 'CITY', 2018, 79990, { bodyType: 'sedan' }, { transmission: 'Automático', engine: '1.5' }),
   carro('toro', 'FIAT', 'TORO', 2017, 96990, { bodyType: 'pickup', ...ROBUST }, { transmission: 'Automático', fuel: 'Diesel', engine: '2.0 Turbo Diesel 170 cv' }),
-  carro('creta', 'HYUNDAI', 'CRETA', 2025, 121990, { bodyType: 'suv', features: ['6 airbags'], ...ROBUST }, { transmission: 'Automático', engine: '1.0 Turbo' }),
+  carro('creta', 'HYUNDAI', 'CRETA', 2025, 121990, { bodyType: 'suv', features: ['6 airbags'], ...ROBUST }, { transmission: 'Automático', engine: '1.0 Turbo', color: 'Prata' }),
   carro('fusca', 'VOLKSWAGEN', 'FUSCA', 1975, 45000, {}, { fuel: 'Gasolina', engine: null }),
   carro('c3', 'CITROËN', 'C3', 2024, 64990),
 ];
@@ -38,7 +39,26 @@ const ESTOQUE = [
   ...Array.from({ length: 19 }, (_, i) => carro(`mobi${i}`, 'FIAT', 'MOBI', 2017, 43990, i < 2 ? { dealer: { name: 'Loja Sem Estado', verificationStatus: 'PENDING' } } : {}, { engine: '1.6' })),
 ];
 
+// Lista sintética: o teste não pode mudar de resultado quando a Uber atualizar a lista real.
+const LISTA_UBER = {
+  cidade: 'São Paulo',
+  fonte: 'https://exemplo.test/uber',
+  consultadoEm: '2026-11-06',
+  modelos: {
+    'honda|fit': { uberx: 2011 },
+    'honda|city': { uberx: 2011, black: 2023 },
+    'fiat|toro': { uberx: 2011 },
+    'hyundai|creta': { uberx: 2011, black: 2019 },
+    'citroen|c3': { uberx: 2011 },
+    'fiat|mobi': { uberx: 2011 },
+  },
+  cores: { 'foto-preto': 'Preto', 'foto-laranja': 'Laranja' },
+};
+
 async function preparar(page: Page, busca: { q: string; ids: string[] } | null = null) {
+  await page.route('**/uber-elegiveis.js', (route) =>
+    route.fulfill({ status: 200, contentType: 'text/javascript', body: `window.UberElegiveis = ${JSON.stringify(LISTA_UBER)};` }),
+  );
   await page.route('**/localhost:3000/**', (route) => {
     const url = new URL(route.request().url());
     const json = (corpo: unknown) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(corpo) });
@@ -277,15 +297,93 @@ test.describe('Resultados', () => {
     expect(limites).toEqual([true, false, false, false]);
   });
 
+  test('Uber e Uber Black filtram pela lista oficial e dizem que a aprovação é da Uber', async ({ page }) => {
+    await preparar(page);
+    await abrirResultados(page);
+    await expect(page.locator('.aviso-categoria')).toHaveCount(0);
+
+    await page.locator('.cat-uber').click();
+    await expect(cards(page)).toHaveCount(24);
+    await expect(cards(page).filter({ hasText: 'FUSCA' })).toHaveCount(0);
+    await expect(page).toHaveURL(/categoria=uber(&|$)/);
+    await expect(page.locator('.aviso-categoria')).toContainText('consultada em 06/11/2026');
+    await expect(page.locator('.aviso-categoria')).toContainText('A aprovação é da Uber');
+
+    await page.locator('.cat-uber-black').click();
+    await expect(cards(page)).toHaveCount(1);
+    await expect(cards(page).first()).toContainText('CRETA');
+    await expect(page.locator('.active-filters-scroll')).toContainText('Uber Black');
+
+    await page.locator('.cat-uber-black').click();
+    await expect(page.locator('.aviso-categoria')).toHaveCount(0);
+  });
+
+  test('a etiqueta Uber não afirma nada sem modelo, ano, cor ou portas', async ({ page }) => {
+    await preparar(page);
+    await abrirResultados(page);
+    const r = await page.evaluate(() => {
+      const { FiltrosBusca } = window as any;
+      const ano = new Date().getFullYear();
+      const passa = (categoria: string, carro: Record<string, unknown>) =>
+        FiltrosBusca.atende(
+          { make: 'HYUNDAI', model: 'CRETA', title: 'HYUNDAI CRETA 4P', yearFab: ano, technicalSpecs: { color: 'Prata' }, ...carro },
+          { ...FiltrosBusca.vazio(), categoria },
+        );
+      return {
+        dezAnos: passa('uber', { yearFab: ano - 10 }),
+        onzeAnos: passa('uber', { yearFab: ano - 11 }),
+        semAno: passa('uber', { yearFab: null }),
+        duasPortas: passa('uber', { title: 'HYUNDAI CRETA 2P' }),
+        foraDaLista: passa('uber', { model: 'FUSCA' }),
+        semUberX: passa('uber', { model: 'CITY', make: 'HONDA' }),
+        blackOk: passa('uber-black', {}),
+        blackCorProibida: passa('uber-black', { technicalSpecs: { color: 'Vinho' } }),
+        blackSemCor: passa('uber-black', { technicalSpecs: {} }),
+        blackCorDaFoto: passa('uber-black', { id: 'foto-preto', technicalSpecs: {} }),
+        blackFotoCorProibida: passa('uber-black', { id: 'foto-laranja', technicalSpecs: {} }),
+        cadastroValeMaisQueFoto: passa('uber-black', { id: 'foto-preto', technicalSpecs: { color: 'Vinho' } }),
+        blackAbaixoDoAno: passa('uber-black', { make: 'HONDA', model: 'CITY', yearFab: 2022 }),
+        blackModeloDeFora: passa('uber-black', { make: 'HONDA', model: 'FIT' }),
+      };
+    });
+    expect(r).toEqual({
+      dezAnos: true,
+      onzeAnos: false,
+      semAno: false,
+      duasPortas: false,
+      foraDaLista: false,
+      semUberX: true,
+      blackOk: true,
+      blackCorProibida: false,
+      blackSemCor: false,
+      blackCorDaFoto: true,
+      blackFotoCorProibida: false,
+      cadastroValeMaisQueFoto: false,
+      blackAbaixoDoAno: false,
+      blackModeloDeFora: false,
+    });
+  });
+
+  test('o arquivo de etiquetas gerado tem o formato que o site lê', () => {
+    const texto = readFileSync('uber-elegiveis.js', 'utf8');
+    const dados = JSON.parse(texto.slice(texto.indexOf('{'), texto.lastIndexOf('}') + 1));
+    expect(dados.cidade).toBe('São Paulo');
+    expect(dados.consultadoEm).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const regras = Object.entries(dados.modelos) as [string, Record<string, number>][];
+    expect(regras.length).toBeGreaterThan(0);
+    for (const cor of Object.values(dados.cores)) expect(cor).toMatch(/^\p{L}/u);
+    for (const [chave, regra] of regras) {
+      expect(chave).toMatch(/^[^|A-Z]+\|[^|A-Z]+$/);
+      for (const ano of Object.values(regra)) expect(ano).toBeGreaterThan(1900);
+    }
+  });
+
   test('não oferece o que o site não consegue cumprir', async ({ page }) => {
     await preparar(page);
     await abrirResultados(page);
     // Espera a tela de carregamento sair: antes disso tudo está escondido e o teste não prova nada.
     await expect(page.locator('.cat-familia')).toBeVisible({ timeout: 15000 });
     await expect(lateral(page).locator('.filter-section', { has: page.locator('h4:text-is("Condição")') })).toBeVisible();
-    for (const classe of ['cat-uber', 'cat-uber-black']) {
-      await expect(page.locator(`.${classe}`)).toBeHidden();
-    }
     for (const titulo of ['Cor Exterior', 'Cor Interior', 'Tração']) {
       await expect(lateral(page).locator('.filter-section', { has: page.locator(`h4:text-is("${titulo}")`) })).toBeHidden();
     }

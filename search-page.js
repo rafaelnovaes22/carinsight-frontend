@@ -324,8 +324,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   // Sem dado no estoque: filtrar esconderia carros sem dizer por quê. Voltam quando o dado existir.
   const SECOES_SEM_DADO = ['Cor Exterior', 'Cor Interior', 'Tração'];
-  // A Uber não publica API de modelos aceitos e a regra exige cor, que quase todo o estoque não tem.
-  const CATEGORIAS_SEM_REGRA = ['cat-uber', 'cat-uber-black'];
 
   const moeda = (valor) => `R$ ${Number(valor).toLocaleString('pt-BR')}`;
   const digitos = (texto) => parseInt(String(texto).replace(/\D/g, ''), 10) || null;
@@ -389,9 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function montarControles() {
     SECOES_SEM_DADO.forEach((titulo) => secoes(titulo).forEach((s) => { s.style.display = 'none'; }));
-    CATEGORIAS_SEM_REGRA.forEach((classe) => {
-      document.querySelectorAll(`.${classe}`).forEach((b) => { b.style.display = 'none'; });
-    });
 
     // O painel do celular chama a mesma seção de outro nome.
     const SECAO_MARCA = ['Marca e Modelo', 'Detalhes do Veículo'];
@@ -524,7 +519,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     montarEtiquetas();
+    mostrarAvisoDaCategoria();
     if (window.lucide) lucide.createIcons();
+  }
+
+  // Categoria que depende de terceiros diz de onde veio a informação e quem decide.
+  function mostrarAvisoDaCategoria() {
+    if (!resultsCount) return;
+    let aviso = document.querySelector('.aviso-categoria');
+    const categoria = filters.categoria && CATEGORIAS[filters.categoria];
+    const texto = categoria && categoria.aviso ? categoria.aviso() : '';
+    if (!texto) { if (aviso) aviso.remove(); return; }
+    if (!aviso) {
+      aviso = document.createElement('p');
+      aviso.className = 'aviso-categoria';
+      resultsCount.after(aviso);
+    }
+    aviso.textContent = texto;
   }
 
   document.addEventListener('change', (event) => {

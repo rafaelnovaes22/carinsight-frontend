@@ -24,6 +24,32 @@
   const automatico = (v) => cambio(v).startsWith('autom');
 
   // Cada categoria é uma regra sobre dados do próprio carro.
+  // Etiqueta Uber: lista oficial de São Paulo (uber-elegiveis.js) mais o limite de 10 anos de fabricação
+  // da capital. Sem o modelo na lista, sem ano de fabricação ou com 2 portas, o site não afirma.
+  const CORES_DO_BLACK = ['preto', 'chumbo', 'prata', 'cinza', 'azul-marinho', 'marrom', 'branco'];
+  const IDADE_MAXIMA_UBER = 10;
+  // A cor do cadastro vale mais. Sem ela, usa a cor lida nas fotos do carro.
+  const corDoCarro = (v) => specs(v).color || ((window.UberElegiveis && window.UberElegiveis.cores) || {})[v.id];
+
+  function regraDaUber(v) {
+    const lista = window.UberElegiveis && window.UberElegiveis.modelos;
+    const regra = lista && lista[`${normalizar(v.make)}|${normalizar(v.model)}`];
+    const fabricacao = Number(v.yearFab);
+    const dentro = regra && new Date().getFullYear() - fabricacao <= IDADE_MAXIMA_UBER && !/\b2P\b/i.test(v.title || '');
+    return dentro ? { regra, fabricacao } : null;
+  }
+
+  const atendeUber = (v, categoria) => {
+    const achado = regraDaUber(v);
+    return Boolean(achado && achado.regra[categoria] && achado.fabricacao >= achado.regra[categoria]);
+  };
+
+  function avisoDaUber() {
+    const dados = window.UberElegiveis;
+    const data = dados ? dados.consultadoEm.split('-').reverse().join('/') : '';
+    return `Modelo e ano na lista da Uber para ${dados ? dados.cidade : 'São Paulo'}, consultada em ${data}. A aprovação é da Uber, que também avalia portas, ar-condicionado, cor e motorista.`;
+  }
+
   const CATEGORIAS = {
     familia: { rotulo: 'Família', regra: (v) => ['suv', 'minivan', 'perua', 'sedan'].includes(carroceria(v)) },
     lazer: { rotulo: 'Lazer', regra: (v) => ['suv', 'pickup'].includes(carroceria(v)) },
@@ -44,6 +70,12 @@
         const fabricacao = Number(v.yearFab);
         return fabricacao > 0 && new Date().getFullYear() - fabricacao > 20;
       },
+    },
+    uber: { rotulo: 'Uber', aviso: avisoDaUber, regra: (v) => atendeUber(v, 'uberx') },
+    'uber-black': {
+      rotulo: 'Uber Black',
+      aviso: avisoDaUber,
+      regra: (v) => atendeUber(v, 'black') && CORES_DO_BLACK.includes(normalizar(corDoCarro(v))),
     },
     eletricos: { rotulo: 'Elétricos', regra: (v) => combustivel(v) === 'eletrico' },
   };
