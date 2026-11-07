@@ -18,10 +18,18 @@
 
   const specs = (v) => v.technicalSpecs || {};
   const motor = (v) => normalizar(specs(v).engine || v.engineSize);
-  const cambio = (v) => normalizar(specs(v).transmission || v.transmission);
+  // A loja às vezes marca manual um carro cujo nome diz o contrário, como o City CVT: o nome vale mais.
+  const NOME_DE_AUTOMATICO = /\b(cvt|at\d*|tiptronic|x-?tronic|dsg|automatic[oa])\b/;
+  const cambio = (v) => (NOME_DE_AUTOMATICO.test(normalizar(v.title)) ? 'automatico' : normalizar(specs(v).transmission || v.transmission));
   const combustivel = (v) => normalizar(specs(v).fuel || specs(v).fuelType);
   const carroceria = (v) => normalizar(v.bodyType);
   const automatico = (v) => cambio(v).startsWith('autom');
+  // Híbrido costuma vir cadastrado como flex: o nome do carro é que diz.
+  const hibrido = (v) => /\b(hybrid|hibrido)\b/.test(normalizar(v.title));
+  const classico = (v) => Number(v.yearModel) > 0 && Number(v.yearModel) <= 1999;
+  const duasPortas = (v) => /\b2p\b/.test(normalizar(v.title));
+  const cilindrada = (v) => parseFloat(motor(v));
+  const itens = (v) => normalizar((v.features || []).join(' '));
 
   // Cada categoria é uma regra sobre dados do próprio carro.
   // Etiqueta Uber: lista oficial de São Paulo (uber-elegiveis.js) mais o limite de 10 anos de fabricação
@@ -51,17 +59,27 @@
   }
 
   const CATEGORIAS = {
-    familia: { rotulo: 'Família', regra: (v) => ['suv', 'minivan', 'perua', 'sedan'].includes(carroceria(v)) },
-    lazer: { rotulo: 'Lazer', regra: (v) => ['suv', 'pickup'].includes(carroceria(v)) },
-    trabalho: { rotulo: 'Trabalho', regra: (v) => ['pickup', 'perua'].includes(carroceria(v)) },
-    economia: { rotulo: 'Economia', regra: (v) => /^1\.0\b/.test(motor(v)) && !/turbo/.test(motor(v)) },
+    // Carro antigo é escolha de coleção e passeio: não entra em família, trabalho nem economia.
+    familia: {
+      rotulo: 'Família',
+      regra: (v) => ['suv', 'minivan', 'perua', 'sedan'].includes(carroceria(v)) && !classico(v) && !duasPortas(v),
+    },
+    lazer: { rotulo: 'Lazer', regra: (v) => ['suv', 'pickup'].includes(carroceria(v)) || (classico(v) && duasPortas(v)) },
+    trabalho: { rotulo: 'Trabalho', regra: (v) => ['pickup', 'perua'].includes(carroceria(v)) && !classico(v) },
+    // Motor 1.0, com ou sem turbo: turbo pequeno costuma gastar menos que um motor maior de força parecida.
+    economia: { rotulo: 'Economia', regra: (v) => /^1\.0\b/.test(motor(v)) && !classico(v) },
     conforto: { rotulo: 'Conforto', regra: automatico },
     seguranca: {
       rotulo: 'Segurança',
-      regra: (v) => /air\s*-?bag|\babs\b|estabilidade/.test(normalizar((v.features || []).join(' '))),
+      // Airbag sozinho não basta: precisa também de ABS ou controle de estabilidade na lista de itens.
+      regra: (v) => /air\s*-?bag/.test(itens(v)) && /\babs\b|estabilidade/.test(itens(v)),
     },
-    desempenho: { rotulo: 'Desempenho', regra: (v) => /turbo/.test(motor(v)) || parseFloat(motor(v)) >= 2 },
-    classicos: { rotulo: 'Clássicos', regra: (v) => Number(v.yearModel) <= 1999 },
+    // 1.0 turbo fica em Economia, e diesel é para carga: nenhum dos dois é o que busca quem quer desempenho.
+    desempenho: {
+      rotulo: 'Desempenho',
+      regra: (v) => combustivel(v) !== 'diesel' && (cilindrada(v) >= 2 || (/turbo/.test(motor(v)) && cilindrada(v) >= 1.3)),
+    },
+    classicos: { rotulo: 'Clássicos', regra: classico },
     // EC 137/2025: 20 anos ou mais de fabricação. A Sefaz-SP só isenta a partir do ano seguinte ao que
     // o carro completa 20 anos, então 2026 vale até 2005. Sem ano de fabricação, o site não afirma.
     'sem-ipva': {
@@ -145,7 +163,7 @@
     if (f.anoMax && !(ano <= f.anoMax)) return false;
     if (f.carrocerias.length && !f.carrocerias.includes(carroceria(v))) return false;
     if (f.cambios.length && !f.cambios.some((c) => (c === 'automatico' ? automatico(v) : cambio(v) === c))) return false;
-    if (f.combustiveis.length && !f.combustiveis.includes(combustivel(v))) return false;
+    if (f.combustiveis.length && !f.combustiveis.some((c) => c === combustivel(v) || (c === 'hibrido' && hibrido(v)))) return false;
     if (f.categoria && !CATEGORIAS[f.categoria].regra(v)) return false;
     return true;
   }

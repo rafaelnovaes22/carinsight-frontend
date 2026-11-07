@@ -256,6 +256,21 @@ const CarInsightAPI = {
     return dados;
   },
 
+  // Aplica as correções de dados cadastrados errado pela loja, identificando o carro pelo código dela.
+  _corrigirEstoque(dados) {
+    const correcoes = window.CorrecoesEstoque;
+    if (!correcoes) return dados;
+    const visitar = (valor) => {
+      if (!valor || typeof valor !== 'object') return;
+      const fonte = valor.technicalSpecs && valor.technicalSpecs.source;
+      const correcao = fonte && correcoes[`${fonte.site}:${fonte.id}`];
+      if (correcao) Object.assign(valor.technicalSpecs, correcao);
+      Object.values(valor).forEach(visitar);
+    };
+    visitar(dados);
+    return dados;
+  },
+
   async _fetch(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
@@ -292,7 +307,7 @@ const CarInsightAPI = {
         throw new Error(error.message || `HTTP ${response.status}`);
       }
 
-      return this._trocarFotos(await response.json());
+      return this._corrigirEstoque(this._trocarFotos(await response.json()));
     } catch (error) {
       console.error(`❌ API Error [${endpoint}]:`, error.message);
       throw error;

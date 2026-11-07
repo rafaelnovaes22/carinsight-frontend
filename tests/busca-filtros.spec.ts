@@ -29,7 +29,7 @@ const ESPECIAIS = [
   carro('fit', 'HONDA', 'FIT', 2019, 79990, {}, { transmission: 'Automático', engine: '1.5' }),
   carro('city', 'HONDA', 'CITY', 2018, 79990, { bodyType: 'sedan' }, { transmission: 'Automático', engine: '1.5' }),
   carro('toro', 'FIAT', 'TORO', 2017, 96990, { bodyType: 'pickup', ...ROBUST }, { transmission: 'Automático', fuel: 'Diesel', engine: '2.0 Turbo Diesel 170 cv' }),
-  carro('creta', 'HYUNDAI', 'CRETA', 2025, 121990, { bodyType: 'suv', features: ['6 airbags'], ...ROBUST }, { transmission: 'Automático', engine: '1.0 Turbo', color: 'Prata' }),
+  carro('creta', 'HYUNDAI', 'CRETA', 2025, 121990, { bodyType: 'suv', features: ['6 airbags', 'Freios ABS'], ...ROBUST }, { transmission: 'Automático', engine: '1.0 Turbo', color: 'Prata' }),
   carro('fusca', 'VOLKSWAGEN', 'FUSCA', 1975, 45000, {}, { fuel: 'Gasolina', engine: null }),
   carro('c3', 'CITROËN', 'C3', 2024, 64990),
 ];
@@ -265,17 +265,102 @@ test.describe('Resultados', () => {
     await expect(cards(page)).toHaveCount(1);
     await expect(cards(page).first()).toContainText('TORO');
     await categoria('Desempenho').click();
-    await expect(cards(page)).toHaveCount(2);
+    await expect(cards(page)).toHaveCount(0);
     await categoria('Segurança').click();
     await expect(cards(page)).toHaveCount(1);
     await expect(cards(page).first()).toContainText('CRETA');
     await categoria('Economia').click();
-    await expect(cards(page)).toHaveCount(1);
-    await expect(cards(page).first()).toContainText('C3');
+    await expect(cards(page)).toHaveCount(2);
+    await expect(cards(page).filter({ hasText: 'C3' })).toHaveCount(1);
+    await expect(cards(page).filter({ hasText: 'CRETA' })).toHaveCount(1);
     await categoria('Elétricos').click();
     await expect(cards(page)).toHaveCount(0);
     await categoria('Elétricos').click();
     await expect(cards(page)).toHaveCount(25);
+  });
+
+  test('cada categoria traz o carro certo e deixa de fora o que não combina', async ({ page }) => {
+    await preparar(page);
+    await abrirResultados(page);
+    const r = await page.evaluate(() => {
+      const { FiltrosBusca } = window as any;
+      const categorias = Object.keys(FiltrosBusca.CATEGORIAS).filter((c) => !c.startsWith('uber') && c !== 'sem-ipva');
+      const em = (carro: Record<string, unknown>) => {
+        const { engine, fuel, transmission, ...resto } = carro;
+        const v = { technicalSpecs: { engine, fuel, transmission }, features: [], ...resto };
+        return categorias.filter((categoria) => FiltrosBusca.atende(v, { ...FiltrosBusca.vazio(), categoria })).sort();
+      };
+      return {
+        peruaClassica: em({ title: 'PERUA 1.6 2P 1973', yearModel: 1973, bodyType: 'perua', engine: '1.6', fuel: 'Gasolina', transmission: 'Manual' }),
+        besouroClassico: em({ title: 'BESOURO 1300 2P 1975', yearModel: 1975, bodyType: 'hatch', fuel: 'Gasolina', transmission: 'Manual' }),
+        popularAntigo: em({ title: 'POPULAR 1.0 4P 1994', yearModel: 1994, bodyType: 'hatch', engine: '1.0', fuel: 'Gasolina', transmission: 'Manual' }),
+        sedanAntigo: em({ title: 'SEDAN 1.8 4P 1994', yearModel: 1994, bodyType: 'sedan', engine: '1.8', fuel: 'Gasolina', transmission: 'Manual' }),
+        peruaAtual: em({ title: 'PERUA 1.6 4P 2015', yearModel: 2015, bodyType: 'perua', engine: '1.6', fuel: 'Flex', transmission: 'Manual' }),
+        sedanDuasPortas: em({ title: 'SEDAN 1.6 2P 2010', yearModel: 2010, bodyType: 'sedan', engine: '1.6', fuel: 'Flex', transmission: 'Manual' }),
+        popularAtual: em({ title: 'POPULAR 1.0 4P 2020', yearModel: 2020, bodyType: 'hatch', engine: '1.0', fuel: 'Flex', transmission: 'Manual' }),
+        suvMilTurbo: em({ title: 'SUV 1.0 TURBO 2025', yearModel: 2025, bodyType: 'suv', engine: '1.0 Turbo', fuel: 'Flex', transmission: 'Automático' }),
+        picapeDiesel: em({ title: 'PICAPE 4X4 2017', yearModel: 2017, bodyType: 'pickup', engine: '2.0 Turbo Diesel 170 cv', fuel: 'Diesel', transmission: 'Automático' }),
+        sedanDoisLitros: em({ title: 'SEDAN 2.0 4P 2014', yearModel: 2014, bodyType: 'sedan', engine: '2.0', fuel: 'Flex', transmission: 'Manual' }),
+        hatchTurbo: em({ title: 'HATCH 1.4 TURBO 4P 2018', yearModel: 2018, bodyType: 'hatch', engine: '1.4 Turbo', fuel: 'Flex', transmission: 'Manual' }),
+        cvtMarcadoManual: em({ title: 'SEDAN 1.5 CVT 4P 2018', yearModel: 2018, bodyType: 'sedan', engine: '1.5', fuel: 'Flex', transmission: 'Manual' }),
+        soAirbag: em({ title: 'HATCH 1.6 4P 2016', yearModel: 2016, bodyType: 'hatch', engine: '1.6', fuel: 'Flex', transmission: 'Manual', features: ['AIR BAG'] }),
+        soAbs: em({ title: 'HATCH 1.6 4P 2016', yearModel: 2016, bodyType: 'hatch', engine: '1.6', fuel: 'Flex', transmission: 'Manual', features: ['FREIOS ABS'] }),
+        airbagEAbs: em({ title: 'HATCH 1.6 4P 2016', yearModel: 2016, bodyType: 'hatch', engine: '1.6', fuel: 'Flex', transmission: 'Manual', features: ['AIR BAG', 'FREIOS ABS'] }),
+        airbagEEstabilidade: em({ title: 'HATCH 1.6 4P 2016', yearModel: 2016, bodyType: 'hatch', engine: '1.6', fuel: 'Flex', transmission: 'Manual', features: ['6 airbags', 'Controle de estabilidade'] }),
+      };
+    });
+    expect(r).toEqual({
+      peruaClassica: ['classicos', 'lazer'],
+      besouroClassico: ['classicos', 'lazer'],
+      popularAntigo: ['classicos'],
+      sedanAntigo: ['classicos'],
+      peruaAtual: ['familia', 'trabalho'],
+      sedanDuasPortas: [],
+      popularAtual: ['economia'],
+      suvMilTurbo: ['conforto', 'economia', 'familia', 'lazer'],
+      picapeDiesel: ['conforto', 'lazer', 'trabalho'],
+      sedanDoisLitros: ['desempenho', 'familia'],
+      hatchTurbo: ['desempenho'],
+      cvtMarcadoManual: ['conforto', 'familia'],
+      soAirbag: [],
+      soAbs: [],
+      airbagEAbs: ['seguranca'],
+      airbagEEstabilidade: ['seguranca'],
+    });
+  });
+
+  test('câmbio e combustível olham o nome do carro quando o cadastro está errado', async ({ page }) => {
+    await preparar(page);
+    await abrirResultados(page);
+    const r = await page.evaluate(() => {
+      const { FiltrosBusca } = window as any;
+      const filtro = (extra: Record<string, unknown>) => ({ ...FiltrosBusca.vazio(), ...extra });
+      const cvt = { title: 'SEDAN 1.5 CVT 4P', technicalSpecs: { transmission: 'Manual', fuel: 'Flex' } };
+      const manual = { title: 'SEDAN 1.5 4P', technicalSpecs: { transmission: 'Manual', fuel: 'Flex' } };
+      const hibrido = { title: 'SUV 1.8 HYBRID 4P', technicalSpecs: { transmission: 'Automático', fuel: 'Flex' } };
+      return {
+        cvtAutomatico: FiltrosBusca.atende(cvt, filtro({ cambios: ['automatico'] })),
+        cvtManual: FiltrosBusca.atende(cvt, filtro({ cambios: ['manual'] })),
+        manualManual: FiltrosBusca.atende(manual, filtro({ cambios: ['manual'] })),
+        manualAutomatico: FiltrosBusca.atende(manual, filtro({ cambios: ['automatico'] })),
+        hibridoHibrido: FiltrosBusca.atende(hibrido, filtro({ combustiveis: ['hibrido'] })),
+        hibridoFlex: FiltrosBusca.atende(hibrido, filtro({ combustiveis: ['flex'] })),
+        hibridoDiesel: FiltrosBusca.atende(hibrido, filtro({ combustiveis: ['diesel'] })),
+        hibridoEletrico: FiltrosBusca.atende(hibrido, filtro({ categoria: 'eletricos' })),
+        flexHibrido: FiltrosBusca.atende(manual, filtro({ combustiveis: ['hibrido'] })),
+      };
+    });
+    expect(r).toEqual({
+      cvtAutomatico: true,
+      cvtManual: false,
+      manualManual: true,
+      manualAutomatico: false,
+      hibridoHibrido: true,
+      hibridoFlex: true,
+      hibridoDiesel: false,
+      hibridoEletrico: false,
+      flexHibrido: false,
+    });
   });
 
   test('Sem IPVA mostra só carro com mais de 20 anos de fabricação', async ({ page }) => {
