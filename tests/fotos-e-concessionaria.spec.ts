@@ -84,15 +84,34 @@ test.describe('fotos sem o telefone da loja', () => {
     await expect(card(page, 1).locator('img').first()).toHaveAttribute('src', `${ORIGEM}foto-nova-sem-recorte.jpg`);
   });
 
+  test('no celular o card desce o enquadramento até o carro', async ({ page }) => {
+    await preparar(page);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/buscando-carro.html');
+    await expect(page.locator('.cars-grid .car-card')).toHaveCount(3, { timeout: 15000 });
+    const foto = card(page, 0).locator('.car-image img').first();
+    // A tela de carregamento esconde os resultados: antes de sair, a foto mede 0 por 0.
+    await expect(foto).toBeVisible({ timeout: 15000 });
+    await expect(foto).toHaveCSS('object-position', '50% 70%');
+    await expect(foto).toHaveCSS('object-fit', 'cover');
+    // Só faz efeito se a caixa cortar a foto na altura: mais larga que a proporção da imagem.
+    const medida = await foto.evaluate(async (img: HTMLImageElement) => {
+      await img.decode();
+      const caixa = img.getBoundingClientRect();
+      return { caixa: caixa.width / caixa.height, foto: img.naturalWidth / img.naturalHeight };
+    });
+    expect(medida.caixa).toBeGreaterThan(medida.foto);
+  });
+
   test('a página do carro não carrega nenhuma foto com telefone', async ({ page }) => {
     await preparar(page);
     const originais: string[] = [];
     page.on('request', (r) => { if (r.url().startsWith(ORIGEM)) originais.push(r.url()); });
     await page.goto('/detalhes-carro.html?id=recortado');
     await expect(page.locator('img[src*="/fotos/renatinhus/"]').first()).toBeAttached({ timeout: 15000 });
-    // A foto principal mostra a parte de baixo, onde está o carro, e não o letreiro da loja.
+    // A foto principal desce o enquadramento até o carro, sem cortar o teto de quem está centrado.
     const principal = page.locator('.main-image img').first();
-    await expect(principal).toHaveCSS('object-position', '50% 100%');
+    await expect(principal).toHaveCSS('object-position', '50% 70%');
     // A regra só vale se a foto couber na galeria: maior que ela, a parte de baixo é cortada.
     await expect(principal).toHaveAttribute('src', /fotos\/renatinhus/);
     const caixas = await page.evaluate(() => {

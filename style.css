@@ -8344,9 +8344,9 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
   color: #6b7280;
 }
 
-/* Nas fotos da loja o carro fica na parte de baixo e o letreiro em cima. */
+/* Nas fotos da loja o carro fica abaixo do meio e o letreiro em cima. Colado embaixo, cortaria o teto de quem está centrado. */
 .main-image img {
-  object-position: center bottom;
+  object-position: center 70%;
 }
 
 /* Sem isto a foto cresce além da altura da galeria e é cortada embaixo, sem enquadrar o carro. */
@@ -8359,4 +8359,9 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
     grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
     min-height: 0;
   }
+}
+
+/* No celular a foto do card é mais baixa que a original: usa o mesmo enquadramento da foto principal. */
+.car-card .car-image img {
+  object-position: center 70%;
 }
