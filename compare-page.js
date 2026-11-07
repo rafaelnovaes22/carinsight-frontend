@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Load vehicles already in compare list
       compareVehicles = await CompareManager.getCompareVehicles();
       
-      // Render comparison slots
+      // Estilos da janela de escolha, que não dependem de haver carros.
+      addCompareTableStyles();
       renderComparisonSlots();
     } catch (error) {
       console.error('❌ Failed to initialize compare page:', error);
@@ -38,12 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const FORMATO_MOEDA = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
   const FORMATO_NUMERO = new Intl.NumberFormat('pt-BR');
+  const ITENS = 'Itens';
+  const criteriosDesligados = new Set();
 
   function escaparTexto(valor) {
     return String(valor).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  // Todas as especificações do carro, na mesma ordem para todas as colunas.
+  // Todas as especificações do carro, na mesma ordem em todas as colunas.
   // "melhor" diz qual lado vence em números: menor preço e km, maior ano.
   function especificacoes(v) {
     const t = v.technicalSpecs || {};
@@ -68,92 +71,169 @@ document.addEventListener('DOMContentLoaded', () => {
     return Array.isArray(v.features) ? v.features : [];
   }
 
-  // Para cada linha numérica, quais colunas têm o melhor valor. Se todos forem iguais, ninguém destaca.
-  function destaquesDe(linhas) {
-    return linhas[0].map((_, idx) => {
-      const celulas = linhas.map((l) => l[idx]);
-      if (linhas.length < 2 || !celulas[0].melhor) return [];
-      const comNumero = celulas.map((c, i) => ({ c, i })).filter((x) => x.c.numero);
-      if (comNumero.length < 2) return [];
-      const numeros = comNumero.map((x) => x.c.numero);
-      if (Math.min(...numeros) === Math.max(...numeros)) return [];
-      const alvo = celulas[0].melhor === 'menor' ? Math.min(...numeros) : Math.max(...numeros);
-      return comNumero.filter((x) => x.c.numero === alvo).map((x) => x.i);
-    });
+  function fotoDo(v) {
+    const VI = window.VehicleImages;
+    return {
+      url: VI ? VI.resolve(v) : 'assets/sem-foto.svg',
+      reserva: VI ? VI.curatedFor(v.make, v.model) || VI.GENERIC_FALLBACK : 'assets/sem-foto.svg',
+    };
   }
 
-  function colunaDoCarro(v, linha, destaques, i) {
-    const VI = window.VehicleImages;
-    const imageUrl = VI ? VI.resolve(v) : 'assets/sem-foto.svg';
-    const imageSafe = VI ? VI.curatedFor(v.make, v.model) || VI.GENERIC_FALLBACK : 'assets/sem-foto.svg';
-    const title = v.title || `${v.make} ${v.model}`;
-    const coluna = document.createElement('div');
-    coluna.className = 'comparison-item-column';
-    coluna.dataset.vehicleId = v.id;
+  function nomeDo(v) {
+    return v.title || `${v.make} ${v.model}`;
+  }
 
-    const valores = linha.map((s, idx) => {
-      const destaque = (destaques[idx] || []).includes(i);
-      return `<div class="item-value${destaque ? ' highlight' : ''}" data-label="${escaparTexto(s.rotulo)}">${s.valor ? escaparTexto(s.valor) : 'N/A'}</div>`;
+  // Meus Carros Salvos: pode salvar quantos quiser e escolher até 3 para comparar.
+  function renderSelecao() {
+    const grade = document.querySelector('.saved-selection-grid');
+    if (!grade) return;
+    if (savedVehicles.length === 0) {
+      grade.innerHTML = `
+        <p class="compare-sem-salvos">
+          Você ainda não salvou nenhum carro. Toque no coração de um carro em
+          <a href="veiculos.html">Veículos</a> para ele aparecer aqui.
+        </p>`;
+      return;
+    }
+    const escolhidos = CompareManager.getCompareList();
+    grade.innerHTML = savedVehicles.map((v) => {
+      const ativo = escolhidos.includes(v.id);
+      const foto = fotoDo(v);
+      const km = v.mileage ? ` • ${FORMATO_NUMERO.format(v.mileage)} km` : '';
+      return `
+        <div class="selection-card">
+          <div class="selection-img">
+            <img src="${foto.url}" alt="${escaparTexto(nomeDo(v))}" onerror="this.onerror=null;this.src='${foto.reserva}'">
+          </div>
+          <div class="selection-info">
+            <h5>${escaparTexto(nomeDo(v))}</h5>
+            <span>${v.yearModel || ''}${km}</span>
+          </div>
+          <button type="button" class="btn-select-car${ativo ? ' active' : ''}" onclick="alternarSelecao('${v.id}')">
+            <i data-lucide="${ativo ? 'check' : 'plus'}"></i> ${ativo ? 'Selecionado' : 'Selecionar'}
+          </button>
+        </div>`;
     }).join('');
-    const itens = itensDo(v);
+  }
 
-    coluna.innerHTML = `
-      <div class="item-header">
-        <button class="btn-change-item" title="Remover da comparação" onclick="removeFromCompare('${v.id}')">
-          <i data-lucide="x"></i>
-        </button>
-        <div class="item-img">
-          <img src="${imageUrl}" alt="${escaparTexto(title)}" onerror="this.onerror=null;this.src='${imageSafe}'">
-        </div>
-        <h4>${escaparTexto(title)}</h4>
-      </div>
-      ${valores}
-      <div class="item-value item-lista" data-label="Itens">${itens.length ? `<ul>${itens.map((x) => `<li>${escaparTexto(x)}</li>`).join('')}</ul>` : 'N/A'}</div>
-    `;
-    return coluna;
+  function temDado(rotulo, carros) {
+    if (rotulo === ITENS) return carros.some((v) => itensDo(v).length > 0);
+    return carros.some((v) => especificacoes(v).find((s) => s.rotulo === rotulo).valor);
+  }
+
+  // Critérios de Comparação: só o que existe nos carros escolhidos. Desmarcar tira a linha da grade.
+  function renderCriterios() {
+    const tags = document.querySelector('.criteria-tags');
+    if (!tags) return;
+    const carros = compareVehicles.slice(0, 3);
+    const secao = tags.closest('.comparison-criteria-section');
+    if (secao) secao.style.display = carros.length ? '' : 'none';
+    const rotulos = [...especificacoes({}).map((s) => s.rotulo), ITENS].filter((r) => temDado(r, carros));
+    tags.innerHTML = rotulos.map((rotulo) => {
+      const ativo = !criteriosDesligados.has(rotulo);
+      return `
+        <label class="criteria-tag${ativo ? ' active' : ''}">
+          <input type="checkbox" ${ativo ? 'checked' : ''} onchange="alternarCriterio('${rotulo}')">
+          ${ativo ? '<i data-lucide="check" style="width:14px;"></i>' : ''} ${rotulo}
+        </label>`;
+    }).join('');
+  }
+
+  // Para cada linha numérica, quais colunas têm o melhor valor. Se todos forem iguais, ninguém destaca.
+  function destacados(celulas) {
+    if (celulas.length < 2 || !celulas[0].melhor) return [];
+    const comNumero = celulas.map((c, i) => ({ c, i })).filter((x) => x.c.numero);
+    if (comNumero.length < 2) return [];
+    const numeros = comNumero.map((x) => x.c.numero);
+    if (Math.min(...numeros) === Math.max(...numeros)) return [];
+    const alvo = celulas[0].melhor === 'menor' ? Math.min(...numeros) : Math.max(...numeros);
+    return comNumero.filter((x) => x.c.numero === alvo).map((x) => x.i);
   }
 
   function colunaVazia(i) {
-    const coluna = document.createElement('div');
-    coluna.className = 'comparison-item-column placeholder';
-    coluna.innerHTML = `
-      <button class="btn-add-comparison" onclick="showVehicleSelector(${i})">
-        <i data-lucide="plus-circle"></i>
-        <span>Adicionar <br>${i + 1}º carro</span>
-      </button>
-    `;
-    return coluna;
+    return `
+      <div class="comparison-item-column placeholder">
+        <button type="button" class="btn-add-comparison" onclick="showVehicleSelector(${i})">
+          <i data-lucide="plus-circle"></i>
+          <span>Adicionar <br>${i + 1}º carro</span>
+        </button>
+      </div>`;
   }
 
-  // Grade no formato do Diego: coluna de nomes à esquerda e uma coluna por carro, com 3 espaços.
-  function renderComparisonSlots() {
+  // Grade do Diego: coluna de nomes à esquerda e 3 espaços, um por carro.
+  function renderGrade() {
     if (!comparisonGrid) return;
-    const antiga = document.querySelector('.comparison-table-section');
-    if (antiga) antiga.remove();
-    comparisonGrid.innerHTML = '';
+    const carros = compareVehicles.slice(0, 3);
+    const visivel = (rotulo) => !criteriosDesligados.has(rotulo) && temDado(rotulo, carros);
+    const linhas = especificacoes({}).map((s) => s.rotulo).filter(visivel);
+    const comItens = visivel(ITENS);
+    const celulasDe = (rotulo) => carros.map((v) => especificacoes(v).find((s) => s.rotulo === rotulo));
 
-    const cards = compareVehicles.slice(0, 3);
-    if (cards.length === 0) {
-      comparisonGrid.appendChild(colunaVazia(0));
-      if (window.lucide) lucide.createIcons();
-      return;
-    }
+    const nomes = `
+      <div class="comparison-labels">
+        <div class="label-spacer"></div>
+        ${linhas.map((r) => `<div class="criteria-label">${r}</div>`).join('')}
+        ${comItens ? `<div class="criteria-label linha-itens">${ITENS}</div>` : ''}
+      </div>`;
 
-    const linhas = cards.map(especificacoes);
-    const destaques = destaquesDe(linhas);
+    const colunas = carros.map((v, i) => {
+      const foto = fotoDo(v);
+      const valores = linhas.map((rotulo) => {
+        const celulas = celulasDe(rotulo);
+        const destaque = destacados(celulas).includes(i);
+        return `<div class="item-value${destaque ? ' highlight' : ''}" data-label="${rotulo}">${celulas[i].valor ? escaparTexto(celulas[i].valor) : 'N/A'}</div>`;
+      }).join('');
+      const itens = itensDo(v);
+      const lista = !comItens ? '' : `
+        <div class="item-value item-lista" data-label="${ITENS}">
+          ${itens.length ? `<ul>${itens.map((x) => `<li>${escaparTexto(x)}</li>`).join('')}</ul>` : 'N/A'}
+        </div>`;
+      return `
+        <div class="comparison-item-column" data-vehicle-id="${v.id}">
+          <div class="item-header">
+            <button type="button" class="btn-change-item" title="Mudar veículo" onclick="showVehicleSelector(${i})">
+              <i data-lucide="refresh-cw"></i>
+            </button>
+            <div class="item-img">
+              <img src="${foto.url}" alt="${escaparTexto(nomeDo(v))}" onerror="this.onerror=null;this.src='${foto.reserva}'">
+            </div>
+            <h4>${escaparTexto(nomeDo(v))}</h4>
+          </div>
+          ${valores}
+          ${lista}
+        </div>`;
+    }).join('');
 
-    const nomes = document.createElement('div');
-    nomes.className = 'comparison-labels';
-    nomes.innerHTML = '<div class="label-spacer"></div>' +
-      linhas[0].map((s) => `<div class="criteria-label">${s.rotulo}</div>`).join('') +
-      '<div class="criteria-label">Itens</div>';
-    comparisonGrid.appendChild(nomes);
+    let vazias = '';
+    for (let i = carros.length; i < 3; i++) vazias += colunaVazia(i);
+    comparisonGrid.innerHTML = nomes + colunas + vazias;
+  }
 
-    cards.forEach((v, i) => comparisonGrid.appendChild(colunaDoCarro(v, linhas[i], destaques, i)));
-    for (let i = cards.length; i < 3; i++) comparisonGrid.appendChild(colunaVazia(i));
-
+  function renderComparisonSlots() {
+    renderSelecao();
+    renderCriterios();
+    renderGrade();
     if (window.lucide) lucide.createIcons();
   }
+
+  async function recarregarComparacao() {
+    compareVehicles = await CompareManager.getCompareVehicles();
+    renderComparisonSlots();
+  }
+
+  window.alternarCriterio = function (rotulo) {
+    if (criteriosDesligados.has(rotulo)) criteriosDesligados.delete(rotulo);
+    else criteriosDesligados.add(rotulo);
+    renderComparisonSlots();
+  };
+
+  window.alternarSelecao = async function (vehicleId) {
+    const resultado = CompareManager.toggle(vehicleId);
+    if (!resultado.inCompare && /Máximo/.test(resultado.message || '')) {
+      window.alert(`${resultado.message}. Tire um da comparação para escolher outro.`);
+    }
+    await recarregarComparacao();
+  };
 
   function addCompareTableStyles() {
     if (document.getElementById('compare-table-styles')) return;
@@ -423,25 +503,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Espaço já ocupado troca o carro no mesmo lugar; espaço vazio acrescenta.
   window.selectVehicleForCompare = async function(vehicleId, slotIndex) {
-    const result = CompareManager.add(vehicleId);
-    if (result.success) {
-      // Reload compare vehicles
-      compareVehicles = await CompareManager.getCompareVehicles();
-      renderComparisonSlots();
+    const lista = CompareManager.getCompareList();
+    if (slotIndex < lista.length) {
+      lista[slotIndex] = vehicleId;
+      CompareManager.saveCompareList(lista);
+    } else {
+      CompareManager.add(vehicleId);
     }
+    await recarregarComparacao();
     hideVehicleSelector();
-  };
-
-  window.removeFromCompare = async function(vehicleId) {
-    CompareManager.remove(vehicleId);
-    compareVehicles = await CompareManager.getCompareVehicles();
-    renderComparisonSlots();
-    
-    // Remove table if less than 2 vehicles
-    if (compareVehicles.length < 2) {
-      const tableSection = document.querySelector('.comparison-table-section');
-      if (tableSection) tableSection.innerHTML = '';
-    }
   };
 });

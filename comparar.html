@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparar Veículos | CarInsight</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="comparar-layout.css">
     <link rel="icon" type="image/png" href="assets/car-insight-icon.png">
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -97,17 +96,6 @@
                             <li>Adicione-os aqui nos espaços vazios clicando no botão de adicionar.</li>
                             <li>Destacamos o melhor valor em preço, quilometragem e ano.</li>
                         </ul>
-
-                        <div
-                            style="margin-top: 32px; padding: 20px; background: #fff1f2; border-radius: 12px; border: 1px solid #fecdd3;">
-                            <h4 style="color: #be123c; margin-bottom: 8px; display:flex; gap:8px; align-items:center;">
-                                <i data-lucide="alert-circle" style="width:18px;"></i> Importante
-                            </h4>
-                            <p style="font-size: 0.9rem; color: #881337; margin: 0; line-height: 1.5;">
-                                Só é possível comparar veículos de categorias similares (ex: SUV com SUV) para um
-                                resultado justo.
-                            </p>
-                        </div>
                     </div>
                 </aside>
 
@@ -115,7 +103,23 @@
                 <main class="results-main">
 
                     <!-- Selection Section -->
+                    <section class="saved-selection-section">
+                        <div class="section-header">
+                            <h2>Meus Carros Salvos</h2>
+                            <p>Selecione até 3 veículos para comparar lado a lado</p>
+                        </div>
+                        <div class="saved-selection-grid"></div>
+                    </section>
+
                     <!-- Criteria Section -->
+                    <section class="comparison-criteria-section">
+                        <div class="criteria-header">
+                            <h3>Critérios de Comparação</h3>
+                            <p>Ajuste os filtros para focar no que importa para sua decisão:</p>
+                        </div>
+                        <div class="criteria-tags"></div>
+                    </section>
+
                     <!-- Comparison Grid -->
                     <div class="comparison-grid-modern"></div>
                 </main>
