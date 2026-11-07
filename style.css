@@ -8343,3 +8343,20 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
   line-height: 1.4;
   color: #6b7280;
 }
+
+/* Nas fotos da loja o carro fica na parte de baixo e o letreiro em cima. */
+.main-image img {
+  object-position: center bottom;
+}
+
+/* Sem isto a foto cresce além da altura da galeria e é cortada embaixo, sem enquadrar o carro. */
+@media (min-width: 1025px) {
+  .gallery-container {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .side-images {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    min-height: 0;
+  }
+}

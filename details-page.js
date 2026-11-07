@@ -186,17 +186,10 @@
     }
   }
 
-  // WhatsApp da vendedora final: o clique abre a conversa direto, com o carro na mensagem.
-  const WHATSAPP_VENDEDOR = '5511949105033';
-
   function wireSellerButton(vehicle) {
     const btn = document.querySelector('.btn-card-action-whats');
     if (!btn || !vehicle) return;
-    const nome = [vehicle.make, vehicle.model, vehicle.version, vehicle.yearModel]
-      .filter(Boolean)
-      .join(' ');
-    const texto = `Olá! Vi o ${nome} no site CarInsight e quero mais informações.`;
-    btn.setAttribute('href', `https://wa.me/${WHATSAPP_VENDEDOR}?text=${encodeURIComponent(texto)}`);
+    btn.setAttribute('href', linkDoVendedor(vehicle));
     btn.setAttribute('target', '_blank');
     btn.setAttribute('rel', 'noopener');
   }

@@ -236,6 +236,26 @@ const CarInsightAPI = {
   },
 
   // ==================== INTERNAL ====================
+  // Troca a foto original, que traz o telefone da loja, pela cópia recortada. Foto sem cópia segue a original.
+  _trocarFotos(dados) {
+    const fotos = window.FotosRecortadas;
+    if (!fotos) return dados;
+    const nomes = new Set(fotos.nomes);
+    const visitar = (valor) => {
+      if (!valor || typeof valor !== 'object') return;
+      Object.keys(valor).forEach((chave) => {
+        const item = valor[chave];
+        if (typeof item === 'string' && item.startsWith(fotos.origem) && nomes.has(item.slice(fotos.origem.length))) {
+          valor[chave] = fotos.destino + item.slice(fotos.origem.length);
+        } else {
+          visitar(item);
+        }
+      });
+    };
+    visitar(dados);
+    return dados;
+  },
+
   async _fetch(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
@@ -272,7 +292,7 @@ const CarInsightAPI = {
         throw new Error(error.message || `HTTP ${response.status}`);
       }
 
-      return response.json();
+      return this._trocarFotos(await response.json());
     } catch (error) {
       console.error(`❌ API Error [${endpoint}]:`, error.message);
       throw error;
