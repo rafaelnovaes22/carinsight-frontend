@@ -93,6 +93,17 @@ test.describe('salvar e comparar', () => {
     expect(await page.evaluate(() => localStorage.getItem('carinsight_compare'))).toContain('a2');
   });
 
+  test('na busca: Conversar com vendedor abre o WhatsApp 5033 com o carro, ao lado de Saiba mais', async ({ page }) => {
+    await preparar(page);
+    await page.goto('/buscando-carro.html');
+    const conversar = page.locator('.btn-check-availability');
+    await expect(conversar).toHaveCount(3, { timeout: 10000 });
+    const href = await conversar.first().getAttribute('href');
+    expect(href).toMatch(/^https:\/\/wa\.me\/5511949105033\?text=/);
+    expect(decodeURIComponent(href ?? '')).toContain('ALFA');
+    await expect(page.locator('.btn-card-action').first()).toBeVisible();
+  });
+
   test('desmarcar tira o carro da lista e o botão volta ao texto normal', async ({ page }) => {
     await preparar(page);
     await page.goto('/detalhes-carro.html?id=a1');

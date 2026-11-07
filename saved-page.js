@@ -1,3 +1,10 @@
+// Conversa com o vendedor: abre o WhatsApp do número final 5033 com o carro na mensagem.
+function linkVendedor(vehicle) {
+  const nome = [vehicle.make, vehicle.model, vehicle.version, vehicle.yearModel].filter(Boolean).join(' ');
+  const texto = `Olá! Vi o ${nome} no site CarInsight e quero mais informações.`;
+  return `https://wa.me/5511949105033?text=${encodeURIComponent(texto)}`;
+}
+
 /**
  * CarInsight Saved Page Integration
  * Handles meus-salvos.html functionality
@@ -123,9 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           </div>
-          <button class="btn-check-availability" onclick="openChat('${vehicle.id}')">
+          <a class="btn-check-availability" href="${linkVendedor(vehicle)}" target="_blank" rel="noopener">
             <i data-lucide="message-circle"></i> Conversar com vendedor
-          </button>
+          </a>
         </div>
       </div>
       <div class="card-details-toggle" onclick="toggleDetails(this)">
