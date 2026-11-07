@@ -157,19 +157,19 @@ const CompareManager = {
     
     criteria.forEach(key => {
       let bestIndex = 0;
-      let bestValue = vehicles[0][key];
+      let bestValue = Number(vehicles[0][key]);
       
       vehicles.forEach((v, i) => {
         if (key === 'price' || key === 'mileage') {
           // Lower is better
-          if (v[key] < bestValue) {
-            bestValue = v[key];
+          if (Number(v[key]) < bestValue) {
+            bestValue = Number(v[key]);
             bestIndex = i;
           }
         } else if (key === 'yearModel') {
           // Higher is better
-          if (v[key] > bestValue) {
-            bestValue = v[key];
+          if (Number(v[key]) > bestValue) {
+            bestValue = Number(v[key]);
             bestIndex = i;
           }
         }

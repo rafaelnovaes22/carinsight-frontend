@@ -13,7 +13,7 @@ const carro = (id: string, make: string, model: string, price: number) => ({
   version: null,
   yearModel: 2020,
   yearFab: 2020,
-  price,
+  price: String(price),
   mileage: 40000,
   condition: 'USED',
   status: 'AVAILABLE',
@@ -27,7 +27,7 @@ const carro = (id: string, make: string, model: string, price: number) => ({
 
 const ESTOQUE = [
   carro('a1', 'MARCA', 'ALFA', 50000),
-  carro('a2', 'MARCA', 'BETA', 60000),
+  carro('a2', 'MARCA', 'BETA', 120000),
   carro('a3', 'MARCA', 'GAMA', 70000),
 ];
 
@@ -68,6 +68,10 @@ test.describe('salvar e comparar', () => {
     expect(texto).not.toContain('GAMA');
     // Combustível e câmbio vêm de technicalSpecs e não podem aparecer como N/A.
     expect(texto).toContain('Flex');
+    // Preço é texto na API: o check tem que ir para o mais barato, não para o que vem primeiro em ordem de texto.
+    const linhaPreco = page.locator('tr', { has: page.locator('td.spec-label', { hasText: 'Preço' }) });
+    await expect(linhaPreco.locator('td').nth(1)).toContainText('✓');
+    await expect(linhaPreco.locator('td').nth(2)).not.toContainText('✓');
     expect(texto).toContain('Manual');
   });
 
