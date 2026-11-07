@@ -29,6 +29,7 @@ const ESTOQUE = [
   carro('a1', 'MARCA', 'ALFA', 50000),
   carro('a2', 'MARCA', 'BETA', 120000),
   carro('a3', 'MARCA', 'GAMA', 70000),
+  carro('a4', 'MARCA', 'DELTA', 80000),
 ];
 
 async function preparar(page: Page) {
@@ -50,7 +51,7 @@ test.describe('salvar e comparar', () => {
   test('nos cards: salvar e comparar dois carros, e a tabela aparece na página Comparar', async ({ page }) => {
     await preparar(page);
     await page.goto('/veiculos.html');
-    await expect(page.locator('.vehicle-actions')).toHaveCount(3, { timeout: 10000 });
+    await expect(page.locator('.vehicle-actions')).toHaveCount(4, { timeout: 10000 });
 
     await page.locator('.vehicle-actions').nth(0).locator('[data-acao="salvar"]').click();
     await expect(page.locator('.vehicle-actions').nth(0).locator('[data-acao="salvar"]')).toHaveClass(/ativo/);
@@ -97,11 +98,41 @@ test.describe('salvar e comparar', () => {
     await preparar(page);
     await page.goto('/buscando-carro.html');
     const conversar = page.locator('.btn-check-availability');
-    await expect(conversar).toHaveCount(3, { timeout: 10000 });
+    await expect(conversar).toHaveCount(4, { timeout: 10000 });
     const href = await conversar.first().getAttribute('href');
     expect(href).toMatch(/^https:\/\/wa\.me\/5511949105033\?text=/);
     expect(decodeURIComponent(href ?? '')).toContain('ALFA');
     await expect(page.locator('.btn-card-action').first()).toBeVisible();
+  });
+
+  test('salvar é ilimitado; comparar aceita 3 e salva o carro ao comparar', async ({ page }) => {
+    await preparar(page);
+    await page.goto('/veiculos.html');
+    await expect(page.locator('.vehicle-actions')).toHaveCount(4, { timeout: 10000 });
+    const bloco = (i: number) => page.locator('.vehicle-actions').nth(i);
+    const lista = (chave: string) => page.evaluate((c) => JSON.parse(localStorage.getItem(c) || '[]'), chave);
+
+    // Comparar sem salvar antes: o carro é salvo junto.
+    await bloco(0).locator('[data-acao="comparar"]').click();
+    expect(await lista('carinsight_favorites')).toContain('a1');
+    expect(await lista('carinsight_compare')).toEqual(['a1']);
+
+    // Salvar não tem limite: os 4 carros entram nos salvos.
+    for (const i of [1, 2, 3]) await bloco(i).locator('[data-acao="salvar"]').click();
+    expect((await lista('carinsight_favorites')).length).toBe(4);
+
+    // Comparar aceita até 3.
+    await bloco(1).locator('[data-acao="comparar"]').click();
+    await bloco(2).locator('[data-acao="comparar"]').click();
+    expect(await lista('carinsight_compare')).toEqual(['a1', 'a2', 'a3']);
+
+    // O 4º comparar é recusado com aviso, e a comparação não muda.
+    const avisos: string[] = [];
+    page.on('dialog', async (d) => { avisos.push(d.message()); await d.accept(); });
+    await bloco(3).locator('[data-acao="comparar"]').click();
+    await expect.poll(() => avisos.length).toBe(1);
+    expect(avisos[0]).toContain('Máximo de 3');
+    expect(await lista('carinsight_compare')).toEqual(['a1', 'a2', 'a3']);
   });
 
   test('desmarcar tira o carro da lista e o botão volta ao texto normal', async ({ page }) => {

@@ -89,9 +89,15 @@
       FavoritesManager.toggle(id);
     }
     if (botao.getAttribute('data-acao') === 'comparar' && window.CompareManager) {
-      var resultado = CompareManager.toggle(id);
-      if (!resultado.inCompare && /Máximo/.test(resultado.message || '')) {
-        window.alert(resultado.message);
+      var jaComparando = naComparacao(id);
+      if (!jaComparando && CompareManager.getCompareList().length >= CompareManager.MAX_VEHICLES) {
+        window.alert('Máximo de ' + CompareManager.MAX_VEHICLES + ' veículos para comparar. Tire um da comparação para escolher outro.');
+      } else {
+        // Comparar exige o carro salvo: salva antes, se ainda não estiver salvo.
+        if (!jaComparando && window.FavoritesManager && !salvo(id)) {
+          FavoritesManager.add(id);
+        }
+        CompareManager.toggle(id);
       }
     }
     atualizar(id);

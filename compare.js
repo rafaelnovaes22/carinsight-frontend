@@ -14,7 +14,12 @@ const CompareManager = {
   getCompareList() {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
+      const lista = stored ? JSON.parse(stored) : [];
+      // Só se compara carro salvo: se o carro sair dos salvos, sai da comparação.
+      if (window.FavoritesManager) {
+        return lista.filter((id) => FavoritesManager.isFavorite(id));
+      }
+      return lista;
     } catch (e) {
       console.error('Error reading compare list:', e);
       return [];
@@ -43,6 +48,10 @@ const CompareManager = {
     
     if (list.includes(vehicleId)) {
       return { success: false, message: 'Veículo já está na comparação' };
+    }
+
+    if (window.FavoritesManager && !FavoritesManager.isFavorite(vehicleId)) {
+      return { success: false, message: 'Salve o carro antes de compará-lo' };
     }
     
     if (list.length >= this.MAX_VEHICLES) {
