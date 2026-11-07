@@ -117,11 +117,11 @@
                             <div class="price-inputs">
                                 <div class="price-input-group">
                                     <label>Mín</label>
-                                    <input type="text" value="R$ 20.000">
+                                    <input type="text" inputmode="numeric">
                                 </div>
                                 <div class="price-input-group">
                                     <label>Máx</label>
-                                    <input type="text" value="R$ 150.000">
+                                    <input type="text" inputmode="numeric">
                                 </div>
                             </div>
                             <div class="range-slider-container">
@@ -345,21 +345,7 @@
                         <i data-lucide="sliders-horizontal" class="w-16"></i> Filtros
                     </button>
                 </div>
-                <!-- Mockup Active Filters -->
-                <div class="active-filters-scroll">
-                    <div class="active-filter-chip">
-                        Toyota <i data-lucide="x" class="w-12 cursor-pointer"></i>
-                    </div>
-                    <div class="active-filter-chip">
-                        2020 - 2024 <i data-lucide="x" class="w-12 cursor-pointer"></i>
-                    </div>
-                    <div class="active-filter-chip">
-                        Até R$ 180k <i data-lucide="x" class="w-12 cursor-pointer"></i>
-                    </div>
-                    <div class="active-filter-chip">
-                        Automático <i data-lucide="x" class="w-12 cursor-pointer"></i>
-                    </div>
-                </div>
+                <div class="active-filters-scroll"></div>
             </div>
         </div>
 
@@ -399,11 +385,11 @@
                     <div class="price-inputs">
                         <div class="price-input-group">
                             <label>Mín</label>
-                            <input type="text" value="R$ 20.000">
+                            <input type="text" inputmode="numeric">
                         </div>
                         <div class="price-input-group">
                             <label>Máx</label>
-                            <input type="text" value="R$ 150.000">
+                            <input type="text" inputmode="numeric">
                         </div>
                     </div>
                     <div class="range-slider-container">
@@ -658,6 +644,7 @@
 <script src="compare.js"></script>
 <script src="chat.js"></script>
 <script src="chat-ui.js"></script>
+<script src="filtros-busca.js"></script>
 <script src="search-page.js"></script>
     <script>
         // Init Icons

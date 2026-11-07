@@ -67,6 +67,24 @@
     return true;
   }
 
+  function setupFilterButtons() {
+    const input = document.querySelector('#search-form-id input[type="text"]');
+    const texto = () => (input ? input.value.trim() : '');
+    const irParaResultados = (filtro) => {
+      const busca = FiltrosBusca.paraUrl({ ...FiltrosBusca.vazio(), q: texto(), ...filtro });
+      window.location.href = `buscando-carro.html${busca ? `?${busca}` : ''}`;
+    };
+
+    // As janelas de filtro fecham com uma animação curta antes de sair da página.
+    document.addEventListener('carinsight:filtro-home', (event) => {
+      setTimeout(() => irParaResultados(event.detail), 350);
+    });
+
+    // Mais Opções leva aos filtros completos da página de resultados.
+    const maisOpcoes = document.querySelector('.filter-btn.btn-plus');
+    if (maisOpcoes) maisOpcoes.addEventListener('click', () => irParaResultados({}));
+  }
+
   function setupSearchForm() {
     const form = document.getElementById('search-form-id');
     if (!form) return;
@@ -135,6 +153,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     setupSearchForm();
+    setupFilterButtons();
     loadShelves();
     updateFavoritesCount();
     window.addEventListener('authChange', updateFavoritesCount);

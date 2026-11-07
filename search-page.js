@@ -13,21 +13,16 @@ function linkVendedor(vehicle) {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🔍 Search Page loaded');
 
-  // Get search params from URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const searchQuery = urlParams.get('q') || '';
+  // Meus Salvos carrega este arquivo pelas funções globais do fim: a busca só roda nos resultados.
+  if (!document.querySelector('.filter-section')) return;
 
-  // Initialize filters state
-  const filters = {
-    query: searchQuery,
-    priceMin: null,
-    priceMax: null,
-    yearMin: null,
-    yearMax: null,
-    make: null,
-    bodyType: null,
-    condition: null,
-  };
+  // Filtros vindos da URL: botões da home, categorias e recarregar a página mantêm a busca.
+  const filters = FiltrosBusca.deUrl(window.location.search);
+  const searchQuery = filters.q;
+  let catalogo = null;
+  let ranking = null;
+  let textoDoRanking = null;
+  let controlesProntos = false;
 
   // DOM Elements
   const loadingScreen = document.getElementById('loading-screen');
@@ -46,53 +41,77 @@ document.addEventListener('DOMContentLoaded', () => {
   if (resultsSearchForm) {
     resultsSearchForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      const q = resultsSearchInput ? resultsSearchInput.value.trim() : '';
-      filters.query = q;
-      const url = new URL(window.location);
-      if (q) {
-        url.searchParams.set('q', q);
-      } else {
-        url.searchParams.delete('q');
-      }
-      window.history.replaceState({}, '', url);
+      filters.q = resultsSearchInput ? resultsSearchInput.value.trim() : '';
       showLoading();
       performSearch();
     });
   }
 
   // ==================== SEARCH ====================
+  async function carregarCatalogo() {
+    if (catalogo) return catalogo;
+    const carros = [];
+    let pagina = 1;
+    let totalPaginas = 1;
+    do {
+      const resposta = await CarInsightAPI.getVehicles({ limit: 100, page: pagina });
+      carros.push(...(resposta.data || resposta));
+      totalPaginas = (resposta.meta && resposta.meta.totalPages) || 1;
+      pagina += 1;
+    } while (pagina <= totalPaginas);
+    catalogo = carros;
+    return catalogo;
+  }
+
+  // A busca por texto ordena por relevância, mas não traz câmbio nem combustível: cruza com o catálogo.
+  async function carregarRanking() {
+    if (!filters.q) {
+      ranking = null;
+      textoDoRanking = null;
+      return;
+    }
+    if (textoDoRanking === filters.q) return;
+    textoDoRanking = filters.q;
+    try {
+      const resposta = await CarInsightAPI.search(filters.q, { limit: 100 });
+      ranking = resposta.data || resposta.results || resposta;
+    } catch (error) {
+      console.warn('Busca por texto indisponível; usando o nome do carro.', error);
+      ranking = null;
+    }
+  }
+
+  function carrosDaBusca() {
+    if (!filters.q) return catalogo;
+    if (Array.isArray(ranking)) {
+      const porId = new Map(catalogo.map((v) => [v.id, v]));
+      return ranking.map((v) => ({ ...v, ...(porId.get(v.id) || {}) }));
+    }
+    const palavras = FiltrosBusca.normalizar(filters.q).split(/\s+/);
+    return catalogo.filter((v) => {
+      const nome = FiltrosBusca.normalizar(v.title || `${v.make} ${v.model}`);
+      return palavras.every((p) => nome.includes(p));
+    });
+  }
+
+  function aplicar() {
+    const busca = FiltrosBusca.paraUrl(filters);
+    window.history.replaceState({}, '', `${window.location.pathname}${busca ? `?${busca}` : ''}`);
+    refletirFiltros();
+    const achados = carrosDaBusca().filter((v) => FiltrosBusca.atende(v, filters));
+    renderResults(achados, achados.length);
+    if (filters.estado && resultsCount) resultsCount.textContent += ` em ${filters.estado}`;
+  }
+
   async function performSearch() {
     try {
-      console.log('🔄 Searching with filters:', filters);
-
-      let results;
-      let totalCount = null;
-      if (filters.query) {
-        const response = await CarInsightAPI.search(filters.query, {
-          priceMin: filters.priceMin,
-          priceMax: filters.priceMax,
-          yearMin: filters.yearMin,
-          yearMax: filters.yearMax,
-          make: filters.make,
-          bodyType: filters.bodyType,
-          condition: filters.condition,
-          limit: 20,
-        });
-        results = response.data || response.results || response;
-        totalCount = response.meta?.total ?? null;
-      } else {
-        const response = await CarInsightAPI.getVehicles({
-          priceMin: filters.priceMin,
-          priceMax: filters.priceMax,
-          make: filters.make,
-          limit: 20,
-        });
-        results = response.data || response;
-        totalCount = response.meta?.total ?? null;
+      await carregarCatalogo();
+      await carregarRanking();
+      if (!controlesProntos) {
+        montarControles();
+        controlesProntos = true;
       }
-
-      console.log('✅ Search results:', results.length || results);
-      renderResults(results, totalCount);
+      aplicar();
     } catch (error) {
       console.error('❌ Search failed:', error);
       renderError(error.message);
@@ -279,131 +298,320 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==================== FILTER HANDLERS ====================
-  // Price filter
-  const priceInputs = document.querySelectorAll('.price-inputs input');
-  priceInputs.forEach((input, index) => {
-    input.addEventListener('change', () => {
-      const value = parseInt(input.value.replace(/\D/g, ''));
-      if (index === 0) filters.priceMin = value || null;
-      else filters.priceMax = value || null;
-      performSearch();
-    });
-  });
+  const { normalizar, CATEGORIAS } = FiltrosBusca;
 
-  // Checkboxes por título de seção (funciona nas sidebars desktop e mobile)
-  const BODY_TYPE_MAP = {
-    suv: 'suv',
-    sedan: 'sedan',
-    hatchback: 'hatch',
-    hatch: 'hatch',
-    picape: 'pickup',
-    pickup: 'pickup',
-    coupe: 'coupe',
-    minivan: 'minivan',
+  // Rótulo do filtro lateral -> onde ele guarda a escolha.
+  const CHECKS = {
+    novos: ['condicao', 'NEW'],
+    usados: ['condicao', 'USED'],
+    suv: ['carrocerias', 'suv'],
+    sedan: ['carrocerias', 'sedan'],
+    hatchback: ['carrocerias', 'hatch'],
+    picape: ['carrocerias', 'pickup'],
+    coupe: ['carrocerias', 'coupe'],
+    automatico: ['cambios', 'automatico'],
+    manual: ['cambios', 'manual'],
+    flex: ['combustiveis', 'flex'],
+    gasolina: ['combustiveis', 'gasolina'],
+    eletrico: ['combustiveis', 'eletrico'],
+    hibrido: ['combustiveis', 'hibrido'],
+    diesel: ['combustiveis', 'diesel'],
   };
-  const CONDITION_MAP = { novos: 'NEW', usados: 'USED', seminovos: 'USED' };
+  const ROTULOS_DE_LISTA = {
+    carrocerias: { suv: 'SUV', sedan: 'Sedan', hatch: 'Hatchback', pickup: 'Picape', coupe: 'Coupe' },
+    cambios: { automatico: 'Automático', manual: 'Manual' },
+    combustiveis: { flex: 'Flex', gasolina: 'Gasolina', eletrico: 'Elétrico', hibrido: 'Híbrido', diesel: 'Diesel' },
+  };
+  // Sem dado no estoque: filtrar esconderia carros sem dizer por quê. Voltam quando o dado existir.
+  const SECOES_SEM_DADO = ['Cor Exterior', 'Cor Interior', 'Tração'];
+  // Dependem de regra da plataforma ou de lei estadual: o site não afirma isso sem regra confirmada.
+  const CATEGORIAS_SEM_REGRA = ['cat-uber', 'cat-uber-black', 'cat-sem-ipva'];
 
-  function wireCheckboxSection(title, apply) {
-    document.querySelectorAll('.filter-section').forEach((section) => {
-      const h4 = section.querySelector('h4');
-      if (!h4 || h4.textContent.trim() !== title) return;
-      const inputs = section.querySelectorAll('.checkbox-item input[type="checkbox"]');
-      inputs.forEach((input) => {
-        input.addEventListener('change', () => {
-          const checkedLabels = Array.from(inputs)
-            .filter((el) => el.checked)
-            .map((el) =>
-              el
-                .closest('.checkbox-item')
-                .textContent.replace(/\(\d+\)/g, '')
-                .trim()
-                .toLowerCase(),
-            );
-          apply(checkedLabels);
-          performSearch();
-        });
-      });
+  const moeda = (valor) => `R$ ${Number(valor).toLocaleString('pt-BR')}`;
+  const digitos = (texto) => parseInt(String(texto).replace(/\D/g, ''), 10) || null;
+  const secoes = (titulo) =>
+    [...document.querySelectorAll('.filter-section')].filter((s) => {
+      const h4 = s.querySelector('h4');
+      return h4 && h4.textContent.trim() === titulo;
     });
-  }
+  const chaveDoCheck = (input) => {
+    const item = input.closest('.checkbox-item');
+    return normalizar(item ? item.textContent.replace(/\(\d+\)/g, '') : '');
+  };
+  const chaveDaCategoria = (botao) => {
+    const classe = [...botao.classList].find((c) => c.startsWith('cat-'));
+    return classe ? normalizar(classe.replace('cat-', '')) : null;
+  };
 
-  wireCheckboxSection('Tipo de Carroceria', (labels) => {
-    const mapped = labels.map((l) => BODY_TYPE_MAP[l]).filter(Boolean);
-    filters.bodyType = mapped[0] || null; // API filtra um tipo por vez
-  });
+  let limitesDePreco = { min: 0, max: 0 };
 
-  wireCheckboxSection('Condição', (labels) => {
-    const mapped = [...new Set(labels.map((l) => CONDITION_MAP[l]).filter(Boolean))];
-    filters.condition = mapped.length === 1 ? mapped[0] : null; // ambos = sem filtro
-  });
-
-  // Marca e Ano: troca os select-boxes decorativos por selects reais
-  const BRANDS = [
-    'Toyota', 'Honda', 'Volkswagen', 'Fiat', 'Chevrolet',
-    'Ford', 'Hyundai', 'Jeep', 'Nissan', 'Renault',
-  ];
-  const YEARS = [];
-  for (let y = new Date().getFullYear(); y >= 2010; y--) YEARS.push(y);
-
-  function replaceSelectBox(sectionTitle, groupLabel, options, placeholder, onChange) {
-    document.querySelectorAll('.filter-section').forEach((section) => {
-      const h4 = section.querySelector('h4');
-      if (!h4 || h4.textContent.trim() !== sectionTitle) return;
-      section.querySelectorAll('.filter-group').forEach((group) => {
-        const label = group.querySelector('label');
-        const box = group.querySelector('.select-box');
-        if (!label || !box || label.textContent.trim().toUpperCase() !== groupLabel.toUpperCase()) return;
-
+  function criarSelect(secao, rotulo, filtro, opcoes, vazioTexto) {
+    [].concat(secao).flatMap(secoes).forEach((s) => {
+      s.querySelectorAll('.filter-group').forEach((grupo) => {
+        const label = grupo.querySelector('label');
+        const caixa = grupo.querySelector('.select-box');
+        if (!label || !caixa || normalizar(label.textContent) !== normalizar(rotulo)) return;
         const select = document.createElement('select');
         select.className = 'select-box';
         select.style.cssText = 'width:100%;cursor:pointer;';
-        select.innerHTML =
-          `<option value="">${placeholder}</option>` +
-          options.map((o) => `<option value="${String(o).toLowerCase()}">${o}</option>`).join('');
-        select.addEventListener('change', () => {
-          onChange(select.value || null);
-          performSearch();
-        });
-        box.replaceWith(select);
+        select.dataset.filtro = filtro;
+        select.dataset.vazio = vazioTexto;
+        caixa.replaceWith(select);
+      });
+    });
+    preencherSelect(filtro, opcoes);
+  }
+
+  function preencherSelect(filtro, opcoes) {
+    document.querySelectorAll(`select[data-filtro="${filtro}"]`).forEach((select) => {
+      select.replaceChildren(new Option(select.dataset.vazio, ''), ...opcoes.map((o) => new Option(o, normalizar(o))));
+    });
+  }
+
+  function valorDoSelect(filtro, valor) {
+    document.querySelectorAll(`select[data-filtro="${filtro}"]`).forEach((select) => {
+      const alvo = valor ? normalizar(valor) : '';
+      // Marca da home que não está no estoque continua visível, com zero resultado.
+      if (alvo && ![...select.options].some((o) => o.value === alvo)) select.add(new Option(String(valor), alvo));
+      select.value = alvo;
+    });
+  }
+
+  const ordenar = (lista) => [...new Set(lista.filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), 'pt-BR'));
+
+  function modelosDaMarca() {
+    return ordenar(
+      catalogo
+        .filter((v) => !filters.marca || normalizar(v.make) === normalizar(filters.marca))
+        .map((v) => v.model),
+    );
+  }
+
+  function montarControles() {
+    SECOES_SEM_DADO.forEach((titulo) => secoes(titulo).forEach((s) => { s.style.display = 'none'; }));
+    CATEGORIAS_SEM_REGRA.forEach((classe) => {
+      document.querySelectorAll(`.${classe}`).forEach((b) => { b.style.display = 'none'; });
+    });
+
+    // O painel do celular chama a mesma seção de outro nome.
+    const SECAO_MARCA = ['Marca e Modelo', 'Detalhes do Veículo'];
+    criarSelect(SECAO_MARCA, 'Marca', 'marca', ordenar(catalogo.map((v) => v.make)), 'Todas as marcas');
+    criarSelect(SECAO_MARCA, 'Modelo', 'modelo', modelosDaMarca(), 'Todos os modelos');
+    const anos = ordenar(catalogo.map((v) => v.yearModel)).reverse();
+    criarSelect('Ano do Modelo', 'De', 'anoMin', anos, 'Qualquer');
+    criarSelect('Ano do Modelo', 'Até', 'anoMax', anos, 'Qualquer');
+
+    // Localização: o texto fixo do desenho parecia filtro aplicado, e não há coordenadas para medir distância.
+    document.querySelectorAll('.distance-slider').forEach((el) => { el.style.display = 'none'; });
+    document.querySelectorAll('.location-box').forEach((caixa) => {
+      const select = document.createElement('select');
+      select.dataset.filtro = 'estado';
+      select.dataset.vazio = 'Todos os estados';
+      select.setAttribute('aria-label', 'Estado');
+      select.style.cssText = 'flex:1;min-width:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;';
+      const texto = caixa.querySelector('span');
+      if (texto) texto.replaceWith(select);
+    });
+    preencherSelect('estado', FiltrosBusca.ESTADOS_COM_LOJA);
+
+    const precos = catalogo.map((v) => Number(v.price)).filter((p) => p > 0);
+    limitesDePreco = precos.length
+      ? { min: Math.floor(Math.min(...precos) / 1000) * 1000, max: Math.ceil(Math.max(...precos) / 1000) * 1000 }
+      : limitesDePreco;
+
+    document.querySelectorAll('.price-inputs').forEach((caixa) => {
+      const [min, max] = caixa.querySelectorAll('input');
+      if (min) min.placeholder = moeda(limitesDePreco.min);
+      if (max) max.placeholder = moeda(limitesDePreco.max);
+    });
+    document.querySelectorAll('.range-slider-container').forEach((faixa) => {
+      faixa.querySelectorAll('.left-0, .left-70, .w-70-pct').forEach((el) => el.classList.remove('left-0', 'left-70', 'w-70-pct'));
+      ['precoMin', 'precoMax'].forEach((filtro) => {
+        const input = document.createElement('input');
+        input.type = 'range';
+        input.className = 'faixa-preco';
+        input.dataset.filtro = filtro;
+        input.min = limitesDePreco.min;
+        input.max = limitesDePreco.max;
+        input.step = 1000;
+        input.setAttribute('aria-label', filtro === 'precoMin' ? 'Preço mínimo' : 'Preço máximo');
+        faixa.appendChild(input);
       });
     });
   }
 
-  replaceSelectBox('Marca e Modelo', 'Marca', BRANDS, 'Todas as marcas', (v) => {
-    filters.make = v;
-  });
-  replaceSelectBox('Ano do Modelo', 'DE', YEARS, 'Qualquer', (v) => {
-    filters.yearMin = v ? parseInt(v) : null;
-  });
-  replaceSelectBox('Ano do Modelo', 'ATÉ', YEARS, 'Qualquer', (v) => {
-    filters.yearMax = v ? parseInt(v) : null;
-  });
+  function montarEtiquetas() {
+    const etiquetas = [];
+    const soltar = (chave) => () => { filters[chave] = null; };
+    if (filters.estado) etiquetas.push([filters.estado, soltar('estado')]);
+    if (filters.categoria) etiquetas.push([CATEGORIAS[filters.categoria].rotulo, soltar('categoria')]);
+    if (filters.condicao) etiquetas.push([filters.condicao === 'NEW' ? 'Novos' : 'Usados', soltar('condicao')]);
+    if (filters.marca) etiquetas.push([filters.marca, () => { filters.marca = null; filters.modelo = null; }]);
+    if (filters.modelo) etiquetas.push([filters.modelo, soltar('modelo')]);
+    if (filters.precoMin) etiquetas.push([`De ${moeda(filters.precoMin)}`, soltar('precoMin')]);
+    if (filters.precoMax) etiquetas.push([`Até ${moeda(filters.precoMax)}`, soltar('precoMax')]);
+    if (filters.anoMin) etiquetas.push([`A partir de ${filters.anoMin}`, soltar('anoMin')]);
+    if (filters.anoMax) etiquetas.push([`Até ${filters.anoMax}`, soltar('anoMax')]);
+    Object.keys(ROTULOS_DE_LISTA).forEach((lista) => {
+      filters[lista].forEach((valor) => {
+        etiquetas.push([ROTULOS_DE_LISTA[lista][valor] || valor, () => {
+          filters[lista] = filters[lista].filter((v) => v !== valor);
+        }]);
+      });
+    });
 
-  // Clear filters button
-  const clearBtn = document.querySelector('.btn-clear');
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      filters.priceMin = null;
-      filters.priceMax = null;
-      filters.yearMin = null;
-      filters.yearMax = null;
-      filters.make = null;
-      filters.bodyType = null;
-      filters.condition = null;
-      document
-        .querySelectorAll('.filter-section .checkbox-item input:checked')
-        .forEach((el) => (el.checked = false));
-      document
-        .querySelectorAll('.filter-section select.select-box')
-        .forEach((el) => (el.value = ''));
-      performSearch();
+    document.querySelectorAll('.active-filters-scroll').forEach((caixa) => {
+      caixa.replaceChildren(...etiquetas.map(([texto, remover]) => {
+        const etiqueta = document.createElement('button');
+        etiqueta.type = 'button';
+        etiqueta.className = 'active-filter-chip';
+        etiqueta.textContent = texto;
+        const icone = document.createElement('i');
+        icone.dataset.lucide = 'x';
+        icone.className = 'w-12 cursor-pointer';
+        etiqueta.appendChild(icone);
+        etiqueta.addEventListener('click', () => {
+          remover();
+          preencherSelect('modelo', modelosDaMarca());
+          aplicar();
+        });
+        return etiqueta;
+      }));
     });
   }
+
+  // Desenha o estado atual nos dois painéis de filtros, o do computador e o do celular.
+  function refletirFiltros() {
+    document.querySelectorAll('.filter-section .checkbox-item input[type="checkbox"]').forEach((input) => {
+      const alvo = CHECKS[chaveDoCheck(input)];
+      if (!alvo) return;
+      const [grupo, valor] = alvo;
+      input.checked = grupo === 'condicao' ? !filters.condicao || filters.condicao === valor : filters[grupo].includes(valor);
+    });
+
+    valorDoSelect('estado', filters.estado);
+    valorDoSelect('marca', filters.marca);
+    valorDoSelect('modelo', filters.modelo);
+    valorDoSelect('anoMin', filters.anoMin);
+    valorDoSelect('anoMax', filters.anoMax);
+
+    document.querySelectorAll('.price-inputs').forEach((caixa) => {
+      const [min, max] = caixa.querySelectorAll('input');
+      if (min) min.value = filters.precoMin ? moeda(filters.precoMin) : '';
+      if (max) max.value = filters.precoMax ? moeda(filters.precoMax) : '';
+    });
+    const extensao = limitesDePreco.max - limitesDePreco.min || 1;
+    const posicao = (valor) => Math.min(100, Math.max(0, ((valor - limitesDePreco.min) / extensao) * 100));
+    const esquerda = posicao(filters.precoMin || limitesDePreco.min);
+    const direita = posicao(filters.precoMax || limitesDePreco.max);
+    document.querySelectorAll('.range-slider-container').forEach((faixa) => {
+      const [bolaMin, bolaMax] = faixa.querySelectorAll('.range-thumb');
+      const preenchido = faixa.querySelector('.range-fill');
+      if (bolaMin) bolaMin.style.left = `${esquerda}%`;
+      if (bolaMax) bolaMax.style.left = `${direita}%`;
+      if (preenchido) {
+        preenchido.style.left = `${esquerda}%`;
+        preenchido.style.width = `${direita - esquerda}%`;
+      }
+      faixa.querySelectorAll('.faixa-preco').forEach((input) => {
+        input.value = filters[input.dataset.filtro] || (input.dataset.filtro === 'precoMin' ? limitesDePreco.min : limitesDePreco.max);
+      });
+    });
+
+    document.querySelectorAll('.category-filter-btn').forEach((botao) => {
+      const chave = chaveDaCategoria(botao);
+      botao.classList.toggle('active', Boolean(chave) && chave === filters.categoria);
+    });
+
+    montarEtiquetas();
+    if (window.lucide) lucide.createIcons();
+  }
+
+  document.addEventListener('change', (event) => {
+    const alvo = event.target;
+    if (alvo.matches('.filter-section .checkbox-item input[type="checkbox"]')) {
+      const mapa = CHECKS[chaveDoCheck(alvo)];
+      if (!mapa) return;
+      const [grupo, valor] = mapa;
+      if (grupo === 'condicao') {
+        const marcados = [...alvo.closest('.filter-section').querySelectorAll('input[type="checkbox"]')]
+          .filter((i) => i.checked)
+          .map((i) => CHECKS[chaveDoCheck(i)][1]);
+        filters.condicao = marcados.length === 1 ? marcados[0] : null;
+      } else if (alvo.checked) {
+        filters[grupo] = [...new Set([...filters[grupo], valor])];
+      } else {
+        filters[grupo] = filters[grupo].filter((v) => v !== valor);
+      }
+      aplicar();
+      return;
+    }
+    if (alvo.matches('.price-inputs input')) {
+      const entradas = [...alvo.closest('.price-inputs').querySelectorAll('input')];
+      filters[entradas.indexOf(alvo) === 0 ? 'precoMin' : 'precoMax'] = digitos(alvo.value);
+      aplicar();
+      return;
+    }
+    if (alvo.matches('select[data-filtro]')) {
+      const filtro = alvo.dataset.filtro;
+      if (filtro === 'anoMin' || filtro === 'anoMax') {
+        filters[filtro] = alvo.value ? Number(alvo.value) : null;
+      } else {
+        filters[filtro] = alvo.value ? alvo.options[alvo.selectedIndex].text : null;
+      }
+      if (filtro === 'marca') {
+        filters.modelo = null;
+        preencherSelect('modelo', modelosDaMarca());
+      }
+      aplicar();
+    }
+  });
+
+  // A faixa de preço filtra enquanto arrasta, sem uma ponta passar da outra.
+  document.addEventListener('input', (event) => {
+    const alvo = event.target;
+    if (!alvo.matches('.faixa-preco')) return;
+    const valor = Number(alvo.value);
+    if (alvo.dataset.filtro === 'precoMin') {
+      const teto = filters.precoMax || limitesDePreco.max;
+      const novo = Math.min(valor, teto);
+      filters.precoMin = novo > limitesDePreco.min ? novo : null;
+    } else {
+      const piso = filters.precoMin || limitesDePreco.min;
+      const novo = Math.max(valor, piso);
+      filters.precoMax = novo < limitesDePreco.max ? novo : null;
+    }
+    aplicar();
+  });
+
+  document.addEventListener('click', (event) => {
+    const categoria = event.target.closest('.category-filter-btn');
+    if (categoria) {
+      const chave = chaveDaCategoria(categoria);
+      if (!CATEGORIAS[chave]) return;
+      filters.categoria = filters.categoria === chave ? null : chave;
+      aplicar();
+      return;
+    }
+    if (event.target.closest('.btn-clear')) {
+      const texto = filters.q;
+      Object.assign(filters, FiltrosBusca.vazio(), { q: texto });
+      preencherSelect('modelo', modelosDaMarca());
+      aplicar();
+      return;
+    }
+    if (event.target.closest('.mobile-filter-footer .btn-primary')) {
+      const janela = document.getElementById('mobile-filter-modal');
+      if (janela) janela.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
 
   // Expose to window for inline handlers
   window.performSearch = performSearch;
   window.updateFilter = (key, value) => {
     filters[key] = value;
-    performSearch();
+    aplicar();
   };
 });
 

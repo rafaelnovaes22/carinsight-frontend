@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationClose = document.getElementById('location-close');
     const locationBtn = document.querySelector('.filter-btn[data-tooltip="Localização"]');
     const searchStateInput = document.getElementById('search-state');
-    const stateItems = document.querySelectorAll('.state-item');
+    const stateItems = document.querySelectorAll('.state-item[data-state]');
 
     // Open location modal
     if (locationBtn) {
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeLocationModal();
             }, 300);
 
-            console.log('Estado selecionado:', stateName, stateCode);
+            document.dispatchEvent(new CustomEvent('carinsight:filtro-home', { detail: { estado: stateCode } }));
         });
     });
 
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 yearBtn.classList.add('active');
             }
 
-            console.log('Ano selecionado:', currentYear);
+            document.dispatchEvent(new CustomEvent('carinsight:filtro-home', { detail: { anoMin: currentYear } }));
             closeYearModal();
         });
     }
@@ -651,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 priceBtn.classList.add('active');
             }
 
-            console.log('Preço selecionado:', currentPrice);
+            document.dispatchEvent(new CustomEvent('carinsight:filtro-home', { detail: { precoMax: currentPrice } }));
             closePriceModal();
         });
     }
@@ -743,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeConditionModal();
             }, 300);
 
-            console.log('Condição selecionada:', label);
+            document.dispatchEvent(new CustomEvent('carinsight:filtro-home', { detail: { condicao: value === '0km' ? 'NEW' : 'USED' } }));
         });
     });
 
@@ -834,7 +834,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeBrandModal();
             }, 300);
 
-            console.log('Marca selecionada:', brand);
+            document.dispatchEvent(new CustomEvent('carinsight:filtro-home', { detail: { marca: brand } }));
         });
     });
 

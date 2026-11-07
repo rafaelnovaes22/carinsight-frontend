@@ -8316,3 +8316,23 @@ summary::after {
 @media (max-width: 900px) {
     .item-value.item-lista::before { display: block; margin-bottom: 8px; }
 }
+
+/* Busca: faixa de preço e categoria ativa. */
+.range-slider-container .faixa-preco {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 24px;
+    margin: 0;
+    background: none;
+    opacity: 0;
+    pointer-events: none;
+    appearance: none;
+    -webkit-appearance: none;
+    z-index: 3;
+}
+.faixa-preco::-webkit-slider-thumb { pointer-events: auto; -webkit-appearance: none; width: 24px; height: 24px; cursor: pointer; }
+.faixa-preco::-moz-range-thumb { pointer-events: auto; width: 24px; height: 24px; border: 0; cursor: pointer; }
+.category-filter-btn.active { background: var(--accent-primary); border-color: var(--accent-primary); color: #fff; }
+.category-filter-btn.active i, .category-filter-btn.active span { color: #fff; }
+button.active-filter-chip { font: inherit; cursor: pointer; }
