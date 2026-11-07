@@ -8365,3 +8365,41 @@ button.active-filter-chip { font: inherit; cursor: pointer; }
 .car-card .car-image img {
   object-position: center 70%;
 }
+
+/* Filtros escolhidos na home, antes de buscar. */
+.selecao-home {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.selecao-home[hidden] {
+  display: none;
+}
+
+.selecao-home-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-ver-carros {
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent-primary, #0a5bd3);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-ver-carros:disabled {
+  background: #e5e7eb;
+  color: #4b5563;
+  cursor: not-allowed;
+}

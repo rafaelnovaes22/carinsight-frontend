@@ -535,40 +535,142 @@ test.describe('Celular', () => {
 
 test.describe('Botões da home', () => {
   const botao = (page: Page, nome: string) => page.locator(`.filter-btn[data-tooltip="${nome}"]`);
+  const verCarros = (page: Page) => page.locator('.btn-ver-carros');
+  const etiquetasDaHome = (page: Page) => page.locator('.selecao-home .active-filter-chip');
+  const texto = (page: Page) => page.locator('#search-form-id input[type="text"]');
 
-  test('Marca leva aos carros da marca, mantendo o texto digitado', async ({ page }) => {
+  const escolherMarca = async (page: Page, marca: string) => {
+    await botao(page, 'Marca de Carro').click();
+    await page.locator(`.brand-item[data-brand="${marca}"]`).click();
+    await expect(page.locator('#brand-modal')).not.toHaveClass(/active/);
+  };
+  const escolherEstado = async (page: Page, estado: string) => {
+    await botao(page, 'Localização').click();
+    await page.locator(`.state-item[data-state="${estado}"]`).click();
+    await expect(page.locator('#location-modal')).not.toHaveClass(/active/);
+  };
+
+  test('escolher um filtro não busca sozinho: dá para somar outros e buscar depois', async ({ page }) => {
+    await preparar(page);
+    await page.goto('/index.html');
+    await expect(page.locator('.selecao-home')).toBeHidden();
+
+    await escolherEstado(page, 'SP');
+    await page.waitForTimeout(700);
+    expect(page.url()).toContain('index.html');
+    await expect(etiquetasDaHome(page)).toHaveText(['SP']);
+    await expect(verCarros(page)).toHaveText('Ver 23 carros');
+
+    await escolherMarca(page, 'Honda');
+    await page.waitForTimeout(700);
+    expect(page.url()).toContain('index.html');
+    await expect(etiquetasDaHome(page)).toHaveText(['SP', 'Honda']);
+    await expect(verCarros(page)).toHaveText('Ver 2 carros');
+
+    await botao(page, 'Ano').click();
+    await page.locator('#year-slider').evaluate((el: HTMLInputElement) => {
+      el.value = '2019';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await page.locator('#year-confirm').click();
+    await expect(etiquetasDaHome(page)).toHaveText(['SP', 'A partir de 2019', 'Honda']);
+    await expect(verCarros(page)).toHaveText('Ver 1 carro');
+
+    await verCarros(page).click();
+    await page.waitForURL(/buscando-carro/);
+    expect(page.url()).toContain('estado=SP');
+    expect(page.url()).toContain('marca=Honda');
+    expect(page.url()).toContain('anoMin=2019');
+    await expect(cards(page)).toHaveCount(1, { timeout: 15000 });
+    await expect(cards(page).first()).toContainText('FIT');
+  });
+
+  test('Mais Opções leva o que já foi escolhido e o texto digitado', async ({ page }) => {
     await preparar(page, { q: 'econômico', ids: ['fit', 'city', 'toro'] });
     await page.goto('/index.html');
-    await page.locator('#search-form-id input[type="text"]').fill('econômico');
-    await botao(page, 'Marca de Carro').click();
-    await page.locator('.brand-item[data-brand="Honda"]').click();
+    await texto(page).fill('econômico');
+    await escolherMarca(page, 'Honda');
+    await botao(page, 'Mais Opções').click();
     await page.waitForURL(/buscando-carro/);
     expect(page.url()).toContain('marca=Honda');
     expect(decodeURIComponent(page.url())).toContain('q=econômico');
     await expect(cards(page)).toHaveCount(2, { timeout: 15000 });
     await expect(page.locator('.filters-sidebar select[data-filtro="marca"]')).toHaveValue('honda');
+    await expect(page.locator('#mobile-filter-modal')).not.toHaveClass(/active/);
   });
 
-  test('Marca fora do estoque avisa que não há carro', async ({ page }) => {
+  test('no celular, Mais Opções abre a janela de filtros com a escolha aplicada', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await preparar(page);
+    await page.goto('/index.html');
+    await escolherMarca(page, 'Honda');
+    await botao(page, 'Mais Opções').click();
+    await page.waitForURL(/buscando-carro/);
+    await expect(page.locator('#mobile-filter-modal')).toHaveClass(/active/, { timeout: 15000 });
+    await expect(page.locator('#mobile-filter-modal select[data-filtro="marca"]')).toHaveValue('honda');
+    expect(page.url()).not.toContain('#filtros');
+  });
+
+  test('a lupa e o Enter também levam os filtros escolhidos', async ({ page }) => {
+    await preparar(page, { q: 'carro', ids: ['fit', 'city', 'toro'] });
+    await page.goto('/index.html');
+    await escolherMarca(page, 'Honda');
+    await texto(page).fill('carro');
+    await texto(page).press('Enter');
+    await page.waitForURL(/buscando-carro/);
+    expect(page.url()).toContain('marca=Honda');
+    expect(page.url()).toContain('q=carro');
+
+    await page.goto('/index.html');
+    await escolherMarca(page, 'Honda');
+    await page.locator('.search-icon-link').click();
+    await page.waitForURL(/marca=Honda/);
+  });
+
+  test('a etiqueta remove o filtro, desmarca o botão e recalcula', async ({ page }) => {
+    await preparar(page);
+    await page.goto('/index.html');
+    await escolherEstado(page, 'SP');
+    await escolherMarca(page, 'Honda');
+    await expect(botao(page, 'Marca de Carro')).toHaveClass(/active/);
+    await etiquetasDaHome(page).filter({ hasText: 'Honda' }).click();
+    await expect(etiquetasDaHome(page)).toHaveText(['SP']);
+    await expect(verCarros(page)).toHaveText('Ver 23 carros');
+    await expect(botao(page, 'Marca de Carro')).not.toHaveClass(/active/);
+    await expect(botao(page, 'Marca de Carro').locator('.tooltip')).toHaveText('Marca de Carro');
+    await expect(page.locator('.brand-item.selected')).toHaveCount(0);
+
+    await etiquetasDaHome(page).first().click();
+    await expect(page.locator('.selecao-home')).toBeHidden();
+    await expect(botao(page, 'Localização')).not.toHaveClass(/active/);
+  });
+
+  test('abrir uma janela e fechar sem escolher não marca o botão', async ({ page }) => {
     await preparar(page);
     await page.goto('/index.html');
     await botao(page, 'Marca de Carro').click();
-    await page.locator('.brand-item[data-brand="Audi"]').click();
-    await page.waitForURL(/marca=Audi/);
-    await expect(page.locator('.no-results')).toContainText('Nenhum veículo', { timeout: 15000 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#brand-modal')).not.toHaveClass(/active/);
+    await expect(botao(page, 'Marca de Carro')).not.toHaveClass(/active/);
+    await expect(page.locator('.selecao-home')).toBeHidden();
   });
 
-  test('Ano leva aos carros a partir do ano escolhido', async ({ page }) => {
+  test('sem carro na combinação, avisa em vez de levar a uma página vazia', async ({ page }) => {
     await preparar(page);
     await page.goto('/index.html');
-    await botao(page, 'Ano').click();
-    await page.locator('.year-quick-btn[data-year="2020"]').click();
-    await page.locator('#year-confirm').click();
-    await page.waitForURL(/anoMin=2020/);
-    await expect(cards(page)).toHaveCount(2, { timeout: 15000 });
+    await escolherMarca(page, 'Audi');
+    await expect(verCarros(page)).toHaveText('Nenhum carro com esses filtros');
+    await expect(verCarros(page)).toBeDisabled();
+
+    await botao(page, '0 km').click();
+    await page.locator('.condition-item[data-value="seminovo"]').click();
+    await expect(etiquetasDaHome(page)).toHaveText(['Seminovo', 'Audi']);
+    await etiquetasDaHome(page).filter({ hasText: 'Audi' }).click();
+    await expect(verCarros(page)).toHaveText('Ver 25 carros');
+    await expect(verCarros(page)).toBeEnabled();
   });
 
-  test('Preço leva aos carros até o valor escolhido', async ({ page }) => {
+  test('Preço e 0 km entram na seleção e chegam aos resultados', async ({ page }) => {
     await preparar(page);
     await page.goto('/index.html');
     await botao(page, 'Preço').click();
@@ -577,42 +679,20 @@ test.describe('Botões da home', () => {
       el.dispatchEvent(new Event('input', { bubbles: true }));
     });
     await page.locator('#price-confirm').first().click();
-    await page.waitForURL(/precoMax=50000/);
+    await expect(etiquetasDaHome(page)).toHaveText(['Até R$ 50.000']);
+    await expect(verCarros(page)).toHaveText('Ver 20 carros');
+
+    await botao(page, '0 km').click();
+    await page.locator('.condition-item[data-value="seminovo"]').click();
+    await expect(etiquetasDaHome(page)).toHaveText(['Seminovo', 'Até R$ 50.000']);
+    await verCarros(page).click();
+    await page.waitForURL(/buscando-carro/);
+    expect(page.url()).toContain('precoMax=50000');
+    expect(page.url()).toContain('condicao=USED');
     await expect(cards(page)).toHaveCount(20, { timeout: 15000 });
   });
 
-  test('0 km mostra que não há carro novo, e Seminovo mostra o estoque', async ({ page }) => {
-    await preparar(page);
-    await page.goto('/index.html');
-    await botao(page, '0 km').click();
-    await page.locator('.condition-item[data-value="0km"]').click();
-    await page.waitForURL(/condicao=NEW/);
-    await expect(page.locator('.no-results')).toBeVisible({ timeout: 15000 });
-
-    await page.goto('/index.html');
-    await botao(page, '0 km').click();
-    await page.locator('.condition-item[data-value="seminovo"]').click();
-    await page.waitForURL(/condicao=USED/);
-    await expect(cards(page)).toHaveCount(25, { timeout: 15000 });
-  });
-
-  test('Localização mostra só as lojas com estado confirmado', async ({ page }) => {
-    await preparar(page);
-    await page.goto('/index.html');
-    await botao(page, 'Localização').click();
-    await page.locator('.state-item[data-state="SP"]').click();
-    await page.waitForURL(/estado=SP/);
-    await expect(cards(page)).toHaveCount(23, { timeout: 15000 });
-    await expect(contagem(page)).toContainText('em SP');
-
-    await page.goto('/index.html');
-    await botao(page, 'Localização').click();
-    await page.locator('.state-item[data-state="RJ"]').click();
-    await page.waitForURL(/estado=RJ/);
-    await expect(page.locator('.no-results')).toBeVisible({ timeout: 15000 });
-  });
-
-  test('Mais Opções abre os filtros completos', async ({ page }) => {
+  test('sem filtro, Mais Opções abre todos os carros', async ({ page }) => {
     await preparar(page);
     await page.goto('/index.html');
     await botao(page, 'Mais Opções').click();

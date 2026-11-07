@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Filtros vindos da URL: botões da home, categorias e recarregar a página mantêm a busca.
   const filters = FiltrosBusca.deUrl(window.location.search);
+  // Quem vem de Mais Opções quer ver os filtros: no celular eles ficam na janela que abre pelo botão.
+  const pediuFiltros = window.location.hash === '#filtros';
   const searchQuery = filters.q;
   let catalogo = null;
   let ranking = null;
@@ -102,6 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
       await carregarRanking();
       if (!controlesProntos) {
         montarControles();
+        // Barra lateral escondida indica o celular, onde os filtros só aparecem na janela.
+        const lateral = document.querySelector('.filters-sidebar');
+        const abrirFiltros = document.getElementById('btn-mobile-open-filters');
+        if (pediuFiltros && lateral && abrirFiltros && getComputedStyle(lateral).display === 'none') abrirFiltros.click();
         controlesProntos = true;
       }
       aplicar();

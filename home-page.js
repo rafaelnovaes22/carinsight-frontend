@@ -67,35 +67,100 @@
     return true;
   }
 
-  function setupFilterButtons() {
+  // Estoque inteiro, para contar os carros da seleção. Fica nulo se não vier completo.
+  let catalogo = null;
+  const selecao = {};
+  let mostrarSelecao = () => {};
+
+  // Texto digitado e filtros escolhidos seguem juntos, qualquer que seja o caminho até os resultados.
+  function irParaResultados(sufixo = '') {
     const input = document.querySelector('#search-form-id input[type="text"]');
-    const texto = () => (input ? input.value.trim() : '');
-    const irParaResultados = (filtro) => {
-      const busca = FiltrosBusca.paraUrl({ ...FiltrosBusca.vazio(), q: texto(), ...filtro });
-      window.location.href = `buscando-carro.html${busca ? `?${busca}` : ''}`;
+    const q = input ? input.value.trim() : '';
+    const busca = FiltrosBusca.paraUrl({ ...FiltrosBusca.vazio(), q, ...selecao });
+    window.location.href = `buscando-carro.html${busca ? `?${busca}` : ''}${sufixo}`;
+  }
+
+  function setupFilterButtons() {
+    const botoes = document.querySelector('.filter-buttons');
+    if (!botoes) return;
+
+    const FILTROS = {
+      estado: { botao: 'Localização', itens: '.state-item', rotulo: (v) => v },
+      anoMin: { botao: 'Ano', rotulo: (v) => `A partir de ${v}` },
+      condicao: { botao: '0 km', itens: '.condition-item', icone: 'gauge', rotulo: (v) => (v === 'NEW' ? '0 km' : 'Seminovo') },
+      precoMax: { botao: 'Preço', rotulo: (v) => `Até R$ ${Number(v).toLocaleString('pt-BR')}` },
+      marca: { botao: 'Marca de Carro', itens: '.brand-item', rotulo: (v) => v },
     };
 
-    // As janelas de filtro fecham com uma animação curta antes de sair da página.
-    document.addEventListener('carinsight:filtro-home', (event) => {
-      setTimeout(() => irParaResultados(event.detail), 350);
-    });
+    const painel = document.createElement('div');
+    painel.className = 'selecao-home';
+    painel.hidden = true;
+    painel.innerHTML = '<div class="selecao-home-etiquetas"></div><button type="button" class="btn-ver-carros"></button>';
+    botoes.after(painel);
+    const etiquetas = painel.querySelector('.selecao-home-etiquetas');
+    const verCarros = painel.querySelector('.btn-ver-carros');
 
-    // Mais Opções leva aos filtros completos da página de resultados.
-    const maisOpcoes = document.querySelector('.filter-btn.btn-plus');
-    if (maisOpcoes) maisOpcoes.addEventListener('click', () => irParaResultados({}));
+    mostrarSelecao = () => {
+      // Na mesma ordem dos botões, seja qual for a ordem em que a pessoa escolheu.
+      const chaves = Object.keys(FILTROS).filter((chave) => chave in selecao);
+      painel.hidden = chaves.length === 0;
+      etiquetas.innerHTML = '';
+      chaves.forEach((chave) => {
+        const etiqueta = document.createElement('button');
+        etiqueta.type = 'button';
+        etiqueta.className = 'active-filter-chip';
+        etiqueta.dataset.filtro = chave;
+        etiqueta.setAttribute('aria-label', `Remover filtro ${FILTROS[chave].rotulo(selecao[chave])}`);
+        etiqueta.innerHTML = '<span></span><i data-lucide="x"></i>';
+        etiqueta.querySelector('span').textContent = FILTROS[chave].rotulo(selecao[chave]);
+        etiquetas.appendChild(etiqueta);
+      });
+      const total = catalogo && catalogo.filter((v) => FiltrosBusca.atende(v, { ...FiltrosBusca.vazio(), ...selecao })).length;
+      verCarros.disabled = total === 0;
+      if (total === 0) verCarros.textContent = 'Nenhum carro com esses filtros';
+      else if (total === null) verCarros.textContent = 'Ver carros';
+      else verCarros.textContent = `Ver ${total} ${total === 1 ? 'carro' : 'carros'}`;
+      if (window.lucide) lucide.createIcons();
+    };
+
+    function limpar(chave) {
+      delete selecao[chave];
+      const filtro = FILTROS[chave];
+      const botao = botoes.querySelector(`.filter-btn[data-tooltip="${filtro.botao}"]`);
+      if (botao) {
+        botao.classList.remove('active');
+        const dica = botao.querySelector('.tooltip');
+        if (dica) dica.textContent = filtro.botao;
+        const icone = botao.querySelector('svg, i');
+        if (filtro.icone && icone) icone.outerHTML = `<i data-lucide="${filtro.icone}"></i>`;
+      }
+      if (filtro.itens) document.querySelectorAll(filtro.itens).forEach((item) => item.classList.remove('selected'));
+      mostrarSelecao();
+    }
+
+    // Escolher um filtro só guarda a escolha: a busca é feita quando a pessoa pedir.
+    document.addEventListener('carinsight:filtro-home', (event) => {
+      Object.assign(selecao, event.detail);
+      mostrarSelecao();
+    });
+    etiquetas.addEventListener('click', (event) => {
+      const etiqueta = event.target.closest('.active-filter-chip');
+      if (etiqueta) limpar(etiqueta.dataset.filtro);
+    });
+    verCarros.addEventListener('click', () => irParaResultados());
+
+    // Mais Opções leva aos filtros completos com o que já foi escolhido.
+    const maisOpcoes = botoes.querySelector('.filter-btn.btn-plus');
+    if (maisOpcoes) maisOpcoes.addEventListener('click', () => irParaResultados('#filtros'));
   }
 
   function setupSearchForm() {
     const form = document.getElementById('search-form-id');
     if (!form) return;
-    const input = form.querySelector('input[type="text"]');
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      const q = input && input.value.trim();
-      window.location.href = q
-        ? `buscando-carro.html?q=${encodeURIComponent(q)}`
-        : 'buscando-carro.html';
+      irParaResultados();
     });
 
     // O ícone-lupa também respeita o texto digitado
@@ -117,6 +182,10 @@
       const vehicles = response.data || response;
       if (Array.isArray(vehicles) && vehicles.length > 0) {
         fillShelf('slider-bestsellers', vehicles);
+      }
+      if (Array.isArray(vehicles) && !(response.meta && response.meta.totalPages > 1)) {
+        catalogo = vehicles;
+        mostrarSelecao();
       }
     } catch (error) {
       console.warn('Home: não foi possível carregar veículos', error);

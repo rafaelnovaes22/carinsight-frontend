@@ -312,12 +312,6 @@ document.addEventListener('DOMContentLoaded', () => {
             filterContainer.addEventListener('mouseenter', stopTooltipRotation);
             filterContainer.addEventListener('mouseleave', startTooltipRotation);
         }
-
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('active');
-            });
-        });
     }
 
     // 8. Location Modal
