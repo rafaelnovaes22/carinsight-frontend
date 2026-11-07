@@ -39,11 +39,19 @@
     };
   }
 
+  function iconeSalvar(ativo) {
+    return '<i data-lucide="heart"' + (ativo ? ' style="fill:currentColor"' : '') + '></i> ';
+  }
+
+  function criarIcones() {
+    if (window.lucide && lucide.createIcons) lucide.createIcons();
+  }
+
   function html(id) {
     garantirEstilo();
     var r = rotulos(id);
     return '<div class="vehicle-actions" data-vehicle-id="' + escapar(id) + '">' +
-      '<button type="button" class="btn-acao' + (r.salvarAtivo ? ' ativo' : '') + '" data-acao="salvar">' + r.salvar + '</button>' +
+      '<button type="button" class="btn-acao' + (r.salvarAtivo ? ' ativo' : '') + '" data-acao="salvar">' + iconeSalvar(r.salvarAtivo) + r.salvar + '</button>' +
       '<button type="button" class="btn-acao' + (r.compararAtivo ? ' ativo' : '') + '" data-acao="comparar">' + r.comparar + '</button>' +
       '</div>';
   }
@@ -54,7 +62,7 @@
       if (bloco.getAttribute('data-vehicle-id') !== id) return;
       var s = bloco.querySelector('[data-acao="salvar"]');
       var c = bloco.querySelector('[data-acao="comparar"]');
-      if (s) { s.textContent = r.salvar; s.classList.toggle('ativo', r.salvarAtivo); }
+      if (s) { s.innerHTML = iconeSalvar(r.salvarAtivo) + r.salvar; s.classList.toggle('ativo', r.salvarAtivo); }
       if (c) { c.textContent = r.comparar; c.classList.toggle('ativo', r.compararAtivo); }
     });
   }
@@ -76,7 +84,8 @@
       }
     }
     atualizar(id);
+    criarIcones();
   });
 
-  window.VehicleActions = { html: html };
+  window.VehicleActions = { html: html, criarIcones: criarIcones };
 })();

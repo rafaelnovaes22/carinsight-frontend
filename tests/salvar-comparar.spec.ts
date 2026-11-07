@@ -81,8 +81,10 @@ test.describe('salvar e comparar', () => {
     const bloco = page.locator('.vehicle-actions');
     await expect(bloco).toBeVisible({ timeout: 10000 });
 
+    expect(await bloco.locator('[data-acao="salvar"]').innerHTML()).toContain('heart');
     await bloco.locator('[data-acao="salvar"]').click();
     await expect(bloco.locator('[data-acao="salvar"]')).toHaveText('Salvo');
+    expect(await bloco.locator('[data-acao="salvar"]').innerHTML()).toContain('heart');
     expect(await page.evaluate(() => localStorage.getItem('carinsight_favorites'))).toContain('a2');
 
     await bloco.locator('[data-acao="comparar"]').click();
