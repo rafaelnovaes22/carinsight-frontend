@@ -62,18 +62,20 @@ test.describe('salvar e comparar', () => {
     await expect(page.locator('.vehicle-actions').nth(1).locator('[data-acao="comparar"]')).toHaveText('Na comparação');
 
     await page.goto('/comparar.html');
-    await expect(page.locator('table').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('.comparison-grid-modern')).toBeVisible({ timeout: 10000 });
     const texto = await page.locator('body').innerText();
     expect(texto).toContain('ALFA');
     expect(texto).toContain('BETA');
     expect(texto).not.toContain('GAMA');
     // Combustível e câmbio vêm de technicalSpecs e não podem aparecer como N/A.
     expect(texto).toContain('Flex');
-    // Preço é texto na API: o check tem que ir para o mais barato, não para o que vem primeiro em ordem de texto.
-    const linhaPreco = page.locator('tr', { has: page.locator('td.spec-label', { hasText: 'Preço' }) });
-    await expect(linhaPreco.locator('td').nth(1)).toContainText('✓');
-    await expect(linhaPreco.locator('td').nth(2)).not.toContainText('✓');
     expect(texto).toContain('Manual');
+    // Preço é texto na API: o destaque tem que ir para o mais barato (ALFA, 50.000), não para o de texto menor.
+    await expect(page.locator('.comparison-item-column').nth(0).locator('.item-value.highlight').first()).toContainText('50.000');
+    await expect(page.locator('.comparison-item-column').nth(1).locator('.item-value').first()).not.toHaveClass(/highlight/);
+    // Cada coluna mostra a foto e a lista de itens do carro.
+    await expect(page.locator('.comparison-item-column').nth(0).locator('.item-img img')).toBeVisible();
+    await expect(page.locator('.comparison-item-column').nth(0).locator('.item-lista li').first()).toContainText('Ar-condicionado');
   });
 
   test('na página do carro: salvar e comparar pelo botão do detalhe', async ({ page }) => {

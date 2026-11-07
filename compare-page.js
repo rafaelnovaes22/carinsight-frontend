@@ -1,12 +1,3 @@
-// Combustível, câmbio e motor vêm de technicalSpecs na API; o restante vem direto do carro.
-function valorDaSpec(vehicle, chave) {
-  const t = vehicle.technicalSpecs || {};
-  if (chave === 'fuelType') return vehicle.fuelType || t.fuel || t.fuelType;
-  if (chave === 'transmission') return vehicle.transmission || t.transmission;
-  if (chave === 'engineSize') return vehicle.engineSize || t.engine;
-  return vehicle[chave];
-}
-
 /**
  * CarInsight Compare Page Integration
  * Handles comparar.html functionality
@@ -18,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM Elements
   const loadingScreen = document.getElementById('loading-screen');
   const resultsScreen = document.getElementById('results-screen');
-  const comparisonGrid = document.querySelector('.comparison-grid');
+  const comparisonGrid = document.querySelector('.comparison-grid-modern');
   const addButtons = document.querySelectorAll('.btn-add-car');
 
   // State
@@ -45,138 +36,123 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderComparisonSlots() {
-    if (!comparisonGrid) return;
+  const FORMATO_MOEDA = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+  const FORMATO_NUMERO = new Intl.NumberFormat('pt-BR');
 
-    comparisonGrid.innerHTML = '';
-
-    // Create 3 slots
-    for (let i = 0; i < 3; i++) {
-      const vehicle = compareVehicles[i];
-      const slot = vehicle ? createFilledSlot(vehicle, i) : createEmptySlot(i);
-      comparisonGrid.appendChild(slot);
-    }
-
-    // Render comparison table if we have 2+ vehicles
-    if (compareVehicles.length >= 2) {
-      renderComparisonTable();
-    }
-
-    if (window.lucide) lucide.createIcons();
+  function escaparTexto(valor) {
+    return String(valor).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  function createEmptySlot(index) {
-    const slot = document.createElement('div');
-    slot.className = 'comparison-slot slot-empty';
-    slot.innerHTML = `
-      <button class="btn-add-car" onclick="showVehicleSelector(${index})">
-        <div class="add-icon-circle">
-          <i data-lucide="plus" style="width: 32px; height: 32px;"></i>
-        </div>
-        <h4>Adicionar Veículo</h4>
-        <span style="font-size:0.9rem; color: #94a3b8;">Escolha dos seus salvos</span>
-      </button>
-    `;
-    return slot;
+  // Todas as especificações do carro, na mesma ordem para todas as colunas.
+  // "melhor" diz qual lado vence em números: menor preço e km, maior ano.
+  function especificacoes(v) {
+    const t = v.technicalSpecs || {};
+    const ano = v.yearModel
+      ? (v.yearFab && v.yearFab !== v.yearModel ? `${v.yearFab}/${v.yearModel}` : String(v.yearModel))
+      : null;
+    return [
+      { rotulo: 'Preço', valor: v.price ? FORMATO_MOEDA.format(Number(v.price)) : null, numero: Number(v.price) || null, melhor: 'menor' },
+      { rotulo: 'Quilometragem', valor: v.mileage ? FORMATO_NUMERO.format(v.mileage) + ' km' : null, numero: Number(v.mileage) || null, melhor: 'menor' },
+      { rotulo: 'Ano', valor: ano, numero: Number(v.yearModel) || null, melhor: 'maior' },
+      { rotulo: 'Carroceria', valor: v.bodyType || null },
+      { rotulo: 'Combustível', valor: t.fuel || t.fuelType || null },
+      { rotulo: 'Câmbio', valor: v.transmission || t.transmission || null },
+      { rotulo: 'Motor', valor: t.engine || v.engineSize || null },
+      { rotulo: 'Potência', valor: t.power || null },
+      { rotulo: 'Cor', valor: t.color || null },
+      { rotulo: 'Condição', valor: v.condition === 'NEW' ? 'Novo' : (v.condition ? 'Seminovo' : null) },
+    ];
   }
 
-  function createFilledSlot(vehicle, index) {
-    const slot = document.createElement('div');
-    slot.className = 'comparison-slot slot-filled';
-    slot.dataset.vehicleId = vehicle.id;
+  function itensDo(v) {
+    return Array.isArray(v.features) ? v.features : [];
+  }
 
-    const price = vehicle.price
-      ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)
-      : 'Consulte';
-    const mileage = vehicle.mileage
-      ? new Intl.NumberFormat('pt-BR').format(vehicle.mileage) + ' km'
-      : 'N/A';
+  // Para cada linha numérica, quais colunas têm o melhor valor. Se todos forem iguais, ninguém destaca.
+  function destaquesDe(linhas) {
+    return linhas[0].map((_, idx) => {
+      const celulas = linhas.map((l) => l[idx]);
+      if (linhas.length < 2 || !celulas[0].melhor) return [];
+      const comNumero = celulas.map((c, i) => ({ c, i })).filter((x) => x.c.numero);
+      if (comNumero.length < 2) return [];
+      const numeros = comNumero.map((x) => x.c.numero);
+      if (Math.min(...numeros) === Math.max(...numeros)) return [];
+      const alvo = celulas[0].melhor === 'menor' ? Math.min(...numeros) : Math.max(...numeros);
+      return comNumero.filter((x) => x.c.numero === alvo).map((x) => x.i);
+    });
+  }
+
+  function colunaDoCarro(v, linha, destaques, i) {
     const VI = window.VehicleImages;
-    const imageUrl = VI ? VI.resolve(vehicle) : vehicle.media?.[0]?.url || 'assets/sem-foto.svg';
-    const imageSafe = VI
-      ? VI.curatedFor(vehicle.make, vehicle.model) || VI.GENERIC_FALLBACK
-      : 'assets/sem-foto.svg';
-    const title = vehicle.title || `${vehicle.make} ${vehicle.model}`;
-    const year = vehicle.yearModel;
+    const imageUrl = VI ? VI.resolve(v) : 'assets/sem-foto.svg';
+    const imageSafe = VI ? VI.curatedFor(v.make, v.model) || VI.GENERIC_FALLBACK : 'assets/sem-foto.svg';
+    const title = v.title || `${v.make} ${v.model}`;
+    const coluna = document.createElement('div');
+    coluna.className = 'comparison-item-column';
+    coluna.dataset.vehicleId = v.id;
 
-    slot.innerHTML = `
-      <div class="comparison-vehicle-card">
-        <button class="btn-remove-compare" onclick="removeFromCompare('${vehicle.id}')" title="Remover">
+    const valores = linha.map((s, idx) => {
+      const destaque = (destaques[idx] || []).includes(i);
+      return `<div class="item-value${destaque ? ' highlight' : ''}" data-label="${escaparTexto(s.rotulo)}">${s.valor ? escaparTexto(s.valor) : 'N/A'}</div>`;
+    }).join('');
+    const itens = itensDo(v);
+
+    coluna.innerHTML = `
+      <div class="item-header">
+        <button class="btn-change-item" title="Remover da comparação" onclick="removeFromCompare('${v.id}')">
           <i data-lucide="x"></i>
         </button>
-        <div class="compare-vehicle-image">
-          <img src="${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='${imageSafe}'">
+        <div class="item-img">
+          <img src="${imageUrl}" alt="${escaparTexto(title)}" onerror="this.onerror=null;this.src='${imageSafe}'">
         </div>
-        <div class="compare-vehicle-info">
-          <h4>${year} ${title}</h4>
-          <div class="compare-vehicle-price">${price}</div>
-          <div class="compare-vehicle-mileage">${mileage}</div>
-        </div>
+        <h4>${escaparTexto(title)}</h4>
       </div>
+      ${valores}
+      <div class="item-value item-lista" data-label="Itens">${itens.length ? `<ul>${itens.map((x) => `<li>${escaparTexto(x)}</li>`).join('')}</ul>` : 'N/A'}</div>
     `;
-
-    return slot;
+    return coluna;
   }
 
-  function renderComparisonTable() {
-    // Check if table already exists
-    let tableSection = document.querySelector('.comparison-table-section');
-    if (!tableSection) {
-      tableSection = document.createElement('section');
-      tableSection.className = 'comparison-table-section';
-      comparisonGrid.parentNode.appendChild(tableSection);
-    }
+  function colunaVazia(i) {
+    const coluna = document.createElement('div');
+    coluna.className = 'comparison-item-column placeholder';
+    coluna.innerHTML = `
+      <button class="btn-add-comparison" onclick="showVehicleSelector(${i})">
+        <i data-lucide="plus-circle"></i>
+        <span>Adicionar <br>${i + 1}º carro</span>
+      </button>
+    `;
+    return coluna;
+  }
 
-    const comparison = CompareManager.generateComparison(compareVehicles);
-    if (!comparison) {
-      tableSection.innerHTML = '';
+  // Grade no formato do Diego: coluna de nomes à esquerda e uma coluna por carro, com 3 espaços.
+  function renderComparisonSlots() {
+    if (!comparisonGrid) return;
+    const antiga = document.querySelector('.comparison-table-section');
+    if (antiga) antiga.remove();
+    comparisonGrid.innerHTML = '';
+
+    const cards = compareVehicles.slice(0, 3);
+    if (cards.length === 0) {
+      comparisonGrid.appendChild(colunaVazia(0));
+      if (window.lucide) lucide.createIcons();
       return;
     }
 
-    const specs = [
-      { key: 'price', label: 'Preço', format: (v) => v ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v) : 'N/A' },
-      { key: 'mileage', label: 'Quilometragem', format: (v) => v ? new Intl.NumberFormat('pt-BR').format(v) + ' km' : 'N/A' },
-      { key: 'yearModel', label: 'Ano', format: (v) => v || 'N/A' },
-      { key: 'bodyType', label: 'Carroceria', format: (v) => v || 'N/A' },
-      { key: 'fuelType', label: 'Combustível', format: (v) => v || 'N/A' },
-      { key: 'transmission', label: 'Câmbio', format: (v) => v || 'N/A' },
-      { key: 'engineSize', label: 'Motor', format: (v) => v || 'N/A' },
-    ];
+    const linhas = cards.map(especificacoes);
+    const destaques = destaquesDe(linhas);
 
-    let tableHTML = `
-      <h3 style="margin-bottom: 20px;">Comparativo Detalhado</h3>
-      <div class="comparison-table-wrapper">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th>Especificação</th>
-              ${compareVehicles.map(v => `<th>${v.make} ${v.model}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-    `;
+    const nomes = document.createElement('div');
+    nomes.className = 'comparison-labels';
+    nomes.innerHTML = '<div class="label-spacer"></div>' +
+      linhas[0].map((s) => `<div class="criteria-label">${s.rotulo}</div>`).join('') +
+      '<div class="criteria-label">Itens</div>';
+    comparisonGrid.appendChild(nomes);
 
-    specs.forEach(spec => {
-      const highlight = comparison.highlights[spec.key];
-      tableHTML += `<tr>
-        <td class="spec-label">${spec.label}</td>
-        ${compareVehicles.map((v, i) => {
-          const isBest = highlight && highlight.bestIndex === i;
-          return `<td class="${isBest ? 'best-value' : ''}">${spec.format(valorDaSpec(v, spec.key))}${isBest ? ' ✓' : ''}</td>`;
-        }).join('')}
-      </tr>`;
-    });
+    cards.forEach((v, i) => comparisonGrid.appendChild(colunaDoCarro(v, linhas[i], destaques, i)));
+    for (let i = cards.length; i < 3; i++) comparisonGrid.appendChild(colunaVazia(i));
 
-    tableHTML += `
-          </tbody>
-        </table>
-      </div>
-    `;
-
-    tableSection.innerHTML = tableHTML;
-
-    // Add table styles if not present
-    addCompareTableStyles();
+    if (window.lucide) lucide.createIcons();
   }
 
   function addCompareTableStyles() {

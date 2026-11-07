@@ -1,0 +1,222 @@
+/* Layout da página Comparar, copiado do repositório de referência do Diego (style.css, linhas 4407-4625). */
+.criteria-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.criteria-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    border: 1px solid transparent;
+}
+
+.criteria-tag.active {
+    background: #eff6ff;
+    color: var(--accent-primary);
+    border-color: #bfdbfe;
+    font-weight: 500;
+}
+
+.criteria-tag input {
+    display: none;
+}
+
+/* Modern Comparison Grid */
+.comparison-grid-modern {
+    display: flex;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    margin-top: 24px;
+}
+
+.comparison-labels {
+    width: 200px;
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+.label-spacer {
+    height: 180px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.criteria-label {
+    height: 60px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.comparison-item-column {
+    flex: 1;
+    min-width: 250px;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.comparison-item-column:last-child {
+    border-right: none;
+}
+
+.item-header {
+    height: 180px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.btn-change-item {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-change-item:hover {
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+    transform: rotate(180deg);
+}
+
+.item-img {
+    height: 100px;
+    margin-bottom: 12px;
+}
+
+.item-img img {
+    height: 100%;
+    object-fit: contain;
+}
+
+.item-header h4 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.item-value {
+    height: 60px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.2s;
+}
+
+.item-value.highlight {
+    background: #f0fdf4;
+    font-weight: 700;
+    color: #15803d;
+}
+
+.comparison-item-column.placeholder {
+    background: #f8fafc;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-add-comparison {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add-comparison i {
+    width: 48px;
+    height: 48px;
+}
+
+.btn-add-comparison:hover {
+    color: var(--accent-primary);
+    transform: translateY(-4px);
+}
+
+@media (max-width: 900px) {
+    .saved-selection-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .comparison-grid-modern {
+        flex-direction: column;
+        border-radius: var(--radius-md);
+    }
+
+    .comparison-labels {
+        display: none;
+    }
+
+    .comparison-item-column {
+        border-right: none;
+        border-bottom: 8px solid #f1f5f9;
+    }
+
+    .item-value::before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: auto;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+}
+
+.compare-instructions li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.compare-instructions li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-primary);
+.item-lista ul { margin: 0; padding-left: 16px; font-size: .8rem; text-align: left; }
+.item-lista li { margin: 2px 0; }
