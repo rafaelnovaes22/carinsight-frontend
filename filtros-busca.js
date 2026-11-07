@@ -14,7 +14,7 @@
 
   // O estoque não tem cidade por carro: a localização vem da loja. Loja fora desta lista não
   // aparece em filtro de estado, para o site não afirmar um lugar que ninguém confirmou.
-  const ESTADO_DAS_LOJAS = { "Renatinhu's Cars": 'SP' };
+  const ESTADO_DAS_LOJAS = { "Renatinhu's Cars": 'SP', 'Robust Car': 'SP' };
 
   const specs = (v) => v.technicalSpecs || {};
   const motor = (v) => normalizar(specs(v).engine || v.engineSize);
@@ -36,6 +36,15 @@
     },
     desempenho: { rotulo: 'Desempenho', regra: (v) => /turbo/.test(motor(v)) || parseFloat(motor(v)) >= 2 },
     classicos: { rotulo: 'Clássicos', regra: (v) => Number(v.yearModel) <= 1999 },
+    // EC 137/2025: 20 anos ou mais de fabricação. A Sefaz-SP só isenta a partir do ano seguinte ao que
+    // o carro completa 20 anos, então 2026 vale até 2005. Sem ano de fabricação, o site não afirma.
+    'sem-ipva': {
+      rotulo: 'Sem IPVA',
+      regra: (v) => {
+        const fabricacao = Number(v.yearFab);
+        return fabricacao > 0 && new Date().getFullYear() - fabricacao > 20;
+      },
+    },
     eletricos: { rotulo: 'Elétricos', regra: (v) => combustivel(v) === 'eletrico' },
   };
 

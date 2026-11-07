@@ -34,7 +34,8 @@ const ESPECIAIS = [
 ];
 const ESTOQUE = [
   ...ESPECIAIS,
-  ...Array.from({ length: 19 }, (_, i) => carro(`mobi${i}`, 'FIAT', 'MOBI', 2017, 43990, {}, { engine: '1.6' })),
+  // Dois carros de uma loja sem estado confirmado: o filtro de estado não pode afirmar onde estão.
+  ...Array.from({ length: 19 }, (_, i) => carro(`mobi${i}`, 'FIAT', 'MOBI', 2017, 43990, i < 2 ? { dealer: { name: 'Loja Sem Estado', verificationStatus: 'PENDING' } } : {}, { engine: '1.6' })),
 ];
 
 async function preparar(page: Page, busca: { q: string; ids: string[] } | null = null) {
@@ -99,6 +100,7 @@ test.describe('Resultados', () => {
     await abrirResultados(page);
     await lateral(page).locator('select[data-filtro="estado"]').selectOption({ label: 'SP' });
     await expect(cards(page)).toHaveCount(23);
+    await expect(cards(page).filter({ hasText: 'TORO' })).toHaveCount(1);
     await expect(contagem(page)).toContainText('em SP');
     await expect(page.locator('#mobile-filter-modal select[data-filtro="estado"]')).toHaveValue('sp');
     await lateral(page).locator('select[data-filtro="estado"]').selectOption('');
@@ -256,13 +258,32 @@ test.describe('Resultados', () => {
     await expect(cards(page)).toHaveCount(25);
   });
 
+  test('Sem IPVA mostra só carro com mais de 20 anos de fabricação', async ({ page }) => {
+    await preparar(page);
+    await abrirResultados(page);
+    await page.locator('.cat-sem-ipva').click();
+    await expect(cards(page)).toHaveCount(1);
+    await expect(cards(page).first()).toContainText('FUSCA');
+    await expect(page).toHaveURL(/categoria=sem-ipva/);
+    await expect(page.locator('.active-filters-scroll')).toContainText('Sem IPVA');
+
+    const limites = await page.evaluate(() => {
+      const { FiltrosBusca } = window as any;
+      const ano = new Date().getFullYear();
+      const filtro = { ...FiltrosBusca.vazio(), categoria: 'sem-ipva' };
+      const atende = (yearFab: unknown) => FiltrosBusca.atende({ yearFab, yearModel: ano }, filtro);
+      return [atende(ano - 21), atende(ano - 20), atende(null), atende(undefined)];
+    });
+    expect(limites).toEqual([true, false, false, false]);
+  });
+
   test('não oferece o que o site não consegue cumprir', async ({ page }) => {
     await preparar(page);
     await abrirResultados(page);
     // Espera a tela de carregamento sair: antes disso tudo está escondido e o teste não prova nada.
     await expect(page.locator('.cat-familia')).toBeVisible({ timeout: 15000 });
     await expect(lateral(page).locator('.filter-section', { has: page.locator('h4:text-is("Condição")') })).toBeVisible();
-    for (const classe of ['cat-uber', 'cat-uber-black', 'cat-sem-ipva']) {
+    for (const classe of ['cat-uber', 'cat-uber-black']) {
       await expect(page.locator(`.${classe}`)).toBeHidden();
     }
     for (const titulo of ['Cor Exterior', 'Cor Interior', 'Tração']) {

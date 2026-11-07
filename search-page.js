@@ -324,8 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   // Sem dado no estoque: filtrar esconderia carros sem dizer por quê. Voltam quando o dado existir.
   const SECOES_SEM_DADO = ['Cor Exterior', 'Cor Interior', 'Tração'];
-  // Dependem de regra da plataforma ou de lei estadual: o site não afirma isso sem regra confirmada.
-  const CATEGORIAS_SEM_REGRA = ['cat-uber', 'cat-uber-black', 'cat-sem-ipva'];
+  // A Uber não publica API de modelos aceitos e a regra exige cor, que quase todo o estoque não tem.
+  const CATEGORIAS_SEM_REGRA = ['cat-uber', 'cat-uber-black'];
 
   const moeda = (valor) => `R$ ${Number(valor).toLocaleString('pt-BR')}`;
   const digitos = (texto) => parseInt(String(texto).replace(/\D/g, ''), 10) || null;
